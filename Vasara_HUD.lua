@@ -211,10 +211,10 @@ Triggers = {}
 g_scriptChecked = false
 g_initMode = 0
 
-snap_denominators = { 2, 3, 4, 5, 6, 8, 10, 16, 20, 24, 32, 128 } -- { 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 30, 32, 40, 48, 60, 64, 128 }
+snap_denominators = { 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 30, 32, 40, 48, 60, 64, 128 }
 snap_modes = {}
 for _,d in ipairs(snap_denominators) do
-	table.insert(snap_modes, "1/" .. d .. " WU")
+	table.insert(snap_modes, "1/" .. d)
 end
 
 function Triggers.draw()
@@ -309,13 +309,20 @@ function Triggers.draw()
 		local lbls = HMenu.menus["apply_options"]
 		if HApply.current_light then lbls[1][7] = "Apply light: " .. HApply.current_light else lbls[1][7] = "Apply light: [out of display range]" end
 
-		local att = "Apply texture"
+		local att = ""
+		if HApply.down(HApply.use_texture) and HApply.use_transfer == 2 then
+			att = "Apply texture & transfer mode"
+		elseif HApply.down(HApply.use_texture) then
+			att = "Apply texture"
+		elseif HApply.use_transfer == 2 then
+			att = "Apply transfer mode"
+		end
 		local tmode = HApply.transfer_modes[HApply.current_transfer + 1]
-		if HCollections.current_collection == 0 then
+		--[[if HCollections.current_collection == 0 then
 			if HApply.current_transfer == 5 then tmode = nil end
 		else
 			if HApply.current_transfer == 0 then tmode = nil end
-		end
+		end--]]
 		if tmode ~= nil then
 			att = att .. ": " .. tmode
 		end
@@ -537,8 +544,8 @@ HKeys = {
 	action = 6,
 	map = 7,
 	dummyfield = 0,
-	names = {"Trigger", "2nd Trigger", "Microphone", "Previous Weapon", "Next Weapon", "Action", "Auto Map"},
-	shortnames = {"Trigger", "2nd", "Mic", "Previous", "Next", "Action", "Map"},
+	names = {"Trigger", "2nd Trigger", "Auxiliary Trigger", "Previous Weapon", "Next Weapon", "Action", "Auto Map"},
+	shortnames = {"Trigger", "2nd", "Aux", "Prev", "Next", "Action", "Map"},
 
 	update = function()
 		HKeys.bitfield = Player.texture_palette.slots[39].texture_index
@@ -740,7 +747,7 @@ key_panel_default = {
 	-- { "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
 	{ "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
 	{ "kmod", "key_mic_any", 380, 4, 44, 64, nil },
-	{ "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+	{ "klabel", "key_mic_any", 350, 30, 50, 12, "Aux +" },
 	-- { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
 	{ "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
 	{ "klabel", "key_mic_weapon", 400, 38, 70, 12, "Change Weapon" },
@@ -767,20 +774,26 @@ HMenu = {
 			{ "radio", "grid_positive", 75, 210, 115, 20, "Positive (absolute)" },
 			{ "radio", "grid_relative", 75, 230, 115, 20, "Centred (relative)" },
 			{ "radio", "grid_negative", 75, 250, 115, 20, "Negative (absolute)" },
-			{ "radio", "snap_1", 30, 270, 80, 20, snap_modes[1] },
-			{ "radio", "snap_2", 30, 290, 80, 20, snap_modes[2] },
-			{ "radio", "snap_3", 30, 310, 80, 20, snap_modes[3] },
-			{ "radio", "snap_4", 30, 330, 80, 20, snap_modes[4] },
-			{ "radio", "snap_5", 30, 350, 80, 20, snap_modes[5] },
-			{ "radio", "snap_6", 30, 370, 80, 20, snap_modes[6] },
-			{ "radio", "snap_7", 110, 270, 80, 20, snap_modes[7] },
-			{ "radio", "snap_8", 110, 290, 80, 20, snap_modes[8] },
-			{ "radio", "snap_9", 110, 310, 80, 20, snap_modes[9] },
-			{ "radio", "snap_10", 110, 330, 80, 20, snap_modes[10] },
-			{ "radio", "snap_11", 110, 350, 80, 20, snap_modes[11] },
-			{ "radio", "snap_12", 110, 370, 80, 20, snap_modes[12] },
+			{ "radio", "snap_1", 30, 270, 50, 20, snap_modes[1] },
+			{ "radio", "snap_2", 30, 290, 50, 20, snap_modes[2] },
+			{ "radio", "snap_3", 30, 310, 50, 20, snap_modes[3] },
+			{ "radio", "snap_4", 30, 330, 50, 20, snap_modes[4] },
+			{ "radio", "snap_5", 30, 350, 50, 20, snap_modes[5] },
+			{ "radio", "snap_6", 30, 370, 50, 20, snap_modes[6] },
+			{ "radio", "snap_7", 80, 270, 55, 20, snap_modes[7] },
+			{ "radio", "snap_8", 80, 290, 55, 20, snap_modes[8] },
+			{ "radio", "snap_9", 80, 310, 55, 20, snap_modes[9] },
+			{ "radio", "snap_10", 80, 330, 55, 20, snap_modes[10] },
+			{ "radio", "snap_11", 80, 350, 55, 20, snap_modes[11] },
+			{ "radio", "snap_12", 80, 370, 55, 20, snap_modes[12] },
+			{ "radio", "snap_13", 135, 270, 55, 20, snap_modes[13] },
+			{ "radio", "snap_14", 135, 290, 55, 20, snap_modes[14] },
+			{ "radio", "snap_15", 135, 310, 55, 20, snap_modes[15] },
+			{ "radio", "snap_16", 135, 330, 55, 20, snap_modes[16] },
+			{ "radio", "snap_17", 135, 350, 55, 20, snap_modes[17] },
+			{ "radio", "snap_18", 135, 370, 55, 20, snap_modes[18] },
 			{ "checkbox", "apply_light", 205, 85, 240, 20, "Apply light:" },
-			{ "checkbox", "apply_transfer", 205, 250, 260, 20, "Apply texture mode:" },
+			{ "checkbox", "apply_transfer", 205, 250, 260, 20, "Apply transfer mode:" },
 			{ "radio", "transfer_0", 215, 270, 80, 20, "Normal" },
 			{ "radio", "transfer_1", 215, 290, 80, 20, "Pulsate" },
 			{ "radio", "transfer_2", 215, 310, 80, 20, "Wobble" },
@@ -931,10 +944,10 @@ HMenu = {
 			{ "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Jump" },
 			{ "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
 			{ "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-			{ "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+			{ "klabel", "key_weapon", 180, 38, 50, 12, "Change Weapon" },
 			-- { "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
 			{ "kmod", "key_mic_any", 380, 4, 44, 64, nil },
-			{ "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+			{ "klabel", "key_mic_any", 350, 30, 50, 12, "Aux +" },
 			{ "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
 			{ "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
 			{ "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
@@ -956,10 +969,10 @@ HMenu = {
 			{ "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Jump" },
 			{ "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
 			{ "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-			{ "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+			{ "klabel", "key_weapon", 180, 38, 50, 12, "Change Weapon" },
 			-- { "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
 			{ "kmod", "key_mic_any", 380, 4, 44, 64, nil },
-			{ "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+			{ "klabel", "key_mic_any", 350, 30, 50, 12, "Aux +" },
 			{ "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
 			{ "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
 			{ "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
@@ -981,10 +994,10 @@ HMenu = {
 			-- { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Collection" },
 			{ "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
 			{ "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-			{ "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+			{ "klabel", "key_weapon", 180, 38, 50, 12, "Change Weapon" },
 			{ "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
 			{ "kmod", "key_mic_any", 380, 4, 44, 64, nil },
-			{ "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+			{ "klabel", "key_mic_any", 350, 30, 50, 12, "Aux +" },
 			{ "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
 			{ "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
 			{ "klabel", "key_mic_weapon", 400, 38, 70, 12, "Change Weapon" },
@@ -1006,10 +1019,10 @@ HMenu = {
 			{ "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Edit Transparent Sides" },
 			{ "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
 			{ "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-			{ "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+			{ "klabel", "key_weapon", 180, 38, 50, 12, "Change Weapon" },
 			{ "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
 			{ "kmod", "key_mic_any", 380, 4, 44, 64, nil },
-			{ "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+			{ "klabel", "key_mic_any", 350, 30, 50, 12, "Aux +" },
 			{ "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
 			{ "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
 			{ "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
@@ -1033,10 +1046,10 @@ HMenu = {
 			-- 	{ "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Type" },
 			{ "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
 			{ "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-			{ "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+			{ "klabel", "key_weapon", 180, 38, 50, 12, "Change Weapon" },
 			{ "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
 			{ "kmod", "key_mic_any", 380, 4, 44, 64, nil },
-			{ "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+			{ "klabel", "key_mic_any", 350, 30, 50, 12, "Aux +" },
 			-- 	{ "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
 			{ "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
 			{ "klabel", "key_mic_weapon", 400, 38, 70, 12, "Change Weapon" },
@@ -1058,10 +1071,10 @@ HMenu = {
 			-- { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Type" },
 			{ "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
 			{ "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-			{ "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+			{ "klabel", "key_weapon", 180, 38, 50, 12, "Change Weapon" },
 			{ "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
 			{ "kmod", "key_mic_any", 380, 4, 44, 64, nil },
-			{ "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+			{ "klabel", "key_mic_any", 350, 30, 50, 12, "Aux +" },
 			-- { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
 			{ "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
 			{ "klabel", "key_mic_weapon", 400, 38, 70, 12, "Change Weapon" },
@@ -1083,10 +1096,10 @@ HMenu = {
 			-- { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Type" },
 			{ "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
 			{ "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-			{ "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+			{ "klabel", "key_weapon", 180, 38, 50, 12, "Change Weapon" },
 			{ "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
 			{ "kmod", "key_mic_any", 380, 4, 44, 64, nil },
-			{ "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+			{ "klabel", "key_mic_any", 350, 30, 50, 12, "Aux +" },
 			-- { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
 			{ "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
 			{ "klabel", "key_mic_weapon", 400, 38, 70, 12, "Change Weapon" },
@@ -1108,10 +1121,10 @@ HMenu = {
 			-- { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Type" },
 			{ "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
 			{ "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-			{ "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+			{ "klabel", "key_weapon", 180, 38, 50, 12, "Change Weapon" },
 			{ "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
 			{ "kmod", "key_mic_any", 380, 4, 44, 64, nil },
-			{ "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+			{ "klabel", "key_mic_any", 350, 30, 50, 12, "Aux +" },
 			-- { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
 			{ "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
 			{ "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Change Weapon" },
@@ -1187,7 +1200,7 @@ HMenu = {
 						label = "Map"
 						if state == "active" then state = "enabled" end
 					elseif item[2] == "key_mic" then
-						label = "Mic"
+						label = "Aux"
 					end
 				end
 
@@ -1245,19 +1258,20 @@ HMenu = {
 					state = HMenu.button_state(item[2])
 					indent = menu_prefs.texture_apply_indent
 				end
+				local iu = indent * u
 
 				if state == "active" then
-					Screen.frame_rect(x - indent*u,
-					                  y - indent*u,
-					                  w + 2*indent*u,
-					                  h + 2*indent*u,
+					Screen.frame_rect(x - iu,
+					                  y - iu,
+					                  w + 2*iu,
+					                  h + 2*iu,
 					                  colors.current_texture,
-					                  2*indent*u)
+					                  2*iu)
 				end
-				local xt = x + indent*u
-				local yt = y + indent*u
-				local wt = w - 2*indent*u
-				local ht = h - 2*indent*u
+				local xt = x + iu
+				local yt = y + iu
+				local wt = w - 2*iu
+				local ht = h - 2*iu
 				HCollections.draw(cc + 0, ct + 0, xt, yt, wt, ht)
 			elseif item[1] == "applypreview" then
 				HCollections.preview_current(x, y, w, item[6])
@@ -1382,9 +1396,9 @@ HMenu = {
 		elseif string.sub(name, 1, 5) == "coll_" then
 			local mode = tonumber(string.sub(name, 6))
 			if HCollections.current_collection == mode then state = "active" end
-		elseif string.sub(name, 1, 7) == "choose_" then
+		elseif string.sub(name, 1, 7) == "choose_" then -- textures
 			local cc, ct = string.match(name, "(%d+)_(%d+)")
-			if cc == HCollections.current_coll() and ct == Player.texture_palette.slots[cc].texture_index then
+			if tonumber(cc) == HCollections.current_coll() and tonumber(ct) == Player.texture_palette.slots[cc].texture_index then
 				state = "active"
 			end
 		elseif string.sub(name, 1, 6) == "pperm_" then
@@ -1640,8 +1654,8 @@ HCollections = {
 						ct = HCollections.landscape_textures[j][2]
 					end
 					table.insert(preview,
-					             { "atexture", "choose_" .. cc .. "_" .. ct,
-					               xt, yt, tsize * xscale, tsize, cc .. ", " .. ct }
+					             { "atexture", string.format("choose_%s_%s", cc, ct),
+					               xt, yt, tsize * xscale, tsize, string.format("%s, %s", cc, ct) }
 					)
 				end
 			end
@@ -1717,8 +1731,8 @@ HCollections = {
 					ct = HCollections.landscape_textures[i][2]
 				end
 				table.insert(buttons,
-				             { "texture", "choose_" .. cc .. "_" .. ct, 
-				               x, y, tsize * xscale, tsize, cc .. ", " .. ct }
+				             { "texture", string.format("choose_%s_%s", cc, ct),
+				               x, y, tsize * xscale, tsize, string.format("%s, %s", cc, ct) }
 				)
 			end
 			for _,v in ipairs(cbuttons) do
@@ -1824,7 +1838,7 @@ HCollections = {
 		local coll = HCollections.current_coll()
 		local tex = Player.texture_palette.slots[coll].texture_index
 
-		if HApply.down(HApply.use_texture) then
+		if HApply.down(HApply.use_texture) or HApply.use_transfer == 2 then
 			if HApply.current_transfer == 4 then
 				local xoff = math.random() * math.max(0, img_static.width - size)
 				local yoff = math.random() * math.max(0, img_static.height - size)
