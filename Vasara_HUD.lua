@@ -323,7 +323,7 @@ function Triggers.draw()
 		else
 			if HApply.current_transfer == 0 then tmode = nil end
 		end--]]
-		if tmode ~= nil then
+		if tmode ~= nil and HApply.use_transfer == 2 then
 			att = att .. ": " .. tmode
 		end
 		lbls[2][7] = att
