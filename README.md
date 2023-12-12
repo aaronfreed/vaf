@@ -6,28 +6,51 @@ by **Hopper**, **Ares Ex Machina**, **Aaron Freed**, **CryoS**, and **Solra Bizn
 from work by **Jon Irons** and **Gregory Smith**
 
 ----------------------------------------------------------------
-WIP notes by Aaron (see below for original readme):
+***WIP notes by Aaron (see below for original readme):***
+----------------------------------------------------------------
+**NEW FEATURES & PLANNED ADDITIONS:**
 
-- I’m in the middle of redoing the grid interface *again*. I started out just wanting to add a “centred” option (useful if you drew an entire map off-grid, but have a bunch of rectangles whose points align to a *different* grid – this applies to a disturbingly large number of levels in *Where Monsters Are in Dreams* – or else you recentered a map in Forge and it didn’t recenter it to the grid), but I’m now planning to have a “negative alignment” option that will align walls to the bottom and/or right (it’ll probably treat floors and ceilings normally).
-- “Centred” mostly works, but it doesn’t yet centre sides vertically, because that’s horrendously complicated to implement.
-- I’m also planning to add separate “x” and “y” snap options, since there are numerous cases where mapmakers might want to align one but not the other, or might want to use one snap vertically and another horizontally
-- I’ve fixed the Lua error spam for lights > 55, but haven’t figured out how to get them to preview correctly. You can currently select lights 0-97 in the main palette, and even if you have both “apply light” and “apply texture” selected with lights > 97, it won’t spam errors. I may figure out a way to reduce the size of each light if there are more than 98 so that more will fit in the selector (but really, what are you doing with that many lights? I’ve only ever made a map with that many lights to test Vasara)
-- You can now select “apply texture mode” separately from “apply texture” - if you have it selected by itself, it’ll apply different transfer modes to existing textures without adjusting their textures. By contrast, if you have “apply texture” selected but not “apply texture mode”, it’ll preserve existing transfer modes while changing the textures. The wild card is landscapes, which often override existing transfer modes. None of this is reflected sensibly in the main interface yet
-- I don’t know what sort of preview to do for the 2x or 4x transfer modes
-- This will flat-out break if you aren’t using at least Aleph One 1.7, and I don’t care
-- “Realign when retexturing” is a forthcoming option that will preserve the old behavior of Vasara of realigning textures to (0,0) when you change a texture. I currently have it disabled, since it’s possible to realign textures to (0,0) manually with it disabled, while it’s *not* possible to preserve existing texture alignment with it *enabled*, but sometimes having it enabled is useful behavior
-- The border for the selected texture on the texture palette broke and I haven’t figured out why. this has been the most annoying thing to debug
-- I think I understand the math needed to fix alignment of transparent textures on the reverse side; I just haven’t figured out how to get Vasara to do it correctly
-- Vasara’s code is very, very dense and very, very sparsely documented, so this has been a slow project and will probably continue to be slow, but I hope to get it finished soon™
-- Most of the updates are mine; a few are CryoS or Solra’s work
+- I’m in the middle of redoing the grid interface.
+  - There are now more options. In addition to 1/2, 1/3, 1/4, 1/5, and 1/8 WU, we’ve added 1/6, 1/10, 1/16, 1/20, 1/24, 1/32, and 1/128 WU. I may add more. 1/16 WU is now the default selection because it’s what I use by far the most.
+  - The “positive” option is the vanilla top-left alignment you’re used to already.
+  - The “centred” option is useful if you drew an entire map off-grid, but have a bunch of rectangles whose points align to a *different* grid (this applies to a disturbingly large number of levels in *Where Monsters Are in Dreams*) or you recentered a map in Forge and it wasn’t recentered on-grid. It currently applies in both directions to polygon floors and ceilings, but only horizontally for walls (vertical alignment will be very complicated to implement, but it is planned).
+  - The “negative” option currently aligns walls to the right rather than the left. It will eventually also align them to the bottom rather than the top, but this is forthcoming for the same reason the vertical direction is forthcoming for centred walls. For polygon floors and ceilings, it will continue to behave the same way the “positive” option behaves.
+  - The “x” and “y” snap options are present because there are numerous cases where mapmakers might want to align one but not the other, or might want to use one snap vertically and another horizontally. Separating these options makes that possible to do (although to get different X and Y snaps, you’ll have to align them separately, and it may help to use the keyboard to do so).
+  - If you want to disable grid snapping, disable both the x and y snaps. (I could probably be persuaded to make a keyboard shortcut that toggles “grid snapping off” and “snap to X and Y”.)
+- You can now select “apply texture mode” separately from “apply texture”
+  - If you have “apply texture mode” selected, but not “apply texture”, it’ll apply different transfer modes to existing textures without adjusting their textures.
+  - By contrast, if you have “apply texture” selected but not “apply texture mode”, it’ll preserve existing transfer modes while changing the textures.
+  - The wild card is landscapes, which often override existing transfer modes.
+  - None of this is reflected sensibly in the main interface yet.
+- This version of Vasara lists what you’re looking at in the upper-left corner of visual mode.
+  - If you see an additional side listed to the right of the one in the upper-left, it’s a transparent side. Unfortunately, it displays the one furthest from you – I feel the one closest would make the most sense, but I’ve so far been unable to debug this
+  - The “Δ” when you’re looking at a side represents ambient delta, a rarely-used map element that affects the side’s light intensity. I have absolutely no idea how to program a good interface for adjusting this, so for now, you can use the following Lua code:
+```lua
+Sides[foo].ambient_delta = bar
+```
+  to set the ambient delta of side `foo` to `bar`. (`bar` should almost always be between -1 and 1.) Be warned that maps that use ambient delta will break if you run them through the Weland copy and paste plugin.
+- This version of Vasara adds the reverse slide, 2x, and 4x transfer modes from Aleph One 1.7.
+  - This flat-out breaks if you aren’t using at least Aleph One 1.7, and I don’t care. Upgrade your Aleph One.
+  - I don’t know what sort of preview to do for the 2x or 4x transfer modes. Contact me [on GitHub](https://github.com/aaronfreed) or on Discord (@aaron6608) if you have any ideas.
+- The new “Realign when retexturing” option preserves the old behavior of Vasara of realigning textures to (0,0) when you change a texture. I currently have it disabled by default, since it’s possible to realign textures to (0,0) manually with it disabled, while it’s *not* possible to preserve existing texture alignment with it *enabled*, but sometimes having it enabled is useful behavior.
+- I think I understand the math needed to fix alignment of transparent textures on the reverse side; I just haven’t figured out how to get Vasara to do it correctly.
+
+--------
+**BUG FIXES, CURRENT ISSUES, AND CREDITS:**
+
+- I’ve fixed the Lua error spam for lights > 55, but haven’t figured out how to get them to preview correctly. You can currently select lights 0-97 in the main palette, and even if you have both “apply light” and “apply texture” selected with lights > 97, it won’t spam errors. I may figure out a way to reduce the size of each light if there are more than 98 so that more will fit in the selector (but really, what are you doing with that many lights? I’ve only ever made a map with that many lights to test Vasara).
+- Platform and light switches now display a lot more options, which should reduce the amount people need to rely on tags. Side note: [tags are terrible](https://aaronfreed.github.io/mapmaking.html#tagsareterrible). :-)
+- The border for the selected texture on the texture palette broke and I haven’t figured out why. This has been the most annoying thing to debug.
+- Vasara’s code is very, very dense and very, very sparsely documented, so this has been a slow project and will probably continue to be slow, but I hope to get it finished soon™.
+- Most of the updates are mine; a few are Cryos (notably the platform switch fix and the initial work at expanding the grid selections) or Solra’s (e.g., the extended stack traces) work.
 
 ----------------------------------------------------------------
 
 ------------
-Vasara 1.0.3
+**Vasara 1.0.3**
 ------------
-by Hopper and Ares Ex Machina
-from work by Irons and Smith
+by **Hopper** and **Ares Ex Machina**
+from work by **Irons** and **Smith**
 
 ----------------------------------------------------------------
 **DESCRIPTION:**
