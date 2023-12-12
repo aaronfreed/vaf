@@ -8,7 +8,7 @@ from work by **Jon Irons** and **Gregory Smith**
 ----------------------------------------------------------------
 ***WIP notes by Aaron (see below for original readme):***
 ----------------------------------------------------------------
-**Vasara** is a texturing utility for **[Marathon Aleph One](https://alephone.lhowon.org)**, best used with **[Weland](https://github.com/treellama/weland/releases)** (see [my detailed setup guide)(https://aaronfreed.github.io/mapmaking.html#welandsetup) if Weland’s readme proves confusing). The original version hasn’t been updated in years, so I’ve taken it upon myself, with a little help from my friends, to update it for several reasons:
+**Vasara** is a texturing utility for **[Marathon Aleph One](https://alephone.lhowon.org)**, best used with **[Weland](https://github.com/treellama/weland/releases)** (see [my detailed setup guide](https://aaronfreed.github.io/mapmaking.html#welandsetup) if Weland’s readme proves confusing). The original version hasn’t been updated in years, so I’ve taken it upon myself, with a little help from my friends, to update it for several reasons:
 - to take advantage of new Aleph One features
 - to add features that it had been sorely lacking for years
 - to fix longstanding bugs.
