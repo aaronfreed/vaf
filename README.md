@@ -30,14 +30,14 @@ This remains a work in progress, hence its beta status. A more detailed overview
   - If you have “apply texture mode” selected, but not “apply texture”, it’ll apply different transfer modes to existing textures without adjusting their textures.
   - By contrast, if you have “apply texture” selected but not “apply texture mode”, it’ll preserve existing transfer modes while changing the textures.
   - The wild card is landscapes, which often override existing transfer modes.
-  - None of this is reflected sensibly in the main interface yet.
+  - This mostly shows up correctly in visual mode. However, I have yet to work out all the strange behavior on the “options” page.
 - This version of Vasara lists what you’re looking at in the upper-left corner of visual mode.
-  - If you see an additional side listed to the right of the one in the upper-left, it’s a transparent side. Unfortunately, it displays the one furthest from you – I feel the one closest would make the most sense, but I’ve so far been unable to debug this
+  - If you see an additional side listed to the right of the one in the upper-left, it’s a transparent side. Unfortunately, it displays the one furthest from you – I feel the one closest would make the most sense, but I’ve so far been unable to debug this.
   - The “Δ” when you’re looking at a side represents ambient delta, a rarely-used map element that affects the side’s light intensity. I have absolutely no idea how to program a good interface for adjusting this, so for now, you can use the following Lua code:
 ```lua
 Sides[foo].ambient_delta = bar
 ```
-  to set the ambient delta of side `foo` to `bar`. (`bar` should almost always be between -1 and 1.) Contact me [on GitHub](https://github.com/aaronfreed) or on Discord (@aaron6608) if you have any remotely good ideas for a UI for this feature. Also, be warned that maps that use ambient delta will break if you run them through the Weland copy and paste plugin.
+  to set the ambient delta of side `foo` to `bar`. (`bar` should almost always be between -1 and 1.) Contact me [on GitHub](https://github.com/aaronfreed) or on Discord (**@aaron6608**) if you have any remotely good ideas for a UI for this feature. Also, be warned that maps that use ambient delta will break if you run them through the Weland copy and paste plugin.
 - This version of Vasara adds the reverse slide, 2x, and 4x transfer modes from Aleph One 1.7.
   - This flat-out breaks if you aren’t using at least Aleph One 1.7, and I don’t care. Upgrade your Aleph One.
   - I don’t know what sort of preview to do for the 2x or 4x transfer modes. Contact me (see directly above) if you have any ideas.
