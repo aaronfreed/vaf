@@ -15,6 +15,7 @@ from work by **Jon Irons** and **Gregory Smith**
 
 This remains a work in progress, hence its beta status. A more detailed overview:
 
+----------------------------------------------------------------
 **NEW FEATURES & PLANNED ADDITIONS:**
 
 - I’m in the middle of redoing the grid interface.
@@ -42,7 +43,7 @@ Sides[foo].ambient_delta = bar
 - The new “Realign when retexturing” option preserves the old behavior of Vasara of realigning textures to (0,0) when you change a texture. I currently have it disabled by default, since it’s possible to realign textures to (0,0) manually with it disabled, while it’s *not* possible to preserve existing texture alignment with it *enabled*, but sometimes having it enabled is useful behavior.
 - I think I understand the math needed to fix alignment of transparent textures on the reverse side; I just haven’t figured out how to get Vasara to do it correctly.
 
---------
+----------------------------------------------------------------
 **BUG FIXES, CURRENT ISSUES, AND CREDITS:**
 
 - I’ve fixed the Lua error spam for lights > 55, but haven’t figured out how to get them to preview correctly. You can currently select lights 0-97 in the main palette, and even if you have both “apply light” and “apply texture” selected with lights > 97, it won’t spam errors. I may figure out a way to reduce the size of each light if there are more than 98 so that more will fit in the selector (but really, what are you doing with that many lights? I’ve only ever made a map with that many lights to test Vasara).
@@ -53,7 +54,6 @@ Sides[foo].ambient_delta = bar
 
 ----------------------------------------------------------------
 
-------------
 **Vasara 1.0.3**
 ------------
 by **Hopper** and **Ares Ex Machina**
