@@ -321,20 +321,56 @@ function Triggers.draw()
 		end
 		lbls[2][7] = att
 
-		if HApply.current_snap_mode == 1 then
+		if HApply.snap_x or HApply.snap_y then
+			local snap_axes = ""
+			if HApply.snap_x and HApply.snap_y then
+				snap_axes = "x & y"
+			elseif HApply.snap_x then
+				snap_axes = "x"
+			else
+				snap_axes = "y"
+			end
+			if HApply.current_snap_mode == 1 then
+				local snap_dirs = ""
+				if HApply.snap_x and HApply.snap_y then
+					snap_dirs = "bottom-right"
+				elseif HApply.snap_x then
+					snap_dirs = "right"
+				elseif HApply.snap_y then
+					snap_dirs = "bottom"
+				end
+				lbls[6][7] = string.format(
+					"Snap: %s %c x%s (abs. %s)",
+					snap_dirs,
+					177,
+					string.sub(snap_modes[HApply.current_snap], 2),
+					snap_axes
+				)
+			elseif HApply.current_snap_mode == 2 then
+				if HApply.snap_x and HApply.snap_y then
+					snap_dirs = "top-left"
+				elseif HApply.snap_x then
+					snap_dirs = "left"
+				elseif HApply.snap_y then
+					snap_dirs = "top"
+				end
+				lbls[6][7] = string.format(
+					"Snap: %s %c x%s (abs. %s)",
+					snap_dirs,
+					177,
+					string.sub(snap_modes[HApply.current_snap], 2),
+					snap_axes
+				)
+			elseif HApply.current_snap_mode == 3 then
+				lbls[6][7] = string.format(
+					"Snap: centre %c x%s (rel. %s)",
+					177,
+					string.sub(snap_modes[HApply.current_snap], 2),
+					snap_axes
+				)
+			end
+		else
 			lbls[6][7] = "Grid snap disabled"
-		elseif HApply.current_snap_mode == 2 then
-			lbls[6][7] = string.format(
-				"Snap to top-left %c x%s (absolute)",
-				177,
-				string.sub(snap_modes[HApply.current_snap], 2)
-			)
-		elseif HApply.current_snap_mode == 3 then
-			lbls[6][7] = string.format(
-				"Snap to centre %c x%s (relative)",
-				177,
-				string.sub(snap_modes[HApply.current_snap], 2)
-			)
 		end
 
 		HMenu.draw_menu("apply_options", true)
@@ -566,9 +602,9 @@ HApply = {
 	align = 3,
 	transparent = 4,
 	edit_panels = 5,
+	realign = 6,
 	current_light = 0,
 	current_transfer = 0,
-	current_snap_mode = 3,
 	transfer_modes = {
 		"Normal", "Pulsate", "Wobble", "Fast wobble", "Static", "Landscape",
 		"Horizontal slide", "Fast horizontal slide", "Vertical slide", "Fast vertical slide", "Wander", "Fast wander",
@@ -582,6 +618,8 @@ HApply = {
 		HApply.use_transfer = Player.texture_palette.slots[44].type
 		HApply.current_snap = Player.texture_palette.slots[45].texture_index
 		HApply.current_snap_mode = Player.texture_palette.slots[45].type
+		HApply.snap_x = hasbit(Player.texture_palette.slots[46].texture_index, 7)
+		HApply.snap_y = hasbit(Player.texture_palette.slots[46].texture_index, 8)
 
 		local lbls = HMenu.menus["key_" .. HMode.apply]
 		local lbls2 = HMenu.menus["key_" .. HMode.attribute]
@@ -721,14 +759,14 @@ HMenu = {
 			{ "checkbox", "apply_align", 30, 105, 160, 20, "Align adjacent" },
 			{ "checkbox", "apply_edit", 30, 125, 160, 20, "Edit switches and panels" },
 			{ "checkbox", "apply_xparent", 30, 145, 160, 20, "Edit transparent sides" },
-			{ "checkbox", "nil", 30, 165, 160, 20, "Realign when retexturing" },
+			{ "checkbox", "apply_realign", 30, 165, 160, 20, "Realign when retexturing" },
 			{ "checkbox", "advanced", 30, 185, 160, 20, "Visual Mode header" },
 			{ "label", "nil", 30+5, 210, 45, 20, "Snap:" },
-			{ "checkbox", "xgrid", 75, 210, 30, 20, "X" },
-			{ "checkbox", "ygrid", 105, 210, 30, 20, "Y" },
-			{ "radio", "grid_absolute", 75, 230, 115, 20, "Absolute (grid)" },
-			{ "radio", "grid_off", 30, 250, 45, 20, "Off" },
-			{ "radio", "grid_relative", 75, 250, 115, 20, "Relative (centred)" },
+			{ "checkbox", "xgrid", 30, 230, 45, 20, "X" },
+			{ "checkbox", "ygrid", 30, 250, 45, 20, "Y" },
+			{ "radio", "grid_positive", 75, 210, 115, 20, "Positive (absolute)" },
+			{ "radio", "grid_relative", 75, 230, 115, 20, "Centred (relative)" },
+			{ "radio", "grid_negative", 75, 250, 115, 20, "Negative (absolute)" },
 			{ "radio", "snap_1", 30, 270, 80, 20, snap_modes[1] },
 			{ "radio", "snap_2", 30, 290, 80, 20, snap_modes[2] },
 			{ "radio", "snap_3", 30, 310, 80, 20, snap_modes[3] },
@@ -1312,13 +1350,19 @@ HMenu = {
 			if HApply.down(HApply.transparent) then state = "active" end
 		elseif name == "apply_edit" then
 			if HApply.down(HApply.edit_panels) then state = "active" end
+		elseif name == "apply_realign" then
+			if HApply.down(HApply.realign) then state = "active" end
 		elseif name == "advanced" then
 			if not HStatus.down(HStatus.advanced_active) then state = "active" end
+		elseif name == "xgrid" then
+			if HApply.snap_x then state = "active" end
+		elseif name == "ygrid" then
+			if HApply.snap_y then state = "active" end
 		elseif name == "apply_snap" then
-			if HApply.current_snap_mode ~= 1 then state = "active" end
-		elseif name == "grid_off" then
+			if HApply.snap_x or HApply.snap_y then state = "active" end
+		elseif name == "grid_negative" then
 			if HApply.current_snap_mode == 1 then state = "active" end
-		elseif name == "grid_absolute" then
+		elseif name == "grid_positive" then
 			if HApply.current_snap_mode == 2 then state = "active" end
 		elseif name == "grid_relative" then
 			if HApply.current_snap_mode == 3 then state = "active" end
