@@ -194,11 +194,14 @@ KEY_HIGHLIGHT_DELAY = 4
 APPLY_TEXTURES = true
 APPLY_LIGHTS = false
 ALIGN_ADJACENT = true
+REALIGN_WHEN_RETEXTURING = false
 EDIT_PANELS = true
 APPLY_TRANSPARENT = false
 APPLY_TRANSFER = true
-QUANTIZE_MODE = 3 -- 1 = off, 2 = absolute, 3 = relative
-DEFAULT_QUANTIZE = 8 -- see snap_denominators below for possible options here: first menu option is 1, second is 2, third is 3, etc. set to 0 to disable default grid snap
+QUANTIZE_MODE = 3 -- 1 = negative, 2 = positive, 3 = relative. i'm sorry about this order
+QUANTIZE_X = true
+QUANTIZE_Y = true -- set both to false to disable grid snap
+DEFAULT_QUANTIZE = 8 -- see snap_denominators below for possible options here: first menu option is 1, second is 2, third is 3, etc
 
 -- END PREFERENCES -- no user serviceable parts below ;)
 
@@ -358,6 +361,8 @@ SMode = {
 			p._mic_dummy = false
 			p._target_poly = 0
 			p._quantize = 0
+			p._quantize_x = QUANTIZE_X
+			p._quantize_y = QUANTIZE_Y
 			p._menu_button = nil
 			p._menu_item = 0
 			p._cursor_x = 320
@@ -570,7 +575,7 @@ SMode = {
 					p._saved_surface.surface = surface
 					p._saved_surface.opposite_surface = nil
 					p._saved_surface.polygon = polygon
-					if (not p._apply.texture) or (surface.collection --[[and (coll == surface.collection.index) and (tex == surface.texture_index)--]]) then
+					if (not p._apply.texture) or (surface.collection and ((coll == surface.collection.index) and (tex == surface.texture_index)) or not p._apply.realign) then
 						p._saved_surface.x = surface.texture_x
 						p._saved_surface.y = surface.texture_y
 					else
@@ -661,24 +666,64 @@ SMode = {
 						local xoff = delta_pitch * math.cos(orad) + delta_yaw * math.sin(orad)
 						local yoff = delta_pitch * math.sin(orad) - delta_yaw * math.cos(orad)
 
-						if p._apply.quantize_mode == 2 then
-							surface.texture_x = VML.quantize(p, p._saved_surface.x + xoff)
-							surface.texture_y = VML.quantize(p, p._saved_surface.y + yoff)
+						local dx = p._saved_surface.x + xoff
+						local dy = p._saved_surface.y + yoff
+
+						if p._apply.quantize_mode == 1 or p._apply.quantize_mode == 2 then
+							if p._quantize_x then surface.texture_x = VML.quantize(p, dx) else surface.texture_x = dx end
+							if p._quantize_y then surface.texture_y = VML.quantize(p, dy) else surface.texture_y = dy end
 						elseif p._apply.quantize_mode == 3 then
-							surface.texture_x = VML.quantize_polygon_center(p, p._saved_surface.x + xoff, Polygons[surface.index].x)
-							surface.texture_y = VML.quantize_polygon_center(p, p._saved_surface.y + yoff, Polygons[surface.index].y)
+							if p._quantize_x then
+								surface.texture_x = VML.quantize_polygon_center(p, dx, Polygons[surface.index].x)
+							else
+								surface.texture_x = dx
+							end
+							if p._quantize_y then
+								surface.texture_y = VML.quantize_polygon_center(p, dy, Polygons[surface.index].y)
+							else
+								surface.texture_y = dy
+							end
 						end
 
 						if p._apply.align then
 							VML.align_polygons(surface, p._saved_surface.align_table)
 						end
 					else
-						if p._apply.quantize_mode == 2 then
-							surface.texture_x = VML.quantize(p, p._saved_surface.x - delta_yaw)
-							surface.texture_y = VML.quantize(p, p._saved_surface.y - delta_pitch)
+						local dx = p._saved_surface.x - delta_yaw
+						local dy = p._saved_surface.y - delta_pitch
+						if p._apply.quantize_mode == 1 then
+							if p._quantize_x then
+								surface.texture_x = VML.quantize_right(p, dx, Sides[surface.index])
+							else
+								surface.texture_x = dx
+							end
+							if p._quantize_y then
+								surface.texture_y = VML.quantize(p, dy)
+							else
+								surface.texture_y = dy
+							end
+						elseif p._apply.quantize_mode == 2 then
+							if p._quantize_x then
+								surface.texture_x = VML.quantize(p, dx)
+							else
+								surface.texture_x = dx
+							end
+							if p._quantize_y then
+								surface.texture_y = VML.quantize(p, dy)
+							else
+								surface.texture_y = dy
+							end
 						elseif p._apply.quantize_mode == 3 then
-							surface.texture_x = VML.quantize_side_center_x(p, p._saved_surface.x - delta_yaw, Sides[surface.index])
-							surface.texture_y = VML.quantize(p, p._saved_surface.y - delta_pitch)
+							if p._quantize_x then
+								surface.texture_x = VML.quantize_side_center_x(p, dx, Sides[surface.index])
+							else
+								surface.texture_x = dx
+							end
+							if p._quantize_y then
+								surface.texture_y = VML.quantize(p, dy)
+							else
+								surface.texture_y = dy
+							end
 						end
 
 						if p._apply.align then
@@ -921,11 +966,14 @@ SMode = {
 			texture = p._apply.texture,
 			transfer = p._apply.transfer,
 			align = p._apply.align,
+			realign = p._apply.realign,
 			transparent = p._apply.transparent,
 			edit_panels = p._apply.edit_panels,
 			quantize_mode = p._apply.quantize_mode,
 			advanced_mode = p._advanced_mode,
 			quantize = p._quantize,
+			quantize_x = p._quantize_x,
+			quantize_y = p._quantize_y,
 			transfer_mode = p._transfer_mode,
 			cur_light = p._light,
 		}
@@ -936,11 +984,14 @@ SMode = {
 		p._apply.texture = p._apply_saved.texture
 		p._apply.transfer = p._apply_saved.transfer
 		p._apply.align = p._apply_saved.align
+		p._apply.realign = p._apply_saved.realign
 		p._apply.transparent = p._apply_saved.transparent
 		p._apply.edit_panels = p._apply_saved.edit_panels
 		p._apply.quantize_mode = p._apply_saved.quantize_mode
 		p._advanced_mode = p._apply_saved.advanced_mode
 		p._quantize = p._apply_saved.quantize
+		p._quantize_x = p._apply_saved.quantize_x
+		p._quantize_y = p._apply_saved.quantize_y
 		p._transfer_mode = p._apply_saved.transfer_mode
 		p._light = p._apply_saved.cur_light
 	end,
@@ -951,12 +1002,15 @@ SMode = {
 			light = APPLY_LIGHTS,
 			transfer = APPLY_TRANSFER,
 			align = ALIGN_ADJACENT,
+			realign = REALIGN_WHEN_RETEXTURING,
 			transparent = APPLY_TRANSPARENT,
 			edit_panels = EDIT_PANELS,
 			quantize_mode = QUANTIZE_MODE,
 		}
 		p._advanced_mode = false
 		p._quantize = DEFAULT_QUANTIZE
+		p._quantize_x = QUANTIZE_X
+		p._quantize_y = QUANTIZE_Y
 		p._transfer_mode = 0
 		p._light = 0
 	end,
@@ -1000,9 +1054,15 @@ SMode = {
 				p._apply.edit_panels = not p._apply.edit_panels
 			elseif name == "apply_transfer" then
 				p._apply.transfer = not p._apply.transfer
-			elseif name == "grid_off" then
+			elseif name == "apply_realign" then
+				p._apply.realign = not p._apply.realign
+			elseif name == "xgrid" then
+				p._quantize_x = not p._quantize_x
+			elseif name == "ygrid" then
+				p._quantize_y = not p._quantize_y
+			elseif name == "grid_negative" then
 				p._apply.quantize_mode = 1
-			elseif name == "grid_absolute" then
+			elseif name == "grid_positive" then
 				p._apply.quantize_mode = 2
 			elseif name == "grid_relative" then
 				p._apply.quantize_mode = 3
@@ -1728,6 +1788,7 @@ SStatus = {
 				if p._advanced_mode then status = status + 16 end
 				p.texture_palette.slots[41].texture_index = status
 
+				-- transfer mode
 				p.texture_palette.slots[43].texture_index = p._light
 				if p._collections.current_collection == 0 then
 					p.texture_palette.slots[44].texture_index = 5
@@ -1739,7 +1800,10 @@ SStatus = {
 						p.texture_palette.slots[44].type = 1
 					end
 				end
+
+				-- some of the grid stuff
 				p.texture_palette.slots[45].texture_index = p._quantize
+				-- p.texture_palette.slots[45].collection = status
 				p.texture_palette.slots[45].type = p._apply.quantize_mode
 
 				status = 0
@@ -1748,6 +1812,10 @@ SStatus = {
 				if p._apply.align then status = status + 4 end
 				if p._apply.transparent then status = status + 8 end
 				if p._apply.edit_panels then status = status + 16 end
+				if p._apply.realign then status = status + 32 end
+				-- i dunno why but i have to do this here
+				if p._quantize_x then status = status + 64 end
+				if p._quantize_y then status = status + 128 end
 				p.texture_palette.slots[46].texture_index = status
 
 				p.texture_palette.slots[47].texture_index = p._menu_item
@@ -1770,14 +1838,14 @@ SMenu = {
 			{ "checkbox", "apply_align", 30, 105, 160, 20, "Align adjacent" },
 			{ "checkbox", "apply_edit", 30, 125, 160, 20, "Edit switches and panels" },
 			{ "checkbox", "apply_xparent", 30, 145, 160, 20, "Edit transparent sides" },
-			{ "checkbox", "nil", 30, 165, 160, 20, "Realign when retexturing" },
+			{ "checkbox", "apply_realign", 30, 165, 160, 20, "Realign when retexturing" },
 			{ "checkbox", "advanced", 30, 185, 160, 20, "Visual Mode header" },
 			{ "label", "nil", 30+5, 210, 45, 20, "Snap:" },
-			{ "checkbox", "xsnap", 75, 210, 30, 20, "X" },
-			{ "checkbox", "ysnap", 105, 210, 30, 20, "Y" },
-			{ "radio", "grid_absolute", 75, 230, 115, 20, "Absolute (grid)" },
-			{ "radio", "grid_off", 30, 250, 45, 20, "Off" },
-			{ "radio", "grid_relative", 75, 250, 115, 20, "Relative (centred)" },
+			{ "checkbox", "xgrid", 30, 230, 45, 20, "X" },
+			{ "checkbox", "ygrid", 30, 250, 45, 20, "Y" },
+			{ "radio", "grid_positive", 75, 210, 115, 20, "Positive (absolute)" },
+			{ "radio", "grid_relative", 75, 230, 115, 20, "Centred (relative)" },
+			{ "radio", "grid_negative", 75, 250, 115, 20, "Negative (absolute)" },
 			{ "radio", "snap_1", 30, 270, 80, 20, snap_modes[1] },
 			{ "radio", "snap_2", 30, 290, 80, 20, snap_modes[2] },
 			{ "radio", "snap_3", 30, 310, 80, 20, snap_modes[3] },
@@ -2562,12 +2630,13 @@ VML = {
 	end,
 
 	quantize = function(player, value)
-		if player._apply.quantize_mode == 1 then
-			return value
-		end
-
 		local ratio = 1.0 / snap_denominators[player._quantize]
 		return math.floor(value / ratio + 0.5) * ratio
+	end,
+
+	quantize_right = function(player, value, side)
+		local ratio = 1.0 / snap_denominators[player._quantize]
+		return math.floor((value + side.line.length) / ratio + 0.5) * ratio - side.line.length
 	end,
 
 	find_line_intersection = function(line, x0, y0, z0, x1, y1, z1)
