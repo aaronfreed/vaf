@@ -1,13 +1,20 @@
 # vasara
 update of Hopper, Ares Ex Machina, treellama, and Irons’ texturing utility for Marathon Aleph One
 ----------------------------------------------------------------
-**Vasara 2.0b1**
+**Vasara 2.0b**
 by **Hopper**, **Ares Ex Machina**, **Aaron Freed**, **CryoS**, and **Solra Bizna**
 from work by **Jon Irons** and **Gregory Smith**
 
 ----------------------------------------------------------------
 ***WIP notes by Aaron (see below for original readme):***
 ----------------------------------------------------------------
+**Vasara** is a texturing utility for **[Marathon Aleph One](https://alephone.lhowon.org]**, best used with **[Weland](https://github.com/treellama/weland/releases)** (see [my detailed setup guide)(https://aaronfreed.github.io/mapmaking.html#welandsetup) if Weland’s readme proves confusing). The original version hasn’t been updated in years, so I’ve taken it upon myself, with a little help from my friends, to update it for several reasons:
+- to take advantage of new Aleph One features
+- to add features that it had been sorely lacking for years
+- to fix longstanding bugs.
+
+This remains a work in progress, hence its beta status. A more detailed overview:
+
 **NEW FEATURES & PLANNED ADDITIONS:**
 
 - I’m in the middle of redoing the grid interface.
@@ -65,9 +72,12 @@ To get the most out of Vasara, be sure to turn on "**Use Mouse**" and "**Overlay
 - Drag the downloaded .zip file, or the unzipped "Vasara" folder, into the "**Plugins**" folder inside your *Marathon Infinity* or custom scenario folder. (Create a "**Plugins**" folder if you don't already have one.)
 - Launch **Aleph One**, and go to "**Preferences**", then "**Environment**", then **"Plugins**" to enable or disable Vasara.
 
-***(EDITORIAL NOTE:** If you’re using **Aleph One** 1.7 or later - and you should be - then **Plugins** isn’t found under **Environment** but is instead its own button. But then, you can also just launch **Vasara** from within **Weland,** and you should. See Weland’s readme for basic instructions or https://aaronfreed.github.io/mapmaking.html#welandsetup for a more detailed setup guide. **-Aaron)***
+***(EDITORIAL NOTE:** With **Aleph One** 1.7 and later, **Plugins** isn’t found under **Environment** but is instead its own button. But then, you can also just launch **Vasara** from within **Weland,** and you should. See Weland’s readme for basic instructions or https://aaronfreed.github.io/mapmaking.html#welandsetup for a more detailed setup guide. **-Aaron)***
 
 **IMPORTANT:** other plugins can interfere with Vasara. You should be all right as long as anything listed after Vasara in your plugins list is turned off. If you have problems, try turning off all plugins except Vasara.
+
+***(EDITORIAL NOTE:** More specifically, it’s best to disable any other plugin that uses solo Lua while using Vasara. These will be marked as such on the plugins list. Any other plugins probably won’t affect its performance. **-Aaron)***
+
 
 ----------------------------------------------------------------
 **GETTING STARTED:**
@@ -90,7 +100,9 @@ You can get back to **Visual Mode** from any other mode by hitting the secondary
 
 To save your work, press the "Chat/Console" key (default is backslash: \ ) and then type:
 
+```lua
   .save level my-fabulous-level.sceA
+```
 
 The period at the start is important! You can replace "my-fabulous-level.sceA" with whatever filename you like. Your level will be saved in Aleph One's standard location for your platform; see:
 
@@ -99,13 +111,13 @@ The period at the start is important! You can replace "my-fabulous-level.sceA" w
 ----------------------------------------------------------------
 **TIPS AND TRICKS:**
 
-Vasara's functionality is based on Visual Mode.lua, which in turn is based on Forge's Visual Mode. If you're confused about what something in Vasara does, check the Forge manual or existing discussions about VML.
+Vasara's functionality is based on **Visual Mode.lua**, which in turn is based on **Forge**'s Visual Mode. If you're confused about what something in Vasara does, check the Forge manual or existing discussions about VML.
 
 Having trouble navigating menu screens with the mouse? Try the keyboard. Your key bindings for turning and looking up/down will move the cursor. Moving or sidestepping will snap the cursor to the closest item in the pressed direction.
 
 When selecting lights, the clickable area is larger than you might think. You can click on either the number or the square.
 
-For VML veterans, the key combo Mic+Action acts as an Undo/Redo toggle just like in Visual Mode.lua.
+For VML veterans, the key combo **Mic+Action** acts as an **Undo/Redo toggle** just like in Visual Mode.lua.
 
 Once you're done texturing, you can take screenshots of your level in Vasara. Use teleport, jump and freeze to find a nice vantage point, then press F2 to hide the GUI. Press F9 to take a screenshot and F1 to bring the GUI back.
 
@@ -119,35 +131,35 @@ Out of the box, Vasara only works with scenarios that use the same 5 texture set
 To use Vasara with additional or moved collections (or to limit M2 to the 3 working landscapes), edit the "walls" and "landscapes" settings at the top of Vasara_Script.lua.
 
 ----------------------------------------------------------------
-CHANGELOG:
+**CHANGELOG:**
 
-v1.0.3:
+**v1.0.3:**
 * Improved compatibility with Marathon 2
 
-v1.0.2:
+**v1.0.2:**
 * Fix problem where "Revert Changes" did nothing
 * Fix problem where control panel settings were reverted
 * Fix problem where chip insertion slots were marked as destroyable
 * Require Aleph One 1.2, which fixes a bug involving Lua and wires
 * Ships as one plugin instead of two
 
-v1.0.1:
+**v1.0.1:**
 * Fix crash when frames are missing for wall texture bitmaps
 * Fix crash when a level has no platforms
 
-v1.0:
+**v1.0:**
 * First release
 
 ----------------------------------------------------------------
-SPECIAL THANKS:
+**SPECIAL THANKS:**
 
-TychoVII, Kurinn - For pushing the boundaries of the Lua HUD
-Bitstream, Tavmjong Bah - For fonts used in the HUD
-dustu - For beta testing
-Treellama, Irons - For Visual Mode.lua
+* **TychoVII**, **Kurinn** - For pushing the boundaries of the Lua HUD
+* **Bitstream**, **Tavmjong Bah** - For fonts used in the HUD
+* **dustu** - For beta testing
+* **Treellama**, **Irons** - For Visual Mode.lua
 
 ----------------------------------------------------------------
-CONTACT:
+**CONTACT:**
 
 If you have any questions, comments, or bugs to report, you can email Hopper:
 - hopper@whpress.com
