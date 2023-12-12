@@ -201,7 +201,7 @@ APPLY_TRANSFER = true
 QUANTIZE_MODE = 3 -- 1 = negative, 2 = positive, 3 = relative. i'm sorry about this order
 QUANTIZE_X = true
 QUANTIZE_Y = true -- set both to false to disable grid snap
-DEFAULT_QUANTIZE = 8 -- see snap_denominators below for possible options here: first menu option is 1, second is 2, third is 3, etc
+DEFAULT_QUANTIZE = 9 -- see snap_denominators below for possible options here: first menu option is 1, second is 2, third is 3, etc
 
 -- END PREFERENCES -- no user serviceable parts below ;)
 
@@ -209,7 +209,7 @@ DEFAULT_QUANTIZE = 8 -- see snap_denominators below for possible options here: f
 MAX_LIGHTS = 98 -- maximum number of lights we can accommodate
 
 Game.monsters_replenish = not SUPPRESS_MONSTERS
-snap_denominators = { 2, 3, 4, 5, 6, 8, 10, 16, 20, 24, 32, 128 }
+snap_denominators = { 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 30, 32, 40, 48, 60, 64, 128 }
 snap_modes = {}
 for _,d in ipairs(snap_denominators) do
 	table.insert(snap_modes, string.format("1/%d WU",d))
@@ -1507,7 +1507,7 @@ SPanel = {
 	wires = 11,
 	classorder = { 5, 6, 7, 10, 11, 1, 2, 3, 4, 8, 9, 0 },
 	device_collections = {},
-	
+
 	init = function()
 		-- these must be hard-coded into Forge; the engine can't tell them apart
 		ControlPanelTypes[3]._type = SPanel.chip
@@ -1608,7 +1608,7 @@ SPanel = {
 			local total = #SPlatforms.sorted_platforms
 			if total > 0 then
 				local idx = SPlatforms.index_lookup[perm]
-				if idx == nil then 
+				if idx == nil then
 					idx = total
 					if dir < 0 then idx = 1 end
 				end
@@ -1656,19 +1656,19 @@ SPanel = {
 	end,
 
 	surface_can_hold_panel = function(surface)
-		if not is_primary_side(surface) then return false end
-		local cc = surface.collection.index
-		local ct = surface.texture_index
-		if SPanel.device_collections[cc] and SPanel.device_collections[cc][ct] then return true end
-		return false
+		return is_primary_side
+		and SPanel.device_collections[surface.collection.index]
+		and SPanel.device_collections[surface.collection.index][surface.texture_index]
 	end,
 
 	surface_has_valid_panel = function(surface)
-		if not is_primary_side(surface) then return false end
-		local cp = Sides[surface.index].control_panel
-		if not cp then return false end
-		if surface.collection ~= cp.type.collection then return false end
-		if surface.texture_index ~= cp.type.active_texture_index and surface.texture_index ~= cp.type.inactive_texture_index then return false end
+		if (not is_primary_side(surface))
+		or (not Sides[surface.index].control_panel)
+		or (surface.collection ~= cp.type.collection)
+		or (surface.texture_index ~= cp.type.active_texture_index
+		and surface.texture_index ~= cp.type.inactive_texture_index) then
+			return false
+		end
 		return true
 	end,
 
@@ -1846,20 +1846,26 @@ SMenu = {
 			{ "radio", "grid_positive", 75, 210, 115, 20, "Positive (absolute)" },
 			{ "radio", "grid_relative", 75, 230, 115, 20, "Centred (relative)" },
 			{ "radio", "grid_negative", 75, 250, 115, 20, "Negative (absolute)" },
-			{ "radio", "snap_1", 30, 270, 80, 20, snap_modes[1] },
-			{ "radio", "snap_2", 30, 290, 80, 20, snap_modes[2] },
-			{ "radio", "snap_3", 30, 310, 80, 20, snap_modes[3] },
-			{ "radio", "snap_4", 30, 330, 80, 20, snap_modes[4] },
-			{ "radio", "snap_5", 30, 350, 80, 20, snap_modes[5] },
-			{ "radio", "snap_6", 30, 370, 80, 20, snap_modes[6] },
-			{ "radio", "snap_7", 110, 270, 80, 20, snap_modes[7] },
-			{ "radio", "snap_8", 110, 290, 80, 20, snap_modes[8] },
-			{ "radio", "snap_9", 110, 310, 80, 20, snap_modes[9] },
-			{ "radio", "snap_10", 110, 330, 80, 20, snap_modes[10] },
-			{ "radio", "snap_11", 110, 350, 80, 20, snap_modes[11] },
-			{ "radio", "snap_12", 110, 370, 80, 20, snap_modes[12] },
+			{ "radio", "snap_1", 30, 270, 50, 20, snap_modes[1] },
+			{ "radio", "snap_2", 30, 290, 50, 20, snap_modes[2] },
+			{ "radio", "snap_3", 30, 310, 50, 20, snap_modes[3] },
+			{ "radio", "snap_4", 30, 330, 50, 20, snap_modes[4] },
+			{ "radio", "snap_5", 30, 350, 50, 20, snap_modes[5] },
+			{ "radio", "snap_6", 30, 370, 50, 20, snap_modes[6] },
+			{ "radio", "snap_7", 80, 270, 55, 20, snap_modes[7] },
+			{ "radio", "snap_8", 80, 290, 55, 20, snap_modes[8] },
+			{ "radio", "snap_9", 80, 310, 55, 20, snap_modes[9] },
+			{ "radio", "snap_10", 80, 330, 55, 20, snap_modes[10] },
+			{ "radio", "snap_11", 80, 350, 55, 20, snap_modes[11] },
+			{ "radio", "snap_12", 80, 370, 55, 20, snap_modes[12] },
+			{ "radio", "snap_13", 135, 270, 55, 20, snap_modes[13] },
+			{ "radio", "snap_14", 135, 290, 55, 20, snap_modes[14] },
+			{ "radio", "snap_15", 135, 310, 55, 20, snap_modes[15] },
+			{ "radio", "snap_16", 135, 330, 55, 20, snap_modes[16] },
+			{ "radio", "snap_17", 135, 350, 55, 20, snap_modes[17] },
+			{ "radio", "snap_18", 135, 370, 55, 20, snap_modes[18] },
 			{ "checkbox", "apply_light", 205, 85, 240, 20, "Apply light:" },
-			{ "checkbox", "apply_transfer", 215+5, 250, 240, 20, "Apply texture mode" },
+			{ "checkbox", "apply_transfer", 215+5, 250, 240, 20, "Apply transfer mode:" },
 			{ "radio", "transfer_0", 215, 270, 80, 20, "Normal" },
 			{ "radio", "transfer_1", 215, 290, 80, 20, "Pulsate" },
 			{ "radio", "transfer_2", 215, 310, 80, 20, "Wobble" },
@@ -2551,7 +2557,7 @@ UApply = {
 			surface.texture_index = tex
 			surface.texture_x = p._saved_surface.x
 			surface.texture_y = p._saved_surface.y
-			if landscape then
+			if landscape and p._apply.transfer then
 				surface.transfer_mode = "landscape"
 			elseif p._apply.transfer then
 				surface.transfer_mode = transfer_modes[p._transfer_mode + 1]
@@ -3087,8 +3093,8 @@ VML = {
 
 		local function recurse(p)
 			if not polygons[p] -- already visited
-			   and p[accessor].texture_index == surface.texture_index 
-			   and p[accessor].collection == surface.collection 
+			   and p[accessor].texture_index == surface.texture_index
+			   and p[accessor].collection == surface.collection
 			   and p[accessor].z == surface.z
 			then
 				-- add this polygon, and search for any adjacent
@@ -3106,7 +3112,7 @@ VML = {
 	align_polygons = function(surface, align_table)
 		local x = surface.texture_x
 		local y = surface.texture_y
-		
+
 		local accessor
 		if is_polygon_floor(surface) then
 			accessor = "floor"
