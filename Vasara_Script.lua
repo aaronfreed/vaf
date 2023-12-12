@@ -698,7 +698,7 @@ SMode = {
 								surface.texture_x = dx
 							end
 							if p._quantize_y then
-								surface.texture_y = VML.quantize(p, dy)
+								surface.texture_y = VML.quantize_surface_bottom_y(p, dy, surface)
 							else
 								surface.texture_y = dy
 							end
@@ -720,7 +720,7 @@ SMode = {
 								surface.texture_x = dx
 							end
 							if p._quantize_y then
-								surface.texture_y = VML.quantize(p, dy)
+								surface.texture_y = VML.quantize_surface_center_y(p, dy, surface)
 							else
 								surface.texture_y = dy
 							end
@@ -2626,6 +2626,20 @@ VML = {
 	quantize_side_center_x = function(player, value, side)
 		local ratio = 1.0 / snap_denominators[player._quantize]
 		local offset = side.line.length / 2
+		return math.floor((value + offset) / ratio + 0.5) * ratio - offset
+	end,
+
+	quantize_surface_center_y = function(player, value, surface)
+		local ratio = 1.0 / snap_denominators[player._quantize]
+		local low, high = VML.surface_heights(surface)
+		local offset = (low - high) / 2
+		return math.floor((value + offset) / ratio + 0.5) * ratio - offset
+	end,
+
+	quantize_surface_bottom_y = function (player, value, surface)
+		local ratio = 1.0 / snap_denominators[player._quantize]
+		local low, high = VML.surface_heights(surface)
+		local offset = low - high
 		return math.floor((value + offset) / ratio + 0.5) * ratio - offset
 	end,
 
