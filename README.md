@@ -18,13 +18,14 @@ This remains a work in progress, hence its beta status. A more detailed overview
 ----------------------------------------------------------------
 **NEW FEATURES & PLANNED ADDITIONS:**
 
-- I’m in the middle of redoing the grid interface.
-  - There are now more options. In addition to 1/2, 1/3, 1/4, 1/5, and 1/8 WU, we’ve added 1/6, 1/10, 1/16, 1/20, 1/24, 1/32, and 1/128 WU. I may add more. 1/16 WU is now the default selection because it’s what I use by far the most.
+- I’m almost finished redoing the grid interface.
+  - There are now more options. In addition to 1/2, 1/3, 1/4, 1/5, and 1/8 WU, we’ve added 1/6, 1/10, 1/12, 1/16, 1/20, 1/24, 1/30, 1/32, 1/40, 1/48, 1/60, 1/64, and 1/128 WU. 1/16 WU is now the default selection because it’s what I use by far the most.
   - The “positive” option is the vanilla top-left alignment you’re used to already.
-  - The “centred” option is useful if you drew an entire map off-grid, but have a bunch of rectangles whose points align to a *different* grid (this applies to a disturbingly large number of levels in *Where Monsters Are in Dreams*) or you recentred a map in Forge and it wasn’t recentred on-grid. It applies in both directions to floors, ceilings, and walls.
+  - The “centred” option (currently the default, although I may change this) is useful if you drew an entire map off-grid, but have a bunch of rectangles whose points align to a *different* grid (this applies to a disturbingly large number of levels in *Where Monsters Are in Dreams*) or you recentred a map in Forge and it wasn’t recentred on-grid. It applies in both directions to floors, ceilings, and walls.
   - The “negative” option aligns walls to the right rather than to the left and to the bottom rather than to the top. For floors and ceilings, it behaves exactly like the “positive” option behaves.
   - The “x” and “y” snap options are present because there are numerous cases where mapmakers might want to align one but not the other, or might want to use one snap vertically and another horizontally. Separating these options makes that possible to do (although to get different X and Y snaps, you’ll have to align them separately, and it may help to use the keyboard to do so).
   - If you want to disable grid snapping, disable both the x and y snaps. (I could probably be persuaded to make a keyboard shortcut that toggles “grid snapping off” and “snap to X and Y”.)
+  - The preview does not yet show the X and Y grids separately, but otherwise functions more or less correctly.
 - You can now select “apply texture mode” separately from “apply texture”.
   - If you have “apply texture mode” selected, but not “apply texture”, it’ll apply different transfer modes to existing textures without adjusting their textures.
   - By contrast, if you have “apply texture” selected but not “apply texture mode”, it’ll preserve existing transfer modes while changing the textures.
