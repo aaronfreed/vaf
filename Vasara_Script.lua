@@ -1664,9 +1664,9 @@ SPanel = {
 	surface_has_valid_panel = function(surface)
 		if (not is_primary_side(surface))
 		or (not Sides[surface.index].control_panel)
-		or (surface.collection ~= cp.type.collection)
-		or (surface.texture_index ~= cp.type.active_texture_index
-		and surface.texture_index ~= cp.type.inactive_texture_index) then
+		or (surface.collection ~= Sides[surface.index].control_panel.type.collection)
+		or (surface.texture_index ~= Sides[surface.index].control_panel.type.active_texture_index
+		and surface.texture_index ~= Sides[surface.index].control_panel.type.inactive_texture_index) then
 			return false
 		end
 		return true
