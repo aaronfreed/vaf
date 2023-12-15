@@ -19,18 +19,20 @@ This remains a work in progress, hence its beta status. A more detailed overview
 **NEW FEATURES & PLANNED ADDITIONS:**
 
 - I’m almost finished redoing the grid interface.
-  - There are now more options. In addition to 1/2, 1/3, 1/4, 1/5, and 1/8 WU, we’ve added 1/6, 1/10, 1/12, 1/16, 1/20, 1/24, 1/30, 1/32, 1/40, 1/48, 1/60, 1/64, and 1/128 WU. 1/16 WU is now the default selection because it’s what I use by far the most.
-  - The “positive” option is the vanilla top-left alignment you’re used to already.
-  - The “centred” option (currently the default, although I may change this) is useful if you drew an entire map off-grid, but have a bunch of rectangles whose points align to a *different* grid (this applies to a disturbingly large number of levels in *Where Monsters Are in Dreams*) or you recentred a map in Forge and it wasn’t recentred on-grid. It applies in both directions to floors, ceilings, and walls.
-  - The “negative” option aligns walls to the right rather than to the left and to the bottom rather than to the top. For floors and ceilings, it behaves exactly like the “positive” option behaves.
-  - The “x” and “y” snap options are present because there are numerous cases where mapmakers might want to align one but not the other, or might want to use one snap vertically and another horizontally. Separating these options makes that possible to do (although to get different X and Y snaps, you’ll have to align them separately, and it may help to use the keyboard to do so).
-  - If you want to disable grid snapping, disable both the x and y snaps. (I could probably be persuaded to make a keyboard shortcut that toggles “grid snapping off” and “snap to X and Y”.)
-  - The preview does not yet show the X and Y grids separately, but otherwise functions more or less correctly.
+  - There are now more options. In addition to 1/2, 1/3, 1/4, 1/5, and 1/8 WU, we’ve added 1, 1/6, 1/10, 1/12, 1/16, 1/20, 1/24, 1/30, 1/32, 1/40, 1/48, 1/60, 1/64, and 1/128 WU. 1/16 WU is now the default selection because it’s what I use by far the most.
+  - The “absolute” option is the vanilla alignment you’re used to from previous versions of Vasara: textures on polygons will be aligned to the map grid, and textures on walls will be aligned to the top-left.
+  - In addition, I’ve added three new “relative” options, which can be useful if you drew an entire map off-grid, but have a bunch of rectangles whose points align to a *different* grid (this applies to a disturbingly large number of levels in *Where Monsters Are in Dreams*) or you recentred a map in Forge and it wasn’t recentred on-grid:
+    - The “centred” option (currently the default, although I may change this) applies in both directions to floors, ceilings, and walls. I’m still tweaking the wall behavior, but floors and ceilings will be aligned to the centres of their respective polygons.
+    - The “northwest” option treats walls exactly like the “absolute” option does; however, it aligns floors and ceilings to the westernmost X coordinate and the northernmost Y coordinate found within their respective polygons.
+    - The “southeast” option aligns walls to the right rather than to the left and to the bottom rather than to the top. Meanwhile, it aligns floors and ceilings to the easternmost X coordinate and the southernmost Y coordinate within their respective polygons.
+  - The “X” and “Y” snap options are present because there are numerous cases where mapmakers might want to align one but not the other, or might want to use one snap vertically and another horizontally, or might want to use one alignment option for X and another for Y. Separating these options makes all of those possible (although to get different X and Y snaps, you’ll have to align them separately, and it may help to use the keyboard to do so).
+  - If you want to disable grid snapping, disable both the X and Y snaps. (I could probably be persuaded to make a keyboard shortcut that toggles “grid snapping off” and “snap to X and Y” or that cycles between the different grid snaps.)
+  - The preview should now display all grid settings correctly.
 - You can now select “apply texture mode” separately from “apply texture”.
   - If you have “apply texture mode” selected, but not “apply texture”, it’ll apply different transfer modes to existing textures without adjusting their textures.
   - By contrast, if you have “apply texture” selected but not “apply texture mode”, it’ll preserve existing transfer modes while changing the textures.
-  - The wild card is landscapes, which often override existing transfer modes.
-  - This mostly shows up correctly in visual mode. However, I have yet to work out all the strange behavior on the “options” page.
+  - Landscapes are the wild card, as they usually override existing transfer modes. I have yet to work out all the strange behavior this causes.
+  - This mostly shows up correctly in visual mode, though strange things currently happen when “apply texture” is disabled.
 - This version of Vasara lists what you’re looking at in the upper-left corner of visual mode.
   - If you see an additional side listed to the right of the one in the upper-left, it’s a transparent side. Unfortunately, it displays the one furthest from you – I feel the one closest would make the most sense, but I’ve so far been unable to debug this.
   - The “Δ” when you’re looking at a side represents ambient delta, a rarely-used map element that affects the side’s light intensity. I have absolutely no idea how to program a good interface for adjusting this, so for now, you can use the following Lua code:
