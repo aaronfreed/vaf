@@ -198,10 +198,10 @@ REALIGN_WHEN_RETEXTURING = false
 EDIT_PANELS = true
 APPLY_TRANSPARENT = false
 APPLY_TRANSFER = true
-QUANTIZE_MODE = 3 -- 1 = negative, 2 = positive, 3 = relative. i'm sorry about this order
+QUANTIZE_MODE = 2 -- 0 = absolute, 1 = negative (northwest), 2 = center, 3 = positive (southeast)
 QUANTIZE_X = true
 QUANTIZE_Y = true -- set both to false to disable grid snap
-DEFAULT_QUANTIZE = 9 -- see snap_denominators below for possible options here: first menu option is 1, second is 2, third is 3, etc
+DEFAULT_QUANTIZE = 10 -- see snap_denominators below for possible options here: first menu option is 1, second is 2, third is 3, etc
 
 -- END PREFERENCES -- no user serviceable parts below ;)
 
@@ -209,10 +209,10 @@ DEFAULT_QUANTIZE = 9 -- see snap_denominators below for possible options here: f
 MAX_LIGHTS = 98 -- maximum number of lights we can accommodate
 
 Game.monsters_replenish = not SUPPRESS_MONSTERS
-snap_denominators = { 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 30, 32, 40, 48, 60, 64, 128 }
-snap_modes = {}
+snap_denominators = { 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 30, 32, 40, 48, 60, 64, 128 }
+snap_modes = { 1 }
 for _,d in ipairs(snap_denominators) do
-	table.insert(snap_modes, string.format("1/%d WU",d))
+	if d ~= 1 then table.insert(snap_modes, string.format("1/%d",d)) end
 end
 transfer_modes = {
 	TransferModes["normal"], TransferModes["pulsate"],
@@ -669,17 +669,29 @@ SMode = {
 						local dx = p._saved_surface.x + xoff
 						local dy = p._saved_surface.y + yoff
 
-						if p._apply.quantize_mode == 1 or p._apply.quantize_mode == 2 then
+						if p._apply.quantize_mode == 0 then -- absolute
 							if p._quantize_x then surface.texture_x = VML.quantize(p, dx) else surface.texture_x = dx end
 							if p._quantize_y then surface.texture_y = VML.quantize(p, dy) else surface.texture_y = dy end
-						elseif p._apply.quantize_mode == 3 then
+						elseif p._apply.quantize_mode == 2 then -- center
 							if p._quantize_x then
-								surface.texture_x = VML.quantize_polygon_center(p, dx, Polygons[surface.index].x)
+								surface.texture_x = VML.quantize_polygon_center(p, dx, surface, true)
 							else
 								surface.texture_x = dx
 							end
 							if p._quantize_y then
-								surface.texture_y = VML.quantize_polygon_center(p, dy, Polygons[surface.index].y)
+								surface.texture_y = VML.quantize_polygon_center(p, dy, surface, false)
+							else
+								surface.texture_y = dy
+							end
+						else -- negative, positive
+							local is_max = p._apply.quantize_mode == 3
+							if p._quantize_x then
+								surface.texture_x = VML.quantize_polygon_corner(p, dx, surface, true, is_max)
+							else
+								surface.texture_x = dx
+							end
+							if p._quantize_y then
+								surface.texture_y = VML.quantize_polygon_corner(p, dy, surface, false, is_max)
 							else
 								surface.texture_y = dy
 							end
@@ -691,9 +703,20 @@ SMode = {
 					else
 						local dx = p._saved_surface.x - delta_yaw
 						local dy = p._saved_surface.y - delta_pitch
-						if p._apply.quantize_mode == 1 then
+						if p._apply.quantize_mode == 2 then -- center
 							if p._quantize_x then
-								surface.texture_x = VML.quantize_right(p, dx, Sides[surface.index])
+								surface.texture_x = VML.quantize_side_center_x(p, dx, Sides[surface.index])
+							else
+								surface.texture_x = dx
+							end
+							if p._quantize_y then
+								surface.texture_y = VML.quantize_surface_center_y(p, dy, surface)
+							else
+								surface.texture_y = dy
+							end
+						elseif p._apply.quantize_mode == 3 then -- positive
+							if p._quantize_x then
+								surface.texture_x = VML.quantize_side_right(p, dx, Sides[surface.index])
 							else
 								surface.texture_x = dx
 							end
@@ -702,7 +725,7 @@ SMode = {
 							else
 								surface.texture_y = dy
 							end
-						elseif p._apply.quantize_mode == 2 then
+						else -- negative, absolute
 							if p._quantize_x then
 								surface.texture_x = VML.quantize(p, dx)
 							else
@@ -710,17 +733,6 @@ SMode = {
 							end
 							if p._quantize_y then
 								surface.texture_y = VML.quantize(p, dy)
-							else
-								surface.texture_y = dy
-							end
-						elseif p._apply.quantize_mode == 3 then
-							if p._quantize_x then
-								surface.texture_x = VML.quantize_side_center_x(p, dx, Sides[surface.index])
-							else
-								surface.texture_x = dx
-							end
-							if p._quantize_y then
-								surface.texture_y = VML.quantize_surface_center_y(p, dy, surface)
 							else
 								surface.texture_y = dy
 							end
@@ -1060,11 +1072,13 @@ SMode = {
 				p._quantize_x = not p._quantize_x
 			elseif name == "ygrid" then
 				p._quantize_y = not p._quantize_y
+			elseif name == "grid_absolute" then
+				p._apply.quantize_mode = 0
 			elseif name == "grid_negative" then
 				p._apply.quantize_mode = 1
-			elseif name == "grid_positive" then
+			elseif name == "grid_center" then
 				p._apply.quantize_mode = 2
-			elseif name == "grid_relative" then
+			elseif name == "grid_positive" then
 				p._apply.quantize_mode = 3
 			elseif name == "advanced" then
 				p._advanced_mode = not p._advanced_mode
@@ -1833,37 +1847,39 @@ SStatus = {
 SMenu = {
 	menus = {
 		[SMode.attribute] = {
-			{ "bg", nil, 20, 80, 600, 320, nil },
+			{ "bg", nil, 20, 80, 600, 330, nil },
 			{ "checkbox", "apply_tex", 30, 85, 160, 20, "Apply texture" },
 			{ "checkbox", "apply_align", 30, 105, 160, 20, "Align adjacent" },
 			{ "checkbox", "apply_edit", 30, 125, 160, 20, "Edit switches and panels" },
 			{ "checkbox", "apply_xparent", 30, 145, 160, 20, "Edit transparent sides" },
 			{ "checkbox", "apply_realign", 30, 165, 160, 20, "Realign when retexturing" },
 			{ "checkbox", "advanced", 30, 185, 160, 20, "Visual Mode header" },
-			{ "label", "nil", 30+5, 210, 45, 20, "Snap:" },
-			{ "checkbox", "xgrid", 30, 230, 45, 20, "X" },
-			{ "checkbox", "ygrid", 30, 250, 45, 20, "Y" },
-			{ "radio", "grid_positive", 75, 210, 115, 20, "Positive (absolute)" },
-			{ "radio", "grid_relative", 75, 230, 115, 20, "Centred (relative)" },
-			{ "radio", "grid_negative", 75, 250, 115, 20, "Negative (absolute)" },
-			{ "radio", "snap_1", 30, 270, 50, 20, snap_modes[1] },
-			{ "radio", "snap_2", 30, 290, 50, 20, snap_modes[2] },
-			{ "radio", "snap_3", 30, 310, 50, 20, snap_modes[3] },
-			{ "radio", "snap_4", 30, 330, 50, 20, snap_modes[4] },
-			{ "radio", "snap_5", 30, 350, 50, 20, snap_modes[5] },
-			{ "radio", "snap_6", 30, 370, 50, 20, snap_modes[6] },
-			{ "radio", "snap_7", 80, 270, 55, 20, snap_modes[7] },
-			{ "radio", "snap_8", 80, 290, 55, 20, snap_modes[8] },
-			{ "radio", "snap_9", 80, 310, 55, 20, snap_modes[9] },
-			{ "radio", "snap_10", 80, 330, 55, 20, snap_modes[10] },
-			{ "radio", "snap_11", 80, 350, 55, 20, snap_modes[11] },
-			{ "radio", "snap_12", 80, 370, 55, 20, snap_modes[12] },
-			{ "radio", "snap_13", 135, 270, 55, 20, snap_modes[13] },
-			{ "radio", "snap_14", 135, 290, 55, 20, snap_modes[14] },
-			{ "radio", "snap_15", 135, 310, 55, 20, snap_modes[15] },
-			{ "radio", "snap_16", 135, 330, 55, 20, snap_modes[16] },
-			{ "radio", "snap_17", 135, 350, 55, 20, snap_modes[17] },
-			{ "radio", "snap_18", 135, 370, 55, 20, snap_modes[18] },
+			{ "label", "nil", 30+5, 205, 45, 20, "Snap:" },
+			{ "checkbox", "xgrid", 30, 225, 45, 20, "X" },
+			{ "checkbox", "ygrid", 30, 245, 45, 20, "Y" },
+			{ "radio", "grid_absolute", 75, 205, 115, 20, "Absolute" },
+			{ "radio", "grid_negative", 75, 225, 115, 20, "Northwest (relative)" },
+			{ "radio", "grid_center", 75, 245, 115, 20, "Centered (relative)" },
+			{ "radio", "grid_positive", 75, 265, 115, 20, "Southeast (relative)" },
+			{ "radio", "snap_1", 30, 265, 45, 20, snap_modes[1] },
+			{ "radio", "snap_2", 30, 285, 50, 20, snap_modes[2] },
+			{ "radio", "snap_3", 30, 305, 50, 20, snap_modes[3] },
+			{ "radio", "snap_4", 30, 325, 50, 20, snap_modes[4] },
+			{ "radio", "snap_5", 30, 345, 50, 20, snap_modes[5] },
+			{ "radio", "snap_6", 30, 365, 50, 20, snap_modes[6] },
+			{ "radio", "snap_7", 30, 385, 50, 20, snap_modes[7] },
+			{ "radio", "snap_8", 80, 285, 55, 20, snap_modes[8] },
+			{ "radio", "snap_9", 80, 305, 55, 20, snap_modes[9] },
+			{ "radio", "snap_10", 80, 325, 55, 20, snap_modes[10] },
+			{ "radio", "snap_11", 80, 345, 55, 20, snap_modes[11] },
+			{ "radio", "snap_12", 80, 365, 55, 20, snap_modes[12] },
+			{ "radio", "snap_13", 80, 385, 55, 20, snap_modes[13] },
+			{ "radio", "snap_14", 135, 285, 55, 20, snap_modes[14] },
+			{ "radio", "snap_15", 135, 305, 55, 20, snap_modes[15] },
+			{ "radio", "snap_16", 135, 325, 55, 20, snap_modes[16] },
+			{ "radio", "snap_17", 135, 345, 55, 20, snap_modes[17] },
+			{ "radio", "snap_18", 135, 365, 55, 20, snap_modes[18] },
+			{ "radio", "snap_19", 135, 385, 55, 20, snap_modes[19] },
 			{ "checkbox", "apply_light", 205, 85, 240, 20, "Apply light:" },
 			{ "checkbox", "apply_transfer", 215+5, 250, 240, 20, "Apply transfer mode:" },
 			{ "radio", "transfer_0", 215, 270, 80, 20, "Normal" },
@@ -2623,9 +2639,40 @@ VML = {
 		end
 	end,
 
+	max_min = function(is_max, ...)
+		if is_max then return math.max(...) else return math.min(...) end
+	end,
+
+	x_is_greater_or_less_than_y = function(is_greater, x, y)
+		if is_greater then return x > y else return x < y end
+	end,
+
+	endpoint_x_or_y = function(is_x, endpoint)
+		if is_x then return endpoint.x else return endpoint.y end
+	end,
+
 	quantize_side_center_x = function(player, value, side)
 		local ratio = 1.0 / snap_denominators[player._quantize]
 		local offset = side.line.length / 2
+		return math.floor((value + offset) / ratio + 0.5) * ratio - offset
+	end,
+
+	quantize_polygon_corner = function(player, value, surface, is_x, is_max)
+		local ratio = 1.0 / snap_denominators[player._quantize]
+		local offset = 32
+		local polygon = Polygons[surface.index]
+		if is_max then offset = -32 end
+		for o in polygon:endpoints() do
+			offset = VML.max_min(is_max, VML.endpoint_x_or_y(is_x, o), offset)
+		end
+		return math.floor((value + offset) / ratio + 0.5) * ratio - offset
+	end,
+
+	quantize_polygon_center = function(player, value, surface, is_x)
+		local ratio = 1.0 / snap_denominators[player._quantize]
+		local coordinate
+		if is_x then coordinate = Polygons[surface.index].x else coordinate = Polygons[surface.index].y end
+		local offset =  (coordinate * 1024 % 1024) / 1024
 		return math.floor((value + offset) / ratio + 0.5) * ratio - offset
 	end,
 
@@ -2643,20 +2690,15 @@ VML = {
 		return math.floor((value + offset) / ratio + 0.5) * ratio - offset
 	end,
 
-	quantize_polygon_center = function(player, value, coordinate)
-		local ratio = 1.0 / snap_denominators[player._quantize]
-		local offset =  (coordinate * 1024 % 1024) / 1024
-		return math.floor((value + offset) / ratio + 0.5) * ratio - offset
-	end,
-
 	quantize = function(player, value)
 		local ratio = 1.0 / snap_denominators[player._quantize]
 		return math.floor(value / ratio + 0.5) * ratio
 	end,
 
-	quantize_right = function(player, value, side)
+	quantize_side_right = function(player, value, side)
 		local ratio = 1.0 / snap_denominators[player._quantize]
-		return math.floor((value + side.line.length) / ratio + 0.5) * ratio - side.line.length
+		local offset = side.line.length
+		return math.floor((value + offset) / ratio + 0.5) * ratio - offset
 	end,
 
 	find_line_intersection = function(line, x0, y0, z0, x1, y1, z1)
