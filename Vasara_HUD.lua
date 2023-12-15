@@ -211,10 +211,10 @@ Triggers = {}
 g_scriptChecked = false
 g_initMode = 0
 
-snap_denominators = { 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 30, 32, 40, 48, 60, 64, 128 }
-snap_modes = {}
+snap_denominators = { 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 30, 32, 40, 48, 60, 64, 128 }
+snap_modes = { 1 }
 for _,d in ipairs(snap_denominators) do
-	table.insert(snap_modes, "1/" .. d)
+	if d ~= 1 then table.insert(snap_modes, "1/" .. d) end
 end
 
 function Triggers.draw()
@@ -316,6 +316,8 @@ function Triggers.draw()
 			att = "Apply texture"
 		elseif HApply.use_transfer == 2 then
 			att = "Apply transfer mode"
+		else
+			att = "Texture & transfer mode disabled"
 		end
 		local tmode = HApply.transfer_modes[HApply.current_transfer + 1]
 		--[[if HCollections.current_collection == 0 then
@@ -331,29 +333,17 @@ function Triggers.draw()
 		if HApply.snap_x or HApply.snap_y then
 			local snap_axes = ""
 			if HApply.snap_x and HApply.snap_y then
-				snap_axes = "x & y"
+				snap_axes = "X & Y"
 			elseif HApply.snap_x then
-				snap_axes = "x"
+				snap_axes = "X"
 			else
-				snap_axes = "y"
+				snap_axes = "Y"
 			end
-			if HApply.current_snap_mode == 1 then
+			local iu = 1024 / snap_denominators[HApply.current_snap]
+			local ch = string.format("%c", 197)
+			if iu == math.floor(iu) then ch = "=" end
+			if HApply.current_snap_mode == 0 then
 				local snap_dirs = ""
-				if HApply.snap_x and HApply.snap_y then
-					snap_dirs = "bottom-right"
-				elseif HApply.snap_x then
-					snap_dirs = "right"
-				elseif HApply.snap_y then
-					snap_dirs = "bottom"
-				end
-				lbls[6][7] = string.format(
-					"Snap: %s %c x%s (abs. %s)",
-					snap_dirs,
-					177,
-					string.sub(snap_modes[HApply.current_snap], 2),
-					snap_axes
-				)
-			elseif HApply.current_snap_mode == 2 then
 				if HApply.snap_x and HApply.snap_y then
 					snap_dirs = "top-left"
 				elseif HApply.snap_x then
@@ -362,17 +352,56 @@ function Triggers.draw()
 					snap_dirs = "top"
 				end
 				lbls[6][7] = string.format(
-					"Snap: %s %c x%s (abs. %s)",
+					"Snap: %s %c n%s WU %s %d IU (absolute %s)",
 					snap_dirs,
 					177,
 					string.sub(snap_modes[HApply.current_snap], 2),
+					ch,
+					iu,
+					snap_axes
+				)
+			elseif HApply.current_snap_mode == 1 then
+				if HApply.snap_x and HApply.snap_y then
+					snap_dirs = "northwest/upper left"
+				elseif HApply.snap_x then
+					snap_dirs = "west/left"
+				elseif HApply.snap_y then
+					snap_dirs = "north/top"
+				end
+				lbls[6][7] = string.format(
+					"Snap: %s %c n%s WU %s %d IU (relative %s)",
+					snap_dirs,
+					177,
+					string.sub(snap_modes[HApply.current_snap], 2),
+					ch,
+					iu,
+					snap_axes
+				)
+			elseif HApply.current_snap_mode == 2 then
+				lbls[6][7] = string.format(
+					"Snap: centre %c n%s WU %s %d IU (relative %s)",
+					177,
+					string.sub(snap_modes[HApply.current_snap], 2),
+					ch,
+					iu,
 					snap_axes
 				)
 			elseif HApply.current_snap_mode == 3 then
+				local snap_dirs = ""
+				if HApply.snap_x and HApply.snap_y then
+					snap_dirs = "southeast/lower right"
+				elseif HApply.snap_x then
+					snap_dirs = "east/right"
+				elseif HApply.snap_y then
+					snap_dirs = "south/bottom"
+				end
 				lbls[6][7] = string.format(
-					"Snap: centre %c x%s (rel. %s)",
+					"Snap: %s %c n%s WU %s %d IU (relative %s)",
+					snap_dirs,
 					177,
 					string.sub(snap_modes[HApply.current_snap], 2),
+					ch,
+					iu,
 					snap_axes
 				)
 			end
@@ -761,37 +790,39 @@ key_panel_default = {
 HMenu = {
 	menus = {
 		[HMode.attribute] = {
-			{ "bg", nil, 20, 80, 600, 320, nil },
+			{ "bg", nil, 20, 80, 600, 330, nil },
 			{ "checkbox", "apply_tex", 30, 85, 160, 20, "Apply texture" },
 			{ "checkbox", "apply_align", 30, 105, 160, 20, "Align adjacent" },
 			{ "checkbox", "apply_edit", 30, 125, 160, 20, "Edit switches and panels" },
 			{ "checkbox", "apply_xparent", 30, 145, 160, 20, "Edit transparent sides" },
 			{ "checkbox", "apply_realign", 30, 165, 160, 20, "Realign when retexturing" },
 			{ "checkbox", "advanced", 30, 185, 160, 20, "Visual Mode header" },
-			{ "label", "nil", 30+5, 210, 45, 20, "Snap:" },
-			{ "checkbox", "xgrid", 30, 230, 45, 20, "X" },
-			{ "checkbox", "ygrid", 30, 250, 45, 20, "Y" },
-			{ "radio", "grid_positive", 75, 210, 115, 20, "Positive (absolute)" },
-			{ "radio", "grid_relative", 75, 230, 115, 20, "Centred (relative)" },
-			{ "radio", "grid_negative", 75, 250, 115, 20, "Negative (absolute)" },
-			{ "radio", "snap_1", 30, 270, 50, 20, snap_modes[1] },
-			{ "radio", "snap_2", 30, 290, 50, 20, snap_modes[2] },
-			{ "radio", "snap_3", 30, 310, 50, 20, snap_modes[3] },
-			{ "radio", "snap_4", 30, 330, 50, 20, snap_modes[4] },
-			{ "radio", "snap_5", 30, 350, 50, 20, snap_modes[5] },
-			{ "radio", "snap_6", 30, 370, 50, 20, snap_modes[6] },
-			{ "radio", "snap_7", 80, 270, 55, 20, snap_modes[7] },
-			{ "radio", "snap_8", 80, 290, 55, 20, snap_modes[8] },
-			{ "radio", "snap_9", 80, 310, 55, 20, snap_modes[9] },
-			{ "radio", "snap_10", 80, 330, 55, 20, snap_modes[10] },
-			{ "radio", "snap_11", 80, 350, 55, 20, snap_modes[11] },
-			{ "radio", "snap_12", 80, 370, 55, 20, snap_modes[12] },
-			{ "radio", "snap_13", 135, 270, 55, 20, snap_modes[13] },
-			{ "radio", "snap_14", 135, 290, 55, 20, snap_modes[14] },
-			{ "radio", "snap_15", 135, 310, 55, 20, snap_modes[15] },
-			{ "radio", "snap_16", 135, 330, 55, 20, snap_modes[16] },
-			{ "radio", "snap_17", 135, 350, 55, 20, snap_modes[17] },
-			{ "radio", "snap_18", 135, 370, 55, 20, snap_modes[18] },
+			{ "label", "nil", 30+5, 205, 45, 20, "Snap:" },
+			{ "checkbox", "xgrid", 30, 225, 45, 20, "X" },
+			{ "checkbox", "ygrid", 30, 245, 45, 20, "Y" },
+			{ "radio", "grid_absolute", 75, 205, 115, 20, "Absolute" },
+			{ "radio", "grid_negative", 75, 225, 115, 20, "Northwest (relative)" },
+			{ "radio", "grid_center", 75, 245, 115, 20, "Centered (relative)" },
+			{ "radio", "grid_positive", 75, 265, 115, 20, "Southeast (relative)" },
+			{ "radio", "snap_1", 30, 265, 45, 20, snap_modes[1] },
+			{ "radio", "snap_2", 30, 285, 45, 20, snap_modes[2] },
+			{ "radio", "snap_3", 30, 305, 45, 20, snap_modes[3] },
+			{ "radio", "snap_4", 30, 325, 45, 20, snap_modes[4] },
+			{ "radio", "snap_5", 30, 345, 45, 20, snap_modes[5] },
+			{ "radio", "snap_6", 30, 365, 45, 20, snap_modes[6] },
+			{ "radio", "snap_7", 30, 385, 45, 20, snap_modes[7] },
+			{ "radio", "snap_8", 75, 285, 55, 20, snap_modes[8] },
+			{ "radio", "snap_9", 75, 305, 55, 20, snap_modes[9] },
+			{ "radio", "snap_10", 75, 325, 55, 20, snap_modes[10] },
+			{ "radio", "snap_11", 75, 345, 55, 20, snap_modes[11] },
+			{ "radio", "snap_12", 75, 365, 55, 20, snap_modes[12] },
+			{ "radio", "snap_13", 75, 385, 55, 20, snap_modes[13] },
+			{ "radio", "snap_14", 130, 285, 60, 20, snap_modes[14] },
+			{ "radio", "snap_15", 130, 305, 60, 20, snap_modes[15] },
+			{ "radio", "snap_16", 130, 325, 60, 20, snap_modes[16] },
+			{ "radio", "snap_17", 130, 345, 60, 20, snap_modes[17] },
+			{ "radio", "snap_18", 130, 365, 60, 20, snap_modes[18] },
+			{ "radio", "snap_19", 130, 385, 60, 20, snap_modes[19] },
 			{ "checkbox", "apply_light", 205, 85, 240, 20, "Apply light:" },
 			{ "checkbox", "apply_transfer", 205, 250, 260, 20, "Apply transfer mode:" },
 			{ "radio", "transfer_0", 215, 270, 80, 20, "Normal" },
@@ -1374,11 +1405,13 @@ HMenu = {
 			if HApply.snap_y then state = "active" end
 		elseif name == "apply_snap" then
 			if HApply.snap_x or HApply.snap_y then state = "active" end
+		elseif name == "grid_absolute" then
+			if HApply.current_snap_mode == 0 then state = "active" end
 		elseif name == "grid_negative" then
 			if HApply.current_snap_mode == 1 then state = "active" end
-		elseif name == "grid_positive" then
+		elseif name == "grid_center" then
 			if HApply.current_snap_mode == 2 then state = "active" end
-		elseif name == "grid_relative" then
+		elseif name == "grid_positive" then
 			if HApply.current_snap_mode == 3 then state = "active" end
 		elseif string.sub(name, 1, 5) == "snap_" then
 			local mode = tonumber(string.sub(name, 6))
@@ -1873,16 +1906,20 @@ HCollections = {
 					end
 				end
 
-				if pref.snap_grid > 0 and HApply.current_snap_mode ~= 1 then
+				if pref.snap_grid > 0 and (HApply.snap_x or HApply.snap_y) then
 					local border = u * pref.snap_grid
 					Screen.frame_rect(x, y, size, size, colors.snap_grid, border)
 					local grids = snap_denominators[HApply.current_snap]
 					for i = 1,grids-1 do
 						local off = size * i / grids
-						Screen.fill_rect(x + off - border/2, y + border,
-						                 border, size - 2*border, colors.snap_grid)
-						Screen.fill_rect(x + border, y + off - border/2,
-						                 size - 2*border, border, colors.snap_grid)
+						if HApply.snap_x then
+							Screen.fill_rect(x + off - border/2, y + border,
+							                 border, size - 2*border, colors.snap_grid)
+						end
+						if HApply.snap_y then
+							Screen.fill_rect(x + border, y + off - border/2,
+							                 size - 2*border, border, colors.snap_grid)
+						end
 					end
 				end
 			end
