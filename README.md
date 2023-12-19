@@ -35,7 +35,7 @@ This remains a work in progress, hence its beta status. A more detailed overview
   - This mostly shows up correctly in visual mode, though strange things currently happen when “apply texture” is disabled.
 - This version of Vasara lists what you’re looking at in the upper-left corner of visual mode.
   - If you see an additional side listed to the right of the one in the upper-left, it’s a transparent side. Unfortunately, it displays the one furthest from you – I feel the one closest would make the most sense, but I’ve so far been unable to debug this.
-  - The “Δ” when you’re looking at a side represents ambient delta, a rarely-used map element that affects the side’s light intensity. I have absolutely no idea how to program a good interface for adjusting this, so for now, to set the ambient delta of side `foo` to `bar`, you can use the following Lua code:
+  - The “Δ” when you’re looking at a side represents ambient delta, a rarely-used map element that affects the side’s light intensity. I haven’t yet had time to begin writing the UI for adjusting this, and I’m not even confident in my UI ideas (I’ve long held that UI is far too important to be left up to programmers that aren’t UI specialists, which I very decidedly am not), so for now, to set the ambient delta of side `foo` to `bar`, you can use the following Lua code:
     ```lua
     Sides[foo].ambient_delta = bar
     ```
