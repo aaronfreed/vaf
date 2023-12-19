@@ -35,11 +35,13 @@ This remains a work in progress, hence its beta status. A more detailed overview
   - This mostly shows up correctly in visual mode, though strange things currently happen when “apply texture” is disabled.
 - This version of Vasara lists what you’re looking at in the upper-left corner of visual mode.
   - If you see an additional side listed to the right of the one in the upper-left, it’s a transparent side. Unfortunately, it displays the one furthest from you – I feel the one closest would make the most sense, but I’ve so far been unable to debug this.
-  - The “Δ” when you’re looking at a side represents ambient delta, a rarely-used map element that affects the side’s light intensity. I have absolutely no idea how to program a good interface for adjusting this, so for now, you can use the following Lua code:
-```lua
-Sides[foo].ambient_delta = bar
-```
-  to set the ambient delta of side `foo` to `bar`. (`bar` should almost always be between -1 and 1.) Contact me [on GitHub](https://github.com/aaronfreed) or on Discord (**@aaron6608**) if you have any remotely good ideas for a UI for this feature. Also, be warned that maps that use ambient delta will break if you run them through the Weland copy and paste plugin.
+  - The “Δ” when you’re looking at a side represents ambient delta, a rarely-used map element that affects the side’s light intensity. I have absolutely no idea how to program a good interface for adjusting this, so for now, to set the ambient delta of side `foo` to `bar`, you can use the following Lua code:
+    ```lua
+    Sides[foo].ambient_delta = bar
+    ```
+    - `bar` should almost always be between -1 and 1.
+    - Also, be warned that maps that use ambient delta will break if you run them through the Weland copy and paste plugin.
+    - At the moment, I’m planning to add an “ambient delta modifier” hotkey that’ll be combined with other keys: one will select which digit to edit, another two will adjust it upwards or downwards, yet another will apply it, and yet another will sample it from another wall, but I haven’t gotten past the concept stage and probably won’t get around to writing it for at least a few weeks. If you have any better ideas for a UI for this feature, please contact me [on GitHub](https://github.com/aaronfreed) or on Discord (**@aaron6608**).
 - This version of Vasara adds the reverse slide, 2x, and 4x transfer modes from Aleph One 1.7.
   - This flat-out breaks if you aren’t using at least Aleph One 1.7, and I don’t care. Upgrade your Aleph One.
   - I don’t know what sort of preview to do for the 2x or 4x transfer modes. Contact me (see directly above) if you have any ideas.
@@ -51,11 +53,11 @@ Sides[foo].ambient_delta = bar
 
 - I’ve fixed the Lua error spam for lights > 55, but haven’t figured out how to get them to preview correctly. You can currently select lights 0-97 in the main palette, and even if you have both “apply light” and “apply texture” selected with lights > 97, it won’t spam errors. I may figure out a way to reduce the size of each light if there are more than 98 so that more will fit in the selector (but really, what are you doing with that many lights? I’ve only ever made a map with that many lights to test Vasara).
 - Platform and light switches now display a lot more options, which should reduce the amount people need to rely on tags. Side note: [tags are terrible](https://aaronfreed.github.io/mapmaking.html#tagsareterrible). :-)
-- ~~The border for the selected texture on the texture palette broke and I haven’t figured out why. This has been the most annoying thing to debug.~~ Fixed. Apparently I needed to throw in some `tonumber` statements that weren't previously necessary. ¯\(°_o)/¯
+- ~~The border for the selected texture on the texture palette broke and I haven’t figured out why. This has been the most annoying thing to debug.~~ Fixed. Apparently I needed to throw in some `tonumber` statements that weren't previously necessary. ¯\\(°\_o)/¯
 - Vasara’s code is very, very dense and very, very sparsely documented, so this has been a slow project and will probably continue to be slow, but I hope to get it finished soon™.
 - Most of the updates are mine; a few are Cryos (notably the platform switch fix and the initial work at expanding the grid selections) or Solra’s (e.g., the extended stack traces) work.
 
---Aaron, 2023-12-12
+--**Aaron**, 2023-12-12
 
 ----------------------------------------------------------------
 
