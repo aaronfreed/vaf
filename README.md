@@ -1,13 +1,15 @@
-# vasara
-update of Hopper, Ares Ex Machina, treellama, and Irons’ texturing utility for Marathon Aleph One
-----------------------------------------------------------------
-**Vasara 2.0b**
-by **Hopper**, **Ares Ex Machina**, **Aaron Freed**, **CryoS**, and **Solra Bizna**
-from work by **Jon Irons** and **Gregory Smith**
+# Vasara
+## a texturing utility for Marathon Aleph One
+
+credits in chronological order:
+- **[Visual Mode.lua](https://github.com/treellama/visualmode)** by **[@jonirons](https://github.com/jonirons)** and **[@treellama](https://github.com/treellama)**
+- **[Vasara 1.0.3](https://simplici7y.com/items/vasara/)** by **[@Hopper262](https://github.com/Hopper262)** and **Ares Ex Machina**
+- **Vasara 2.0b** by **[@aaronfreed](https://github.com/aaronfreed)**, **[@murbruksprodukt](https://github.com/murbruksprodukt)**, and **[@SolraBizna](https://github.com/SolraBizna)**
+
+Hopper also has a **[GitHub repository for Vasara 1.0.2](https://github.com/Hopper262/Vasara)**, but it’s one version behind the Simplici7y release.
 
 ----------------------------------------------------------------
-***WIP notes by Aaron (see below for original readme):***
-----------------------------------------------------------------
+## WIP notes by Aaron (see below for original readme):
 **Vasara** is a texturing utility for **[Marathon Aleph One](https://alephone.lhowon.org)** 1.7 or later, best used with **[Weland](https://github.com/treellama/weland/releases)** (see [my detailed setup guide](https://aaronfreed.github.io/mapmaking.html#welandsetup) if Weland’s readme proves confusing). The original version hasn’t been updated in years, so I’ve taken it upon myself, with a little help from my friends, to update it for several reasons:
 - to take advantage of new Aleph One features
 - to add features that it had been sorely lacking for years
@@ -16,7 +18,7 @@ from work by **Jon Irons** and **Gregory Smith**
 This remains a work in progress, hence its beta status. A more detailed overview:
 
 ----------------------------------------------------------------
-**NEW FEATURES & PLANNED ADDITIONS:**
+### NEW FEATURES & PLANNED ADDITIONS:
 
 - I’m almost finished redoing the grid interface.
   - There are now more options. In addition to 1/2, 1/3, 1/4, 1/5, and 1/8 World Units, we’ve added 1, 1/6, 1/10, 1/12, 1/16, 1/20, 1/24, 1/30, 1/32, 1/40, 1/48, 1/60, 1/64, and 1/128 WU. 1/16 WU is now the default selection because it’s what I use by far the most.
@@ -46,9 +48,8 @@ This remains a work in progress, hence its beta status. A more detailed overview
   - This flat-out breaks if you aren’t using at least Aleph One 1.7, and I don’t care. Upgrade your Aleph One.
   - I don’t know what sort of preview to do for the 2x or 4x transfer modes. Contact me (see directly above) if you have any ideas.
 - The new “Realign when retexturing” option preserves the old behavior of Vasara of realigning textures to (0,0) when you change a texture. I currently have it disabled by default, since it’s possible to realign textures to (0,0) manually with it disabled, while it’s *not* possible to preserve existing texture alignment with it *enabled*, but sometimes having it enabled is useful behavior.
-
 ----------------------------------------------------------------
-**BUG FIXES, CURRENT ISSUES, PLANNED FEATURES, AND CREDITS:**
+### BUG FIXES, CURRENT ISSUES, PLANNED FEATURES, AND CREDITS:
 
 - I’ve fixed the Lua error spam for lights > 55, but haven’t figured out how to get them to preview correctly. You can currently select lights 0-97 in the main palette, and even if you have both “apply light” and “apply texture” selected with lights > 97, it won’t spam errors. I may figure out a way to reduce the size of each light if there are more than 98 so that more will fit in the selector (but really, what are you doing with that many lights? I’ve only ever made a map with that many lights to test Vasara).
 - Platform and light switches now display a lot more options, which should reduce the amount people need to rely on tags. Side note: [tags are terrible](https://aaronfreed.github.io/mapmaking.html#tagsareterrible). :-)
@@ -62,21 +63,19 @@ This remains a work in progress, hence its beta status. A more detailed overview
 --**Aaron**, 2023-12-12
 
 ----------------------------------------------------------------
-
-**Vasara 1.0.3**
-------------
-by **Hopper** and **Ares Ex Machina**
-from work by **Irons** and **Smith**
+## Vasara 1.0.3
+- by **Hopper** and **Ares Ex Machina**
+- from work by **Irons** and **Smith**
 
 ----------------------------------------------------------------
-**DESCRIPTION:**
+### DESCRIPTION:
 
-Vasara is a Lua script and dedicated HUD for use in texturing Aleph One maps. The HUD lists the keyboard shortcts for easy reference, and features a GUI-style interface for choosing textures and options.
+Vasara is a Lua script and dedicated HUD for use in texturing **Aleph One** maps. The HUD lists the keyboard shortcts for easy reference, and features a GUI-style interface for choosing textures and options.
 
 To get the most out of Vasara, be sure to turn on "**Use Mouse**" and "**Overlay Map**" in your preferences.
 
 ----------------------------------------------------------------
-**INSTALLATION:**
+### INSTALLATION:
 
 - Drag the downloaded .zip file, or the unzipped "Vasara" folder, into the "**Plugins**" folder inside your *Marathon Infinity* or custom scenario folder. (Create a "**Plugins**" folder if you don't already have one.)
 - Launch **Aleph One**, and go to "**Preferences**", then "**Environment**", then **"Plugins**" to enable or disable Vasara.
@@ -87,38 +86,37 @@ To get the most out of Vasara, be sure to turn on "**Use Mouse**" and "**Overlay
 
 ***(EDITORIAL NOTE:** More specifically, it’s best to disable any other plugin that uses solo Lua while using Vasara. These will be marked as such on the plugins list. Any other plugins probably won’t affect its performance. **-Aaron)***
 
-
 ----------------------------------------------------------------
-**GETTING STARTED:**
+### GETTING STARTED:
 
 Vasara has four modes. The tabs at the top left of the screen show which mode you're in, and the area to the right shows what your keys do. For some commands, you need to hold the **Microphone** key down and then press the other key shown.
 
-***(EDITORIAL NOTE:** The Microphone key is now referred to as the **Aux Trigger** key. **-Aaron)***
+***(EDITORIAL NOTE:** The Microphone key is now referred to as the **Aux Trigger** key. I will henceforth correct the term without further notes to this extent. **-Aaron)***
 
 Vasara will feel most natural if you have "**Use Mouse**" turned on, and have the primary trigger mapped to your left mouse button. That way, the most common actions can be done by pointing and clicking.
 
 1. You start in **Visual Mode**, where you apply lights and textures to your level. Click to "paint", and hold the trigger down to drag textures into position.
 
-2. Press the **Microphone** key to switch to **Choose Textures mode**. Click a texture to select it for use in **Visual Mode**. Click on the buttons at the bottom to switch to a different collection. Or, use the key shortcuts to switch textures and collections.
+2. Press the **Aux Trigger** key to switch to **Choose Textures mode**. Click a texture to select it for use in **Visual Mode**. Click on the buttons at the bottom to switch to a different collection. Or, use the key shortcuts to switch textures and collections.
 
-3. Press the **Action** key to switch to **Options** mode. You can toggle lesser-used settings here, like **snap-to-grid** or **transfer modes**.
+3. Press the **Action** key to switch to **Options mode**. You can toggle lesser-used settings here, like **snap-to-grid** or **transfer modes**.
 
-4. Press the **Map** key to switch to Teleport mode. Point at a polygon and click to teleport there. With the key shortcuts, you can cycle through polygons to reach faraway areas. The currently selected polygon is highlighted in first-person view and on the overhead map.
+4. Press the **Map** key to switch to **Teleport mode**. Point at a polygon and click to teleport there. With the key shortcuts, you can cycle through polygons to reach faraway areas. The currently selected polygon is highlighted in first-person view and on the overhead map.
 
-You can get back to **Visual Mode** from any other mode by hitting the secondary trigger (the "grenade" button). Always check the top of the screen to see what your options are.
+You can get back to **Visual Mode** from any other mode by hitting the **secondary trigger** (the "grenade" button). Always check the top of the screen to see what your options are.
 
-To save your work, press the "Chat/Console" key (default is backslash: \ ) and then type:
+***(EDITORIAL NOTE:** If you’ve launched Vasara through Weland as I’ve suggested doing above, the rest of this section will not be necessary. -**Aaron)***
+
+To save your work, press the **Chat/Console** key (default is backslash: \ ) and then type:
 
 ```lua
   .save level my-fabulous-level.sceA
 ```
 
-The period at the start is important! You can replace "my-fabulous-level.sceA" with whatever filename you like. Your level will be saved in Aleph One's standard location for your platform; see:
-
-  https://github.com/Aleph-One-Marathon/alephone/wiki/File-Locations
+The period at the start is important! You can replace "my-fabulous-level.sceA" with whatever filename you like. Your level will be saved in Aleph One's standard location for your platform; see https://github.com/Aleph-One-Marathon/alephone/wiki/File-Locations
 
 ----------------------------------------------------------------
-**TIPS AND TRICKS:**
+### TIPS AND TRICKS:
 
 Vasara's functionality is based on **Visual Mode.lua**, which in turn is based on **Forge**'s Visual Mode. If you're confused about what something in Vasara does, check the Forge manual or existing discussions about VML.
 
@@ -126,21 +124,25 @@ Having trouble navigating menu screens with the mouse? Try the keyboard. Your ke
 
 When selecting lights, the clickable area is larger than you might think. You can click on either the number or the square.
 
-For VML veterans, the key combo **Mic+Action** acts as an **Undo/Redo toggle** just like in Visual Mode.lua.
+For VML veterans, the key combo **Aux+Action** acts as an **Undo/Redo toggle** just like in Visual Mode.lua.
 
 Once you're done texturing, you can take screenshots of your level in Vasara. Use teleport, jump and freeze to find a nice vantage point, then press F2 to hide the GUI. Press F9 to take a screenshot and F1 to bring the GUI back.
 
 The two Lua scripts have various preferences at the top. You can change the mouse cursor sensitivity, the color scheme, the collection names, and more. Poke around there if you're interested.
 
+***(EDITORIAL NOTE:** Owing to how one of our script elements works, these had to be moved down a bit. They are currently about 100 lines down. --**Aaron**)*
+
 ----------------------------------------------------------------
-**SCENARIO COMPATIBILITY:**
+### SCENARIO COMPATIBILITY:
 
 Out of the box, Vasara only works with scenarios that use the same 5 texture sets and same 4 landscapes as *Marathon Infinity*, since the plugin needs to know the proper shapes collections to use. It mostly works with *Marathon 2* (which is missing the Jjaro set), but there are glitches with the fourth "landscape" since M2 uses that collection for something else.
 
-To use Vasara with additional or moved collections (or to limit M2 to the 3 working landscapes), edit the "walls" and "landscapes" settings at the top of Vasara_Script.lua.
+To use Vasara with additional or moved collections (or to limit M2 to the 3 working landscapes), edit the "walls" and "landscapes" settings at the top of **Vasara_Script.lua**.
+
+***(EDITORIAL NOTE:** Again, these are currently about 100 lines into the script. --**Aaron**)*
 
 ----------------------------------------------------------------
-**CHANGELOG:**
+### CHANGELOG:
 
 **v1.0.3:**
 * Improved compatibility with Marathon 2
@@ -160,7 +162,7 @@ To use Vasara with additional or moved collections (or to limit M2 to the 3 work
 * First release
 
 ----------------------------------------------------------------
-**SPECIAL THANKS:**
+### SPECIAL THANKS:
 
 * **TychoVII**, **Kurinn** - For pushing the boundaries of the Lua HUD
 * **Bitstream**, **Tavmjong Bah** - For fonts used in the HUD
@@ -168,7 +170,7 @@ To use Vasara with additional or moved collections (or to limit M2 to the 3 work
 * **Treellama**, **Irons** - For Visual Mode.lua
 
 ----------------------------------------------------------------
-**CONTACT:**
+### CONTACT:
 
 If you have any questions, comments, or bugs to report, you can email Hopper:
 - hopper@whpress.com
