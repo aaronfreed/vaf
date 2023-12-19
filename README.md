@@ -30,8 +30,7 @@ This remains a work in progress, hence its beta status. A more detailed overview
   - If you want to disable grid snapping, disable both the X and Y snaps. (I could probably be persuaded to make a keyboard shortcut that toggles “grid snapping off” and “snap to X and Y” or that cycles between the different grid snaps.)
   - The preview should now display all grid settings correctly.
 - You can now select “apply texture mode” separately from “apply texture”.
-  - If you have “apply texture mode” selected, but not “apply texture”, it’ll apply different transfer modes to existing textures without adjusting their textures.
-  - By contrast, if you have “apply texture” selected but not “apply texture mode”, it’ll preserve existing transfer modes while changing the textures.
+  - If you have “apply texture mode” selected, but not “apply texture”, it’ll apply different transfer modes to existing textures without adjusting their textures, and *vice versa*. (The Romans would’ve pronounced this something like ***wee**-keh **wer**-sah*. There, you can cross off an item on your bingo cards. You’re welcome.)
   - Landscapes are the wild card, as they usually override existing transfer modes. I have yet to work out all the strange behavior this causes.
   - This mostly shows up correctly in visual mode, though strange things currently happen when “apply texture” is disabled.
 - This version of Vasara lists what you’re looking at in the upper-left corner of visual mode.
