@@ -93,7 +93,7 @@ This remains a work in progress, hence its beta status. A more detailed overview
 - A value added to or subtracted from the light value of a side, where a value of 1 corresponds to a 100% increase in light value.
 - Ambient delta applies to the entire side - thus, its primary, secondary, and transparent textures are all affected by it. It cannot be applied to polygon floors or ceilings.
 - Negative ambient delta values can override the game’s miner’s light (i.e., the effect that lights surfaces close to the player more brightly).
-  - Thus, If you want to preserve the miner’s light, do not give any side an ambient delta value lower than `-(100 - l)/100`, where l is the lowest possible intensity for any light applied to any of its surfaces.
+  - Thus, If you want to preserve the miner’s light, do not give any side an ambient delta value lower than `l/100 - 1`, where l is the lowest possible intensity for any light applied to any of its surfaces.
     - **NOTE:** The Forge manual’s description of “∆ Intensity” is incorrect: the engine only ever adds, and never subtracts, random values from a light’s specified “Intensity”. Thus, if Intensity is 50 and ∆ Intensity is also 50, the possible values are not 0 to 100 but 50 to 100.
   - A side with an ambient delta value of 1 always renders at 100% light intensity, even if one or more of its surfaces is textured with a 0% intensity light.
   - If a side’s ambient delta value is -1, a texture on the side given a 100% intensity light is rendered as if it had been given a light with 0% intensity. A texture lit at 0% intensity is rendered as completely black.
