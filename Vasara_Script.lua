@@ -198,7 +198,7 @@ REALIGN_WHEN_RETEXTURING = false
 EDIT_PANELS = true
 APPLY_TRANSPARENT = false
 APPLY_TRANSFER = true
-QUANTIZE_MODE = 2 -- 0 = absolute, 1 = negative (northwest), 2 = center, 3 = positive (southeast)
+QUANTIZE_MODE = 0 -- 0 = absolute, 1 = negative (northwest), 2 = center, 3 = positive (southeast)
 QUANTIZE_X = true
 QUANTIZE_Y = true -- set both to false to disable grid snap
 DEFAULT_QUANTIZE = 10 -- see snap_denominators below for possible options here: first menu option is 1, second is 2, third is 3, etc
