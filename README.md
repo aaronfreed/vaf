@@ -101,7 +101,7 @@ This remains a work in progress, hence its beta status. A more detailed overview
   - If a side’s ambient delta value is -1, a texture on the side given a 100% intensity light is rendered as if it had been given a light with 0% intensity. A texture lit at 0% intensity is rendered as completely black.
   - If a side’s ambient delta value is -2, it always renders as completely black.
 
---**Aaron**, 2023-12-12 (last edited 2023-12-20)
+--**Aaron**, 2023-12-12 (last edited 2024-01-17)
 
 ----------------------------------------------------------------
 ## Vasara 1.0.3
