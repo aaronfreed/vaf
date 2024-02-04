@@ -34,7 +34,7 @@ This remains a work in progress, hence its beta status. A more detailed overview
   - If you have “apply texture mode” selected, but not “apply texture”, it’ll apply different transfer modes to existing textures without adjusting their textures, and *vice versa*. (The Romans would’ve pronounced this something like ***wee**-keh **wer**-sah*. There, you can cross off an item on your bingo cards. You’re welcome.)
   - Landscapes are the wild card, as they usually override existing transfer modes. I have yet to work out all the strange behavior this causes.
     - If for some reason you wish to apply a texture from a landscape collection in a transfer mode other than “landscape”, you can apply it to your desired surface, deselect “apply texture”, and then apply a different transfer mode. (You may need to select a different texture before you can do the last of these.) However, bear in mind that textures from landscape collections may behave weirdly in transfer modes besides “landscape”.
-  - All of this mostly shows up correctly in visual mode, though the preview currently behaves weirdly when “apply texture” is disabled.
+  - All of this mostly shows up correctly in visual mode, though the preview currently behaves weirdly when “apply texture” is disabled. (The checkbox in visual mode is now at least checked when “apply transfer mode” is checked, but “apply texture” isn’t.)
 - This version of Vasara lists what you’re looking at in the upper-left corner of visual mode.
   - Floors, ceilings, and lines without associated sides (which occur when you haven’t paved a level before going into visual mode) are labeled as floors, ceilings, or lines. Sides are listed along the lines “1337 (∆0.0420)”, which indicates that you are looking at side 1337 and that it has an ambient delta value of 0.0420. Ambient delta is a rarely-used map element that affects the side’s light intensity; at present, Greg Kirkpatrick, Jason Jones, and I are the only people I’m aware of who have ever used it. See “Notes on Terminology” below for a detailed explanation.
   - If you see an additional side listed to the right of the one in the upper-left, it’s a transparent side. Unfortunately, Vasara currently displays the one furthest from you – I feel the one closest would make the most sense, but I’ve so far been unable to debug this.
@@ -49,6 +49,13 @@ This remains a work in progress, hence its beta status. A more detailed overview
   - This flat-out breaks if you aren’t using at least Aleph One 1.7, and I don’t care. Upgrade your Aleph One.
   - I don’t know what sort of preview to do for the 2x or 4x transfer modes. Contact me (see directly above) if you have any ideas.
 - The new “Realign when retexturing” option preserves the old behavior of Vasara of realigning textures to (0,0) when you change a texture. I currently have it disabled by default, since it’s possible to realign textures to (0,0) manually with it disabled, while it’s *not* possible to preserve existing texture alignment with it *enabled*, but sometimes having it enabled is useful behavior.
+- The new “Decouple transparent sides” option disables Vasara’s standard behavior of editing the transparent side on the reverse of the one you’re looking at. The obvious applications that come to mind for this are:
+  - Aligning sides separately – useful for fixing faulty alignment, of which two kinds are especially common:
+    - Incorrectly aligned “2x” and “4x” textures (the default alignment behavior assumes a texture size of 1 WU)
+    - Alignment that got screwed up on only one side (“align adjacent” has never aligned both sides correctly)
+  - Applying different lights to each side – perhaps there’s a light on one side of the texture
+  - Applying entirely different textures to each side – especially useful if one texture is a horizontal flip of the other
+  - Applying a texture to only one side of a line
 
 ----------------------------------------------------------------
 ### BUG FIXES, CURRENT ISSUES, PLANNED FEATURES, AND CREDITS:
@@ -101,7 +108,7 @@ This remains a work in progress, hence its beta status. A more detailed overview
   - If a side’s ambient delta value is -1, a texture on the side given a 100% intensity light is rendered as if it had been given a light with 0% intensity. A texture lit at 0% intensity is rendered as completely black.
   - If a side’s ambient delta value is -2, it always renders as completely black.
 
---**Aaron**, 2023-12-12 (last edited 2024-01-17)
+--**Aaron**, 2023-12-12 (last edited 2024-02-03)
 
 ----------------------------------------------------------------
 ## Vasara 1.0.3
