@@ -126,29 +126,29 @@ collection_names = {
 -- colors (RGBA, 0 to 1)
 colors = {
 	menu_label = { 0.7, 0.7, 0.3, 1 },
-	current_texture = { 0, 1, 0, 1 },
+	current_texture = { 0, 7/9, 0, 1 },
 	snap_grid = { 0, 1, 0, 0.6 },
 
 	light = {
-		enabled = { frame = { 0.5, 0.5, 0.5, 1 }, text = { 0.8, 0.8, 0.8, 1 }, },
-		active  = { frame = { 0,   1,   0,   1 }, text = { 0.2, 1.0, 0.2, 1 }, },
+		enabled={frame={0.5, 0.5, 0.5, 1}, text={0.8, 0.8, 0.8, 1},},
+		active ={frame={0,   1,   0,   1}, text={0.2, 1.0, 0.2, 1},},
 	},
 
 	commands = {
-		enabled  = { label = { 0.7, 0.7, 0.3, 1 }, key = { 1,   1,   1,   1 }, },
-		disabled = { label = { 0.4, 0.4, 0.2, 1 }, key = { 0.5, 0.5, 0.5, 1 }, },
-		active   = { label = { 0.2, 1.0, 0.2, 1 }, key = { 0.2, 1.0, 0.2, 1 }, },
+		enabled ={label={0.7, 0.7, 0.3, 1}, key={1,   1,   1,   1},},
+		disabled={label={0.4, 0.4, 0.2, 1}, key={0.5, 0.5, 0.5, 1},},
+		active  ={label={0.2, 1.0, 0.2, 1}, key={0.2, 1.0, 0.2, 1},},
 	},
 
 	button = {
-		enabled  = { background = { 0.1, 0.1, 0.1, 1 }, highlight = { 0.08, 0.08, 0.08, 1 }, shadow = { 0.12, 0.12, 0.12, 1 }, text = { 0.8, 0.8, 0.8, 1 }, },
-		disabled = { background = { 0.1, 0.1, 0.1, 1 }, highlight = { 0.08, 0.08, 0.08, 1 }, shadow = { 0.12, 0.12, 0.12, 1 }, text = { 0.4, 0.4, 0.4, 1 }, },
-		active   = { background = { 0.2, 0.2, 0.2, 1 }, highlight = { 0.25, 0.25, 0.25, 1 }, shadow = { 0.15, 0.15, 0.15, 1 }, text = { 0.0, 1.0, 0.0, 1 }, },
+		enabled ={background={0.1, 0.1, 0.1, 1}, highlight={0.08, 0.08, 0.08, 1}, shadow={0.12, 0.12, 0.12, 1}, text={0.8, 0.8, 0.8, 1},},
+		disabled={background={0.1, 0.1, 0.1, 1}, highlight={0.08, 0.08, 0.08, 1}, shadow={0.12, 0.12, 0.12, 1}, text={0.4, 0.4, 0.4, 1},},
+		active  ={background={0.2, 0.2, 0.2, 1}, highlight={0.25, 0.25, 0.25, 1}, shadow={0.15, 0.15, 0.15, 1}, text={0.0, 1.0, 0.0, 1},},
 	},
 
 	apply = {
-		enabled = { background = { 0.0, 0.0, 0.0, 1 }, highlight = { 0.0, 0.0, 0.0, 1 }, shadow = { 0.0, 0.0, 0.0, 1 }, text = { 0.5, 0.5, 0.5, 1 }, },
-		active  = { background = { 0.0, 0.0, 0.0, 1 }, highlight = { 0.0, 0.0, 0.0, 1 }, shadow = { 0.0, 0.0, 0.0, 1 }, text = { 1,   1,   1,   1 }, },
+		enabled={background={0.0, 0.0, 0.0, 1}, highlight={0.0, 0.0, 0.0, 1}, shadow={0.0, 0.0, 0.0, 1}, text={0.5, 0.5, 0.5, 1},},
+		active ={background={0.0, 0.0, 0.0, 1}, highlight={0.0, 0.0, 0.0, 1}, shadow={0.0, 0.0, 0.0, 1}, text={1,   1,   1,   1},},
 	},
 
 	teleport = {
@@ -159,17 +159,17 @@ colors = {
 
 	ktab = {
 		background = { 0.15, 0.15, 0.15, 1 },
-		current  = { background = { 0.15, 0.15, 0.15, 1 }, text = { 0.2, 1.0, 0.2, 1 }, label = { 0,   0,   0,   0 }, },
-		enabled  = { background = { 0.1,  0.1,  0.1,  1 }, text = { 0.8, 0.8, 0.8, 1 }, label = { 0.7, 0.7, 0.3, 1 }, },
-		disabled = { background = { 0.1,  0.1,  0.1,  1 }, text = { 0.4, 0.4, 0.4, 1 }, label = { 0.4, 0.4, 0.2, 1 }, },
-		active   = { background = { 0.1,  0.1,  0.1,  1 }, text = { 0.2, 1.0, 0.2, 1 }, label = { 0.2, 1.0, 0.2, 1 }, },
+		current ={background={0.15, 0.15, 0.15, 1}, text={0.2, 1.0, 0.2, 1}, label={0,   0,   0,   0},},
+		enabled ={background={0.1,  0.1,  0.1,  1}, text={0.8, 0.8, 0.8, 1}, label={0.7, 0.7, 0.3, 1},},
+		disabled={background={0.1,  0.1,  0.1,  1}, text={0.4, 0.4, 0.4, 1}, label={0.4, 0.4, 0.2, 1},},
+		active  ={background={0.1,  0.1,  0.1,  1}, text={0.2, 1.0, 0.2, 1}, label={0.2, 1.0, 0.2, 1},},
 	},
 
 	tab = {
 		background = { 0.1, 0.1, 0.1, 1 },
-		enabled  = { background = { 0.06, 0.06, 0.06, 1 }, text = { 0.8, 0.8, 0.8, 1 }, },
-		disabled = { background = { 0.06, 0.06, 0.06, 1 }, text = { 0.4, 0.4, 0.4, 1 }, },
-		active   = { background = { 0.1,  0.1,  0.1,  1 }, text = { 0.2, 1.0, 0.2, 1 }, }
+		enabled ={background={0.06, 0.06, 0.06, 1}, text={0.8, 0.8, 0.8, 1},},
+		disabled={background={0.06, 0.06, 0.06, 1}, text={0.4, 0.4, 0.4, 1},},
+		active  ={background={0.1,  0.1,  0.1,  1}, text={0.2, 1.0, 0.2, 1},},
 	},
 }
 
@@ -211,7 +211,7 @@ Triggers = {}
 g_scriptChecked = false
 g_initMode = 0
 
-snap_denominators = { 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 30, 32, 40, 48, 60, 64, 128 }
+snap_denominators = { 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 18, 20, 24, 30, 32, 36, 40, 48, 60, 64, 128 }
 snap_modes = { 1 }
 for _,d in ipairs(snap_denominators) do
 	if d ~= 1 then table.insert(snap_modes, "1/" .. d) end
@@ -310,11 +310,11 @@ function Triggers.draw()
 		if HApply.current_light then lbls[1][7] = "Apply light: " .. HApply.current_light else lbls[1][7] = "Apply light: [out of display range]" end
 
 		local att = ""
-		if HApply.down(HApply.use_texture) and HApply.use_transfer == 2 then
+		if HApply.down(HApply.use_texture) and HApply.use_transfer == 1 then
 			att = "Apply texture & transfer mode"
 		elseif HApply.down(HApply.use_texture) then
 			att = "Apply texture"
-		elseif HApply.use_transfer == 2 then
+		elseif HApply.use_transfer == 1 then
 			att = "Apply transfer mode"
 		else
 			att = "Texture & transfer mode disabled"
@@ -325,10 +325,20 @@ function Triggers.draw()
 		else
 			if HApply.current_transfer == 0 then tmode = nil end
 		end--]]
-		if tmode ~= nil and HApply.use_transfer == 2 then
+		if tmode ~= nil and HApply.use_transfer == 1 then
 			att = att .. ": " .. tmode
 		end
 		lbls[2][7] = att
+
+		if HApply.down(HApply.transparent) then
+			if Level.stash["decouple"] == "TRUE" then
+				lbls[5][7] = "Edit transparent side (decoupled from reverse)"
+			else
+				lbls[5][7] = "Edit transparent sides (coupled with reverse)"
+			end
+		else
+			lbls[5][7] = "Ignore transparent sides"
+		end
 
 		if HApply.snap_x or HApply.snap_y then
 			local snap_axes = ""
@@ -578,7 +588,7 @@ HKeys = {
 
 	update = function()
 		HKeys.bitfield = Player.texture_palette.slots[39].texture_index
-		HKeys.dummyfield = Player.texture_palette.slots[42].texture_index
+		-- HKeys.dummyfield = Player.texture_palette.slots[42].texture_index
 	end,
 
 	down = function(k)
@@ -791,40 +801,44 @@ HMenu = {
 	menus = {
 		[HMode.attribute] = {
 			{ "bg", nil, 20, 80, 600, 330, nil },
-			{ "checkbox", "apply_tex", 30, 85, 160, 20, "Apply texture" },
-			{ "checkbox", "apply_align", 30, 105, 160, 20, "Align adjacent" },
-			{ "checkbox", "apply_edit", 30, 125, 160, 20, "Edit switches and panels" },
-			{ "checkbox", "apply_xparent", 30, 145, 160, 20, "Edit transparent sides" },
-			{ "checkbox", "apply_realign", 30, 165, 160, 20, "Realign when retexturing" },
-			{ "checkbox", "advanced", 30, 185, 160, 20, "Visual Mode header" },
-			{ "label", "nil", 30+5, 205, 45, 20, "Snap:" },
-			{ "checkbox", "xgrid", 30, 225, 45, 20, "X" },
-			{ "checkbox", "ygrid", 30, 245, 45, 20, "Y" },
-			{ "radio", "grid_absolute", 75, 205, 115, 20, "Absolute" },
-			{ "radio", "grid_negative", 75, 225, 115, 20, "Northwest (relative)" },
-			{ "radio", "grid_center", 75, 245, 115, 20, "Centered (relative)" },
-			{ "radio", "grid_positive", 75, 265, 115, 20, "Southeast (relative)" },
-			{ "radio", "snap_1", 30, 265, 45, 20, snap_modes[1] },
-			{ "radio", "snap_2", 30, 285, 45, 20, snap_modes[2] },
-			{ "radio", "snap_3", 30, 305, 45, 20, snap_modes[3] },
-			{ "radio", "snap_4", 30, 325, 45, 20, snap_modes[4] },
-			{ "radio", "snap_5", 30, 345, 45, 20, snap_modes[5] },
-			{ "radio", "snap_6", 30, 365, 45, 20, snap_modes[6] },
-			{ "radio", "snap_7", 30, 385, 45, 20, snap_modes[7] },
-			{ "radio", "snap_8", 75, 285, 55, 20, snap_modes[8] },
-			{ "radio", "snap_9", 75, 305, 55, 20, snap_modes[9] },
-			{ "radio", "snap_10", 75, 325, 55, 20, snap_modes[10] },
-			{ "radio", "snap_11", 75, 345, 55, 20, snap_modes[11] },
-			{ "radio", "snap_12", 75, 365, 55, 20, snap_modes[12] },
-			{ "radio", "snap_13", 75, 385, 55, 20, snap_modes[13] },
-			{ "radio", "snap_14", 130, 285, 60, 20, snap_modes[14] },
-			{ "radio", "snap_15", 130, 305, 60, 20, snap_modes[15] },
-			{ "radio", "snap_16", 130, 325, 60, 20, snap_modes[16] },
-			{ "radio", "snap_17", 130, 345, 60, 20, snap_modes[17] },
-			{ "radio", "snap_18", 130, 365, 60, 20, snap_modes[18] },
-			{ "radio", "snap_19", 130, 385, 60, 20, snap_modes[19] },
+			{ "checkbox", "apply_tex", 30, 85, 170, 20, "Apply texture" },
+			{ "checkbox", "apply_align", 30, 105, 170, 20, "Align adjacent" },
+			{ "checkbox", "apply_edit", 30, 125, 170, 20, "Edit switches & panels" },
+			{ "checkbox", "apply_xparent", 30, 145, 170, 20, "Edit transparent sides" },
+			{ "checkbox", "decouple_xparent", 30, 165, 170, 20, "Decouple transparent sides" },
+			{ "checkbox", "apply_realign", 30, 185, 170, 20, "Realign when retexturing" },
+			{ "checkbox", "advanced", 30, 205, 170, 20, "Visual Mode header" },
+			{ "label", "nil", 30+5, 225, 40, 20, "Snap:" },
+			{ "checkbox", "xgrid", 30, 245, 40, 20, "X" },
+			{ "checkbox", "ygrid", 30, 265, 40, 20, "Y" },
+			{ "radio", "grid_absolute", 70, 225, 130, 20, "Absolute" },
+			{ "radio", "grid_negative", 70, 245, 130, 20, "Northwest (relative)" },
+			{ "radio", "grid_center", 70, 265, 130, 20, "Centered (relative)" },
+			{ "radio", "grid_positive", 70, 285, 130, 20, "Southeast (relative)" },
+			{ "radio", "snap_1", 30, 285, 40, 20, snap_modes[1] },
+			{ "radio", "snap_2", 30, 305, 40, 20, snap_modes[2] },
+			{ "radio", "snap_3", 30, 325, 40, 20, snap_modes[3] },
+			{ "radio", "snap_4", 30, 345, 40, 20, snap_modes[4] },
+			{ "radio", "snap_5", 30, 365, 40, 20, snap_modes[5] },
+			{ "radio", "snap_6", 30, 385, 40, 20, snap_modes[6] },
+			{ "radio", "snap_7", 70, 305, 42, 20, snap_modes[7] },
+			{ "radio", "snap_8", 70, 325, 42, 20, snap_modes[8] },
+			{ "radio", "snap_9", 70, 345, 42, 20, snap_modes[9] },
+			{ "radio", "snap_10", 70, 365, 42, 20, snap_modes[10] },
+			{ "radio", "snap_11", 70, 385, 42, 20, snap_modes[11] },
+			{ "radio", "snap_12", 112, 305, 42, 20, snap_modes[12] },
+			{ "radio", "snap_13", 112, 325, 42, 20, snap_modes[13] },
+			{ "radio", "snap_14", 112, 345, 42, 20, snap_modes[14] },
+			{ "radio", "snap_15", 112, 365, 42, 20, snap_modes[15] },
+			{ "radio", "snap_16", 112, 385, 42, 20, snap_modes[16] },
+			{ "radio", "snap_17", 154, 305, 46, 20, snap_modes[17] },
+			{ "radio", "snap_18", 154, 325, 46, 20, snap_modes[18] },
+			{ "radio", "snap_19", 154, 345, 46, 20, snap_modes[19] },
+			{ "radio", "snap_20", 154, 365, 46, 20, snap_modes[20] },
+			{ "radio", "snap_21", 154, 385, 46, 20, snap_modes[21] },
 			{ "checkbox", "apply_light", 205, 85, 240, 20, "Apply light:" },
-			{ "checkbox", "apply_transfer", 205, 250, 260, 20, "Apply transfer mode:" },
+			{ "checkbox", "apply_transfer", 215, 250, 250, 20, "Apply transfer mode:" },
+			-- { "checkbox", "override_landscape", 340, 250, 125, 20, "Override 'Landscape'" },
 			{ "radio", "transfer_0", 215, 270, 80, 20, "Normal" },
 			{ "radio", "transfer_1", 215, 290, 80, 20, "Pulsate" },
 			{ "radio", "transfer_2", 215, 310, 80, 20, "Wobble" },
@@ -849,7 +863,7 @@ HMenu = {
 		},
 		apply_options = {
 			{ "acheckbox", "apply_light", 110, 394, 155, 14, "Apply light" },
-			{ "acheckbox", "apply_tex", 110, 408, 155, 14, "Apply texture" },
+			{ "acheckbox", "apply_tex_mode", 110, 408, 155, 14, "Apply texture" },
 			{ "acheckbox", "apply_align", 110, 422, 155, 14, "Align adjacent" },
 			{ "acheckbox", "apply_edit", 110, 436, 155, 14, "Edit switches and panels" },
 			{ "acheckbox", "apply_xparent", 110, 450, 155, 14, "Edit transparent sides" },
@@ -1387,12 +1401,16 @@ HMenu = {
 			state = "disabled"
 		elseif name == "apply_tex" then
 			if HApply.down(HApply.use_texture) then state = "active" end
+		elseif name == "apply_tex_mode" then
+			if HApply.down(HApply.use_texture) or HApply.use_transfer then state = "active" end
 		elseif name == "apply_light" then
 			if HApply.down(HApply.use_light) then state = "active" end
 		elseif name == "apply_align" then
 			if HApply.down(HApply.align) then state = "active" end
 		elseif name == "apply_xparent" then
 			if HApply.down(HApply.transparent) then state = "active" end
+		elseif name == "decouple_xparent" then
+			if Level.stash["decouple"] == "TRUE" then state = "active" end
 		elseif name == "apply_edit" then
 			if HApply.down(HApply.edit_panels) then state = "active" end
 		elseif name == "apply_realign" then
@@ -1417,12 +1435,12 @@ HMenu = {
 			local mode = tonumber(string.sub(name, 6))
 			if HApply.current_snap == mode then state = "active" end
 		elseif name == "apply_transfer" then
-			if HApply.use_transfer == 2 then state = "active" end
+			if HApply.use_transfer == 1 then state = "active" end
 		elseif string.sub(name, 1, 9) == "transfer_" then
 			local mode = tonumber(string.sub(name, 10))
 			if HApply.current_transfer == mode then state = "active" end
 			if HCollections.current_collection == 0 and mode ~= 5 then state = "disabled" end
-			if HApply.use_transfer == 1 and not HApply.down(HApply.use_texture) then state = "disabled" end
+			if HApply.use_transfer == 0 and not HApply.down(HApply.use_texture) then state = "disabled" end
 		elseif string.sub(name, 1, 6) == "light_" then
 			local mode = tonumber(string.sub(name, 7))
 			if HApply.current_light == mode then state = "active" end
@@ -1871,7 +1889,7 @@ HCollections = {
 		local coll = HCollections.current_coll()
 		local tex = Player.texture_palette.slots[coll].texture_index
 
-		if HApply.down(HApply.use_texture) or HApply.use_transfer == 2 then
+		if HApply.down(HApply.use_texture) or HApply.use_transfer == 1 then
 			if HApply.current_transfer == 4 then
 				local xoff = math.random() * math.max(0, img_static.width - size)
 				local yoff = math.random() * math.max(0, img_static.height - size)
