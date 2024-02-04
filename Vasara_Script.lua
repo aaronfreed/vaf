@@ -159,8 +159,8 @@ LANDSCAPES = { 27, 28, 29, 30 }
 SUPPRESS_ITEMS = true
 SUPPRESS_MONSTERS = true
 
-MAX_TAGS = 90     -- max: 90
-MAX_SCRIPTS = 90  -- max: 90
+MAX_TAGS = 90    -- max: 90
+MAX_SCRIPTS = 90 -- max: 90
 
 -- set to false to hide the Visual Mode header on startup
 SHOW_VISUAL_MODE_HEADER = true
@@ -169,10 +169,10 @@ SHOW_VISUAL_MODE_HEADER = true
 SHOW_TELEPORT_DESTINATION = true
 
 -- cursor speed settings: larger numbers mean a slower mouse
-MENU_VERTICAL_RANGE = 30      -- default: 30
-MENU_HORIZONTAL_RANGE = 70    -- default: 70
-DRAG_VERTICAL_RANGE = 80      -- default: 80
-DRAG_HORIZONTAL_RANGE = 120   -- default: 120
+MENU_VERTICAL_RANGE = 30    -- default: 30
+MENU_HORIZONTAL_RANGE = 70  -- default: 70
+DRAG_VERTICAL_RANGE = 80    -- default: 80
+DRAG_HORIZONTAL_RANGE = 120 -- default: 120
 
 -- how far you can drag a texture before it stops moving (in World Units)
 DRAG_VERTICAL_LIMIT = 1
@@ -202,6 +202,9 @@ QUANTIZE_MODE = 0 -- 0 = absolute, 1 = negative (northwest), 2 = center, 3 = pos
 QUANTIZE_X = true
 QUANTIZE_Y = true -- set both to false to disable grid snap
 DEFAULT_QUANTIZE = 10 -- see snap_denominators below for possible options here: first menu option is 1, second is 2, third is 3, etc
+AUTOMATIC_LANDSCAPE = true -- whether textures in landscape collections should automatically have "landscape" transfer mode set. (while overriding this could conceivably be useful occasionally, false seems like an undesirable default, but i've included it for completeness)
+OVERRIDE_TERMINAL_COUNT = true -- whether to use the terminal count in merged maps (this will tell you that you're using a merged map, but it's annoying)
+DECOUPLE_TRANSPARENT = false -- if true, Vasara edits transparent sides on both sides of a line (its traditional behaviour); set to false to disable this
 
 -- END PREFERENCES -- no user serviceable parts below ;)
 
@@ -209,7 +212,7 @@ DEFAULT_QUANTIZE = 10 -- see snap_denominators below for possible options here: 
 MAX_LIGHTS = 98 -- maximum number of lights we can accommodate
 
 Game.monsters_replenish = not SUPPRESS_MONSTERS
-snap_denominators = { 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 30, 32, 40, 48, 60, 64, 128 }
+snap_denominators = { 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 18, 20, 24, 30, 32, 36, 40, 48, 60, 64, 128 }
 snap_modes = { 1 }
 for _,d in ipairs(snap_denominators) do
 	if d ~= 1 then table.insert(snap_modes, string.format("1/%d",d)) end
@@ -368,6 +371,7 @@ SMode = {
 			p._cursor_x = 320
 			p._cursor_y = 240
 			p._advanced_mode = not SHOW_VISUAL_MODE_HEADER
+			p._override_landscape = not AUTOMATIC_LANDSCAPE
 
 			SMode.default_attribute(p)
 
@@ -591,7 +595,7 @@ SMode = {
 
 					SUndo.add_undo(p, surface)
 					UApply.apply_texture(p, surface, coll, tex, landscape)
-					if is_transparent_side(surface) then
+					if is_transparent_side(surface) and not p._apply.decouple_transparent then
 						-- put the same texture on the opposite side of the line
 						local dsurface = nil
 						local side = Sides[surface.index]
@@ -980,6 +984,7 @@ SMode = {
 			align = p._apply.align,
 			realign = p._apply.realign,
 			transparent = p._apply.transparent,
+			decouple_transparent = p._apply.decouple_transparent,
 			edit_panels = p._apply.edit_panels,
 			quantize_mode = p._apply.quantize_mode,
 			advanced_mode = p._advanced_mode,
@@ -998,6 +1003,7 @@ SMode = {
 		p._apply.align = p._apply_saved.align
 		p._apply.realign = p._apply_saved.realign
 		p._apply.transparent = p._apply_saved.transparent
+		p._apply.decouple_transparent = p._apply_saved.decouple_transparent
 		p._apply.edit_panels = p._apply_saved.edit_panels
 		p._apply.quantize_mode = p._apply_saved.quantize_mode
 		p._advanced_mode = p._apply_saved.advanced_mode
@@ -1016,6 +1022,7 @@ SMode = {
 			align = ALIGN_ADJACENT,
 			realign = REALIGN_WHEN_RETEXTURING,
 			transparent = APPLY_TRANSPARENT,
+			decouple_transparent = DECOUPLE_TRANSPARENT,
 			edit_panels = EDIT_PANELS,
 			quantize_mode = QUANTIZE_MODE,
 		}
@@ -1068,6 +1075,10 @@ SMode = {
 				p._apply.transfer = not p._apply.transfer
 			elseif name == "apply_realign" then
 				p._apply.realign = not p._apply.realign
+			elseif name == "override_landscape" then
+				p._override_landscape = not p._override_landscape
+			elseif name == "decouple_xparent" then
+				p._apply.decouple_transparent = not p._apply.decouple_transparent
 			elseif name == "xgrid" then
 				p._quantize_x = not p._quantize_x
 			elseif name == "ygrid" then
@@ -1265,7 +1276,7 @@ SKeys = {
 					local dummy = 0
 					if p._mic_dummy then dummy = dummy + 4 end
 
-					p.texture_palette.slots[42].texture_index = dummy
+					-- p.texture_palette.slots[42].texture_index = dummy
 				end
 			end
 		end
@@ -1635,7 +1646,7 @@ SPanel = {
 				total = #Lights
 			elseif cur == SPanel.terminal then
 				total = #Terminals
-				if total < 1 then total = MAX_SCRIPTS end
+				if total < 1 or OVERRIDE_TERMINAL_COUNT then total = MAX_SCRIPTS end
 			elseif cur == SPanel.tag_switch or cur == SPanel.chip or cur == SPanel.wires then
 				total = MAX_TAGS
 			end
@@ -1778,7 +1789,7 @@ SStatus = {
 				p.texture_palette.slots[41].texture_index = 0
 				p.texture_palette.slots[43].texture_index = 0
 				p.texture_palette.slots[44].texture_index = 0
-				p.texture_palette.slots[44].type = 2
+				p.texture_palette.slots[44].type = 1
 				p.texture_palette.slots[45].texture_index = 0
 				p.texture_palette.slots[45].type = QUANTIZE_MODE
 				p.texture_palette.slots[46].texture_index = 0
@@ -1809,9 +1820,9 @@ SStatus = {
 				else
 					p.texture_palette.slots[44].texture_index = p._transfer_mode
 					if p._apply.transfer then
-						p.texture_palette.slots[44].type = 2
-					else
 						p.texture_palette.slots[44].type = 1
+					else
+						p.texture_palette.slots[44].type = 0
 					end
 				end
 
@@ -1830,6 +1841,7 @@ SStatus = {
 				-- i dunno why but i have to do this here
 				if p._quantize_x then status = status + 64 end
 				if p._quantize_y then status = status + 128 end
+				if p._apply.decouple_transparent then Level.stash["decouple"] = "TRUE" else Level.stash["decouple"] = "false" end
 				p.texture_palette.slots[46].texture_index = status
 
 				p.texture_palette.slots[47].texture_index = p._menu_item
@@ -1848,40 +1860,44 @@ SMenu = {
 	menus = {
 		[SMode.attribute] = {
 			{ "bg", nil, 20, 80, 600, 330, nil },
-			{ "checkbox", "apply_tex", 30, 85, 160, 20, "Apply texture" },
-			{ "checkbox", "apply_align", 30, 105, 160, 20, "Align adjacent" },
-			{ "checkbox", "apply_edit", 30, 125, 160, 20, "Edit switches and panels" },
-			{ "checkbox", "apply_xparent", 30, 145, 160, 20, "Edit transparent sides" },
-			{ "checkbox", "apply_realign", 30, 165, 160, 20, "Realign when retexturing" },
-			{ "checkbox", "advanced", 30, 185, 160, 20, "Visual Mode header" },
-			{ "label", "nil", 30+5, 205, 45, 20, "Snap:" },
-			{ "checkbox", "xgrid", 30, 225, 45, 20, "X" },
-			{ "checkbox", "ygrid", 30, 245, 45, 20, "Y" },
-			{ "radio", "grid_absolute", 75, 205, 115, 20, "Absolute" },
-			{ "radio", "grid_negative", 75, 225, 115, 20, "Northwest (relative)" },
-			{ "radio", "grid_center", 75, 245, 115, 20, "Centered (relative)" },
-			{ "radio", "grid_positive", 75, 265, 115, 20, "Southeast (relative)" },
-			{ "radio", "snap_1", 30, 265, 45, 20, snap_modes[1] },
-			{ "radio", "snap_2", 30, 285, 50, 20, snap_modes[2] },
-			{ "radio", "snap_3", 30, 305, 50, 20, snap_modes[3] },
-			{ "radio", "snap_4", 30, 325, 50, 20, snap_modes[4] },
-			{ "radio", "snap_5", 30, 345, 50, 20, snap_modes[5] },
-			{ "radio", "snap_6", 30, 365, 50, 20, snap_modes[6] },
-			{ "radio", "snap_7", 30, 385, 50, 20, snap_modes[7] },
-			{ "radio", "snap_8", 80, 285, 55, 20, snap_modes[8] },
-			{ "radio", "snap_9", 80, 305, 55, 20, snap_modes[9] },
-			{ "radio", "snap_10", 80, 325, 55, 20, snap_modes[10] },
-			{ "radio", "snap_11", 80, 345, 55, 20, snap_modes[11] },
-			{ "radio", "snap_12", 80, 365, 55, 20, snap_modes[12] },
-			{ "radio", "snap_13", 80, 385, 55, 20, snap_modes[13] },
-			{ "radio", "snap_14", 135, 285, 55, 20, snap_modes[14] },
-			{ "radio", "snap_15", 135, 305, 55, 20, snap_modes[15] },
-			{ "radio", "snap_16", 135, 325, 55, 20, snap_modes[16] },
-			{ "radio", "snap_17", 135, 345, 55, 20, snap_modes[17] },
-			{ "radio", "snap_18", 135, 365, 55, 20, snap_modes[18] },
-			{ "radio", "snap_19", 135, 385, 55, 20, snap_modes[19] },
+			{ "checkbox", "apply_tex", 30, 85, 170, 20, "Apply texture" },
+			{ "checkbox", "apply_align", 30, 105, 170, 20, "Align adjacent" },
+			{ "checkbox", "apply_edit", 30, 125, 170, 20, "Edit switches & panels" },
+			{ "checkbox", "apply_xparent", 30, 145, 170, 20, "Edit transparent sides" },
+			{ "checkbox", "decouple_xparent", 30, 165, 170, 20, "Decouple transparent sides" },
+			{ "checkbox", "apply_realign", 30, 185, 170, 20, "Realign when retexturing" },
+			{ "checkbox", "advanced", 30, 205, 170, 20, "Visual Mode header" },
+			{ "label", "nil", 30+5, 225, 40, 20, "Snap:" },
+			{ "checkbox", "xgrid", 30, 245, 40, 20, "X" },
+			{ "checkbox", "ygrid", 30, 265, 40, 20, "Y" },
+			{ "radio", "grid_absolute", 70, 225, 130, 20, "Absolute" },
+			{ "radio", "grid_negative", 70, 245, 130, 20, "Northwest (relative)" },
+			{ "radio", "grid_center", 70, 265, 130, 20, "Centered (relative)" },
+			{ "radio", "grid_positive", 70, 285, 130, 20, "Southeast (relative)" },
+			{ "radio", "snap_1", 30, 285, 40, 20, snap_modes[1] },
+			{ "radio", "snap_2", 30, 305, 40, 20, snap_modes[2] },
+			{ "radio", "snap_3", 30, 325, 40, 20, snap_modes[3] },
+			{ "radio", "snap_4", 30, 345, 40, 20, snap_modes[4] },
+			{ "radio", "snap_5", 30, 365, 40, 20, snap_modes[5] },
+			{ "radio", "snap_6", 30, 385, 40, 20, snap_modes[6] },
+			{ "radio", "snap_7", 70, 305, 42, 20, snap_modes[7] },
+			{ "radio", "snap_8", 70, 325, 42, 20, snap_modes[8] },
+			{ "radio", "snap_9", 70, 345, 42, 20, snap_modes[9] },
+			{ "radio", "snap_10", 70, 365, 42, 20, snap_modes[10] },
+			{ "radio", "snap_11", 70, 385, 42, 20, snap_modes[11] },
+			{ "radio", "snap_12", 112, 305, 42, 20, snap_modes[12] },
+			{ "radio", "snap_13", 112, 325, 42, 20, snap_modes[13] },
+			{ "radio", "snap_14", 112, 345, 42, 20, snap_modes[14] },
+			{ "radio", "snap_15", 112, 365, 42, 20, snap_modes[15] },
+			{ "radio", "snap_16", 112, 385, 42, 20, snap_modes[16] },
+			{ "radio", "snap_17", 154, 305, 46, 20, snap_modes[17] },
+			{ "radio", "snap_18", 154, 325, 46, 20, snap_modes[18] },
+			{ "radio", "snap_19", 154, 345, 46, 20, snap_modes[19] },
+			{ "radio", "snap_20", 154, 365, 46, 20, snap_modes[20] },
+			{ "radio", "snap_21", 154, 385, 46, 20, snap_modes[21] },
 			{ "checkbox", "apply_light", 205, 85, 240, 20, "Apply light:" },
-			{ "checkbox", "apply_transfer", 215+5, 250, 240, 20, "Apply transfer mode:" },
+			{ "checkbox", "apply_transfer", 215, 250, 250, 20, "Apply transfer mode:" },
+			-- { "checkbox", "override_landscape", 340, 250, 125, 20, "Override 'Landscape'" },
 			{ "radio", "transfer_0", 215, 270, 80, 20, "Normal" },
 			{ "radio", "transfer_1", 215, 290, 80, 20, "Pulsate" },
 			{ "radio", "transfer_2", 215, 310, 80, 20, "Wobble" },
@@ -2551,7 +2567,7 @@ UTeleport = {
 			p._teleport.last_target_mode = poly.floor.transfer_mode
 			p._teleport.last_target_type = poly.type
 			poly.floor.transfer_mode = "static"
-			-- poly.type = PolygonTypes["major ouch"]
+			poly.type = PolygonTypes["major ouch"]
 		end
 	end,
 
