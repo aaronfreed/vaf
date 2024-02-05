@@ -19,7 +19,7 @@ This remains a work in progress, hence its beta status. Below are:
 - brief installation instructions, along with a link to my detailed Weland setup guide
 - a more detailed overview of Vasara 2’s new features, planned additions, and known bugs
 - extremely obsessive notes on mapping terminology
-- the original release notes from Vasara 1.0.x, with added notes where appropriate
+- the original release notes from Vasara 1.0.x, with added notes where appropriate. (At some point, I plan to integrate these more seamlessly into my own notes.)
 
 ----------------------------------------------------------------
 ### GETTING STARTED:
