@@ -15,15 +15,27 @@ Hopper also has a **[GitHub repository for Vasara 1.0.2](https://github.com/Hopp
 - to add features that it had been sorely lacking for years
 - to fix longstanding bugs.
 
-This remains a work in progress, hence its beta status. A more detailed overview:
+This remains a work in progress, hence its beta status. Below are:
+- brief installation instructions, along with a link to my detailed Weland setup guide
+- a more detailed overview of Vasara 2’s new features, planned additions, and known bugs
+- extremely obsessive notes on mapping terminology
+- the original release notes from Vasara 1.0.x, with added notes where appropriate
+
+----------------------------------------------------------------
+### GETTING STARTED:
+
+1. Click “Code”.
+2. Click “Download ZIP”.
+3. Save to the “Plugins” directory for the scenario you want to use it with. If one doesn’t exist, make one. Mac users may need to make one here instead: https://github.com/Aleph-One-Marathon/alephone/wiki/File-Locations#mac-os-x-1
+4. *(Optional, but highly recommended.)* Set it up in Weland. Windows and Mac users can refer to https://aaronfreed.github.io/mapmaking.html#welandsetup if this proves challenging. (One of these days I’ll write a guide for Linux.)
 
 ----------------------------------------------------------------
 ### NEW FEATURES & PLANNED ADDITIONS:
 
 - I’m almost finished redoing the grid interface.
-  - Vasara 1.0.x only offered five grid sizes: 1/2, 1/3, 1/4, 1/5, and 1/8 world units (WU). We’ve bumped this number up to nineteen by adding options for 1, 1/6, 1/10, 1/12, 1/16, 1/20, 1/24, 1/30, 1/32, 1/40, 1/48, 1/60, 1/64, and 1/128 WU. 1/16 WU is now the default selection because it’s what I use by far the most. (See “Notes on Terminology” below for explanations of world units, internal units, and the engine’s space measurements.)
+  - Vasara 1.0.x only offered five grid sizes: 1/2, 1/3, 1/4, 1/5, and 1/8 world units (WU). We’ve bumped this number up to twenty-one by adding options for 1, 1/6, 1/10, 1/12, 1/16, 1/18, 1/20, 1/24, 1/30, 1/32, 1/36, 1/40, 1/48, 1/60, 1/64, and 1/128 WU. 1/16 WU is now the default selection because it’s what I use by far the most. (See “Notes on Terminology” below for explanations of world units, internal units, and the engine’s space measurements.)
   - The default “absolute” option is the vanilla alignment you’re used to from previous versions of Vasara: textures on polygons will be aligned to the map grid, and textures on walls will be aligned to the top-left.
-  - In addition, I’ve added three new “relative” options, which can be useful if you drew an entire map off-grid, but have a bunch of rectangles whose points align to a *different* grid (this applies to a disturbingly large number of levels in *Where Monsters Are in Dreams*) or you recentred a map in Forge and it wasn’t recentred on-grid:
+  - In addition, I’ve added three new “relative” options, which can be useful if you drew an entire map off-grid, but have a bunch of rectangles whose points align to a *different* grid (this applies to a disturbingly large number of levels in *Where Monsters Are in Dreams*), or if you recentred a map in Forge and it wasn’t recentred on-grid:
     - The “northwest” option treats walls exactly like the “absolute” option does; however, it aligns floors and ceilings to the westernmost X coordinate and the northernmost Y coordinate found within their respective polygons.
     - The “centred” option applies in both directions to floors, ceilings, and walls. I haven’t yet perfected the vertical alignment option for walls, but the horizontal alignment should always work correctly, and floors and ceilings should be aligned to a grid centred precisely within their respective polygons. I briefly had this set as the default, but reverted it to “absolute” since (a) it’s what people are used to and (b) I still find myself using it the most often.
     - The “southeast” option aligns walls to the right rather than to the left and to the bottom rather than to the top (although its vertical alignment is also not yet perfect). Meanwhile, it aligns floors and ceilings to the easternmost X coordinate and the southernmost Y coordinate within their respective polygons, making it the precise opposite of the “northwest” option.
