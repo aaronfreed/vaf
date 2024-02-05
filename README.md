@@ -28,7 +28,7 @@ This remains a work in progress, hence its beta status. Below are:
 2. Click “Download ZIP”.
 3. Save to the “Plugins” directory for the scenario you want to use it with. If one doesn’t exist, make one. Mac users may need to make one here instead: https://github.com/Aleph-One-Marathon/alephone/wiki/File-Locations#mac-os-x-1
 4. *(Optional, but highly recommended.)* Set it up in Weland. There are brief instructions in Weland’s readme; should one of the steps prove challenging or frustrating, I’ve written detailed guides for doing this on Windows and MacOS: https://aaronfreed.github.io/mapmaking.html#welandsetup (One of these days I’ll write a guide for Linux.)
-  * Alternately, you can run it through Aleph One directly; as this will require you to swap the map back and forth between Aleph One and Weland, simplifying version control should in and of itself be sufficient reason to avoid this approach. However, should you be unable to get Weland to launch Vasara correctly, select it in your Aleph One install’s Preferences -> Plugins, ensure that no other plugins that use solo Lua are enabled, and ensure that “Solo Lua Script” is unchecked.
+    * Alternately, you can run it through Aleph One directly; as this will require you to swap the map back and forth between Aleph One and Weland, simplifying version control should in and of itself be sufficient reason to avoid this approach. However, should you be unable to get Weland to launch Vasara correctly, select it in your Aleph One install’s Preferences -> Plugins, ensure that no other plugins that use solo Lua are enabled, and ensure that “Solo Lua Script” is unchecked.
 
 ----------------------------------------------------------------
 ### NEW FEATURES & PLANNED ADDITIONS:
