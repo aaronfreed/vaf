@@ -16,10 +16,11 @@ Hopper also has a **[GitHub repository for Vasara 1.0.2](https://github.com/Hopp
 - to fix longstanding bugs.
 
 This remains a work in progress, hence its beta status. Below are:
-- brief installation instructions, along with a link to my detailed Weland setup guide
-- a more detailed overview of Vasara 2’s new features, planned additions, and known bugs
-- extremely obsessive notes on mapping terminology
-- the original release notes from Vasara 1.0.x, with added notes where appropriate. (At some point, I plan to integrate these more seamlessly into my own notes.)
+- [brief installation instructions, including a link to my detailed Weland setup guide](#getting-started)
+- [a more detailed overview of Vasara 2’s new features](#new-features--planned-additions)
+- [a somewhat less exhaustive overview of bug fixes, known issues, and credits](#bug-fixes-current-issues-planned-features-and-credits)
+- [extremely obsessive notes on mapping terminology](#notes-on-terminology) (you do not need to memorize all of this before you begin texturing, but it may clarify some of the terminology I use in the above sections)
+- [the original release notes from Vasara 1.0.x, with added notes where appropriate](#vasara-103) (at some point, I plan to integrate these more seamlessly into my own notes)
 
 ----------------------------------------------------------------
 ### GETTING STARTED:
@@ -29,6 +30,8 @@ This remains a work in progress, hence its beta status. Below are:
 3. Save to the “Plugins” directory for the scenario you want to use it with. If one doesn’t exist, make one. Mac users may need to make one here instead: https://github.com/Aleph-One-Marathon/alephone/wiki/File-Locations#mac-os-x-1
 4. *(Optional, but highly recommended.)* Set it up in Weland. There are brief instructions in Weland’s readme; should one of the steps prove challenging or frustrating, I’ve written detailed guides for doing this on Windows and MacOS: https://aaronfreed.github.io/mapmaking.html#welandsetup (One of these days I’ll write a guide for Linux.)
     * Alternately, you can run it through Aleph One directly; as this will require you to swap the map back and forth between Aleph One and Weland, simplifying version control should in and of itself be sufficient reason to avoid this approach. However, should you be unable to get Weland to launch Vasara correctly, select it in your Aleph One install’s Preferences -> Plugins, ensure that no other plugins that use solo Lua are enabled, and ensure that “Solo Lua Script” is unchecked. You will then have to type `.save level` into the Lua console to save the level and – this step is important – *make sure to reload it in Weland **after** you save it.* Which in turn, on Windows, will require you to quit Aleph One (or take some other similarly tedious step); and once you relaunch Aleph One, you’ll have to make sure *it* loads the right version of the level – like I said, I strongly recommend against this approach.
+  
+[Back to the top](#vasara)
 
 ----------------------------------------------------------------
 ### NEW FEATURES & PLANNED ADDITIONS:
@@ -70,6 +73,8 @@ This remains a work in progress, hence its beta status. Below are:
   - Applying entirely different textures to each side – especially useful if one texture is a horizontal flip of the other
   - Applying a texture to only one side of a line
 
+[Back to the top](#vasara)
+
 ----------------------------------------------------------------
 ### BUG FIXES, CURRENT ISSUES, PLANNED FEATURES, AND CREDITS:
 **Bug fixes:**
@@ -93,6 +98,8 @@ This remains a work in progress, hence its beta status. Below are:
 
 **Credits:**
 - Most of the updates are mine; a few are CryoS (notably the platform switch fix and the initial work at expanding the grid selections) or Solra’s (e.g., the extended stack traces) work.
+
+[Back to the top](#vasara)
 
 ----------------------------------------------------------------
 ### NOTES ON TERMINOLOGY:
@@ -135,6 +142,8 @@ This remains a work in progress, hence its beta status. Below are:
   - If a side’s ambient delta value is -2, it always renders as completely black.
 
 --**Aaron**, 2023-12-12 (last edited 2024-02-06)
+
+[Back to the top](#vasara)
 
 ----------------------------------------------------------------
 ## Vasara 1.0.3
@@ -248,3 +257,5 @@ To use Vasara with additional or moved collections (or to limit M2 to the 3 work
 
 If you have any questions, comments, or bugs to report, you can email Hopper:
 - hopper@whpress.com
+
+[Back to the top](#vasara)
