@@ -154,7 +154,7 @@ This remains a work in progress, hence its beta status. Below are:
 ----------------------------------------------------------------
 ### DESCRIPTION:
 
-Vasara is a Lua script and dedicated HUD for use in texturing **Aleph One** maps. The HUD lists the keyboard shortcts for easy reference, and features a GUI-style interface for choosing textures and options.
+Vasara is a Lua script and dedicated HUD for use in texturing **Aleph One** maps. The HUD lists the keyboard shortcuts for easy reference, and features a GUI-style interface for choosing textures and options.
 
 To get the most out of Vasara, be sure to turn on "**Use Mouse**" and "**Overlay Map**" in your preferences.
 
@@ -164,18 +164,18 @@ To get the most out of Vasara, be sure to turn on "**Use Mouse**" and "**Overlay
 - Drag the downloaded .zip file, or the unzipped "Vasara" folder, into the "**Plugins**" folder inside your *Marathon Infinity* or custom scenario folder. (Create a "**Plugins**" folder if you don't already have one.)
 - Launch **Aleph One**, and go to "**Preferences**", then "**Environment**", then **"Plugins**" to enable or disable Vasara.
 
-***(EDITORIAL NOTE:** With **Aleph One** 1.7 and later, **Plugins** isn’t found under **Environment** but is instead its own button. But then, you can also just launch **Vasara** from within **Weland,** and you should. See Weland’s readme for basic instructions or https://aaronfreed.github.io/mapmaking.html#welandsetup for a more detailed setup guide. **-Aaron)***
+> ***(EDITORIAL NOTE:** With **Aleph One** 1.7 and later, **Plugins** isn’t found under **Environment** but is instead its own button. But then, you can also just launch **Vasara** from within **Weland,** and you should. See Weland’s readme for basic instructions or https://aaronfreed.github.io/mapmaking.html#welandsetup for a more detailed setup guide. **-Aaron)***
 
 **IMPORTANT:** other plugins can interfere with Vasara. You should be all right as long as anything listed after Vasara in your plugins list is turned off. If you have problems, try turning off all plugins except Vasara.
 
-***(EDITORIAL NOTE:** More specifically, it’s best to disable any other plugin that uses solo Lua while using Vasara. These will be marked as such on the plugins list. Any other plugins probably won’t affect its performance. **-Aaron)***
+> ***(EDITORIAL NOTE:** More specifically, it’s best to disable any other plugin that uses solo Lua while using Vasara. These will be marked as such on the plugins list. Any other plugins probably won’t affect its performance. **-Aaron)***
 
 ----------------------------------------------------------------
 ### GETTING STARTED:
 
 Vasara has four modes. The tabs at the top left of the screen show which mode you're in, and the area to the right shows what your keys do. For some commands, you need to hold the **Microphone** key down and then press the other key shown.
 
-***(EDITORIAL NOTE:** The Microphone key is now referred to as the **Aux Trigger** key. I will henceforth correct the term without further notes to this extent. **-Aaron)***
+> ***(EDITORIAL NOTE:** The Microphone key is now referred to as the **Aux Trigger** key. I will henceforth correct the term without further notes to this extent. **-Aaron)***
 
 Vasara will feel most natural if you have "**Use Mouse**" turned on, and have the primary trigger mapped to your left mouse button. That way, the most common actions can be done by pointing and clicking.
 
@@ -189,7 +189,7 @@ Vasara will feel most natural if you have "**Use Mouse**" turned on, and have th
 
 You can get back to **Visual Mode** from any other mode by hitting the **secondary trigger** (the "grenade" button). Always check the top of the screen to see what your options are.
 
-***(EDITORIAL NOTE:** If you’ve launched Vasara through Weland as I’ve suggested doing above, the rest of this section will not be necessary. -**Aaron)***
+> ***(EDITORIAL NOTE:** If you’ve launched Vasara through Weland as I’ve suggested doing above, the rest of this section will not be necessary. -**Aaron)***
 
 To save your work, press the **Chat/Console** key (default is backslash: \ ) and then type:
 
@@ -214,7 +214,7 @@ Once you're done texturing, you can take screenshots of your level in Vasara. Us
 
 The two Lua scripts have various preferences at the top. You can change the mouse cursor sensitivity, the color scheme, the collection names, and more. Poke around there if you're interested.
 
-***(EDITORIAL NOTE:** Owing to how one of our script elements works, these had to be moved down a bit. They are currently about 100 lines down. --**Aaron**)*
+> ***(EDITORIAL NOTE:** Owing to how one of our script elements works, these had to be moved down a bit. They are currently about 100 lines down. --**Aaron**)*
 
 ----------------------------------------------------------------
 ### SCENARIO COMPATIBILITY:
@@ -223,7 +223,7 @@ Out of the box, Vasara only works with scenarios that use the same 5 texture set
 
 To use Vasara with additional or moved collections (or to limit M2 to the 3 working landscapes), edit the "walls" and "landscapes" settings at the top of **Vasara_Script.lua**.
 
-***(EDITORIAL NOTE:** Again, these are currently about 100 lines into the script. --**Aaron**)*
+> ***(EDITORIAL NOTE:** Again, these are currently about 100 lines into the script. --**Aaron**)*
 
 ----------------------------------------------------------------
 ### CHANGELOG:
