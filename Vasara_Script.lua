@@ -605,12 +605,14 @@ SMode = {
 								dsurface = line.counterclockwise_side.transparent
 							elseif line.counterclockwise_polygon then
 								dsurface = Sides.new(line.counterclockwise_polygon, line).transparent
+								VML.init()
 							end
 						else
 							if line.clockwise_side then
 								dsurface = line.clockwise_side.transparent
 							elseif line.clockwise_polygon then
 								dsurface = Sides.new(line.clockwise_polygon, line).transparent
+								VML.init()
 							end
 						end
 
@@ -2399,6 +2401,7 @@ SCollections = {
 		elseif is_line(o) then
 			-- we need to make a new side
 			surface = VML.side_surface(Sides.new(polygon, o), z)
+			VML.init() -- rerunning this is inefficient, but it takes so little time it's not worth improving
 		end
 		return surface, polygon
 	end,
@@ -2645,7 +2648,7 @@ VML = {
 	ccw_endpoint_sides = {},
 	init = function()
 		local endpoint, side
-		for endpoint in Endpoints() do 
+		for endpoint in Endpoints() do
 			VML.cw_endpoint_sides[endpoint] = {}
 			VML.ccw_endpoint_sides[endpoint] = {}
 		end
