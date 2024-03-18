@@ -87,12 +87,12 @@ Vasara 2.0b lists what you’re looking at in the upper-left corner of visual mo
     ```
   - `bar` should almost always be between -1 and 1.
   - Also, be warned that maps that use ambient delta will break if you run them through the Weland copy and paste plugin.
-  - I’m not especially confident in my UI ideas (I’ve long held that UI is far too important to be left up to programmers that aren’t UI specialists, which I very decidedly am not). At the moment, I tentatively plan to add an “ambient delta modifier” hotkey that’ll be combined with other keys: one will select which digit to edit, another two will adjust it upwards or downwards, yet another will apply it, and yet another will sample it from another wall, but I haven’t gotten past the concept stage and probably won’t get around to writing it for weeks or even months. If you have any better ideas for a UI for this feature, please contact me [on GitHub](https://github.com/aaronfreed) or on Discord (**@aaron6608**).
+  - I’m not especially confident in my UI ideas (I’ve long held that UI is far too important to be left up to programmers that aren’t UI specialists, which I very decidedly am not). At the moment, I tentatively plan to add an “ambient delta modifier” hotkey that’ll be combined with other keys: one will select which digit to edit, another two will adjust it upwards or downwards, yet another will apply it, and yet another will sample it from another wall, but I haven’t gotten past the concept stage and probably won’t get around to writing it for weeks or even months. If you have any better ideas for a UI for this feature, please [contact me](#credits-and-contact-info).
 
 #### Aleph One 1.7’s new transfer modes
 Vasara 2.0b adds the reverse slide, 2x, and 4x transfer modes from Aleph One 1.7.
 - This flat-out breaks if you aren’t using at least Aleph One 1.7, and I don’t care. Upgrade your Aleph One.
-- I don’t know what sort of preview to do for the 2x or 4x transfer modes. Contact me (see directly above) if you have any ideas.
+- I don’t know what sort of preview to do for the 2x or 4x transfer modes. [Contact me](#credits-and-contact-info) if you have any ideas.
 
 #### Realign when retexturing
 - The new “Realign when retexturing” option preserves the old behavior of Vasara of realigning textures to (0,0) when you change a texture. I currently have it disabled by default, since it’s possible to realign textures to (0,0) manually with it disabled, while it’s *not* possible to preserve existing texture alignment with it *enabled*, but sometimes having it enabled is useful behavior.
