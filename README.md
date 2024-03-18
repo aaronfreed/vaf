@@ -10,7 +10,7 @@ Hopper also has a **[GitHub repository for Vasara 1.0.2](https://github.com/Hopp
 
 ----------------------------------------------------------------
 ## WIP notes by Aaron (see below for original readme):
-**Vasara** is a texturing utility for **[Marathon Aleph One](https://alephone.lhowon.org)** 1.7 or later, best used with **[Weland](https://github.com/treellama/weland/releases)** (see [my detailed setup guide](https://aaronfreed.github.io/mapmaking.html#welandsetup) if Weland’s readme proves confusing). The original version hasn’t been updated in years, so I’ve taken it upon myself, with a little help from my friends, to update it for several reasons:
+**Vasara** is a texturing utility for **[Marathon Aleph One](https://alephone.lhowon.org)** 1.7 or later, best used with **[Weland](https://github.com/treellama/weland/releases)** (see [my detailed setup guide](https://aaronfreed.github.io/mapmaking101.html#welandsetup) if Weland’s readme proves confusing). The original version hasn’t been updated in years, so I’ve taken it upon myself, with a little help from my friends, to update it for several reasons:
 - to take advantage of new Aleph One features
 - to add features that it had been sorely lacking for years
 - to fix longstanding bugs.
@@ -18,7 +18,7 @@ Hopper also has a **[GitHub repository for Vasara 1.0.2](https://github.com/Hopp
 This remains a work in progress, hence its beta status. Below are:
 - [brief installation instructions, including a link to my detailed Weland setup guide](#getting-started)
 - [a more detailed overview of Vasara 2’s new features](#new-features--planned-additions)
-- [a somewhat less exhaustive overview of bug fixes, known issues, and credits](#bug-fixes-current-issues-planned-features-and-credits)
+- [a somewhat less exhaustive overview of bug fixes, known issues, planned features, credits, and links to additional resources](#bug-fixes-current-issues-planned-features-and-credits)
 - [extremely obsessive notes on mapping terminology](#notes-on-terminology) (you do not need to memorize all of this before you begin texturing, but it may clarify some of the terminology I use in the above sections)
 - [the original release notes from Vasara 1.0.x, with added notes where appropriate](#vasara-103) (at some point, I plan to integrate these more seamlessly into my own notes)
 
@@ -77,13 +77,13 @@ This remains a work in progress, hence its beta status. Below are:
 
 ----------------------------------------------------------------
 ### BUG FIXES, CURRENT ISSUES, PLANNED FEATURES, AND CREDITS:
-**Bug fixes:**
+#### Bug fixes:
 - I’ve fixed the Lua error spam for lights > 55, but haven’t figured out how to get them to preview correctly. You can currently select lights 0-97 in the main palette, and even if you have both “apply light” and “apply texture” selected with lights > 97, it won’t spam errors. I may figure out a way to reduce the size of each light if there are more than 98 so that more will fit in the selector (but really, what are you doing with that many lights? I’ve only ever made a map with that many lights to test Vasara).
 - Platform and light switches now display a lot more options, which should reduce the amount people need to rely on tags. Side note: [tags are terrible](https://aaronfreed.github.io/mapmaking.html#tagsareterrible). :-)
 - ~~The border for the selected texture on the texture palette broke and I haven’t figured out why. This has been the most annoying thing to debug.~~ Fixed. Apparently I needed to throw in some `tonumber` statements that weren't previously necessary. ¯\\(°\_o)/¯
 - “Align adjacent” now works correctly with *most* sides Vasara has created since loading the map. Still not aligning correctly: certain transparent sides, explained below.
 
-**Current issues:**
+#### Current issues:
 - Transparent sides don’t align at all when the reverse polygon’s ceiling is higher than or has the same height as the obverse polygon’s, and the reverse polygon’s floor is lower than or has the same height as the obverse polygon’s.
 - I think I understand the math needed to fix alignment of transparent textures on the reverse side; I just haven’t figured out how to get Vasara to know which transparent sides should be aligned to which others. (In fact, I’m not fully sure I know this myself.) Because of this, I’ve introduced the “decouple transparent textures” mode, though for the above reason, you’ll frequently have to align transparent textures on one side of a line manually (this should at least help for the other side, though).
 - Walking over “must be explored” polygons (or, if the mission type is set to “Exploration (M1)”, even seeing them somewhere within your field of view) changes them to “normal”. This may require some engine-side changes to fix; in fact, some previous engine-side changes were meant to have provided a fix, but I’m not certain if it’s working as intended. I’ll have to investigate further.
@@ -92,19 +92,26 @@ This remains a work in progress, hence its beta status. Below are:
 - Freezing with enough momentum will result in continued camera bob. When you come out of the freeze state, your momentum will be reduced (or cut to zero).
 - See also [https://github.com/aaronfreed/vasara/issues].
 
-**Planned features:**
+#### Planned features:
 - As much as I hated Forge’s implementation of this feature, I’m tentatively planning to add an “adjust heights” mode that would adjust polygon heights, on the strict condition that it _always_ snap to the player’s selected grid setting.
   - Forge’s “adjust height” mode _always_ adjusted heights by 51 IU (≈.04980 WU). This meant that adjusting the height by five clicks would have moved it by 255 IU (≈.24902 WU), which caused egregious _mis_-alignments when mappers were too lazy to clean up their heights. (Bungie could’ve easily fixed this by simply adding or subtracting 1 IU \[≈.00098 WU\] with each five adjustments.) For those of us on the obsessive-compulsive spectrum, I believe this qualifies as a war crime. Any implementation of this feature that does _not_ align to a grid is to be nuked from orbit – it’s the only way to be sure.
 - Vasara’s code is very, very dense and very, very sparsely documented, so this has been a slow project and will probably continue to be slow, but I hope to get it finished soon™.
 
-**Credits:**
+#### Credits:
 - Most of the updates are mine; a few are CryoS (notably the platform switch fix and the initial work at expanding the grid selections) or Solra’s (e.g., the extended stack traces) work.
+
+#### Further resources:
+- [Weland](https://github.com/treellama/weland/releases), just in case you somehow don’t have it yet. If you need help setting it up, see the relevant section of my beginners’ guide immediately below.
+- My mapmaking guide is currently available in two distinct flavours:
+  - [A guide for beginners](https://aaronfreed.github.io/mapmaking101.html), which is relatively brief by my standards
+  - [A much longer advanced guide](https://aaronfreed.github.io/mapmaking.html), which I’m planning to split up eventually (the beginners’ guide is step one of this process)
+- [The Aleph One GitHub wiki](https://github.com/Aleph-One-Marathon/alephone/wiki) is an invaluable resource
 
 [Back to the top](#vasara)
 
 ----------------------------------------------------------------
 ### NOTES ON TERMINOLOGY:
-**Lengths and heights:**
+#### Lengths and heights:
   - A **world unit** (WU) is the standard size of a texture repetition (i.e., not using the “2x”, “4x”, or “Landscape” transfer modes).
   - The game uses a much smaller scale to store its position values and to perform most of its calculations. I refer to this scale as **internal units** (IU). 1,024 internal units equal one world unit (thus, 1 IU = 0.0009765625 WU).
   - For reference, in vanilla game physics, the player is 819 IU (≈0.7998 WU) tall and has a radius of 256 IU (0.25 WU). There is contradictory information about how this corresponds to real-world measurements; the indispensable [Marathon’s Story page](https://marathon.bungie.org/story/) has an [entire section on this](https://marathon.bungie.org/story/ourheight.html), and the definitive answer is “¯\\(°_o)/¯”.
@@ -112,7 +119,7 @@ This remains a work in progress, hence its beta status. Below are:
   - Anvil and ShapeFusion list values for physics models in IU. The scale factor in a shapes file also corresponds to IU – each pixel of a shape with a scale factor of 1 will occupy 1 IU in the game world.
   - I present both WU and IU throughout the this document. This version of Vasara also displays both where space permits.
 
-**Lines, sides, and surfaces:**
+#### Lines, sides, and surfaces:
 - A **line** is what you’d draw in Forge or Weland, and what they display in top-down view.
 - Each line can have up to two associated **sides**. Generally, a side does not exist until a **texture** is placed on the line, usually because a mapmaker either paved the level or manually placed a texture. A line can have a side for each adjoining polygon; thus, if the line adjoins two polygons, it can have two sides, and if it adjoins one, it can only have one. To disambiguate them, I call the polygon closer to a given side’s viewer its **obverse polygon** (in this context, *obverse* = *facing the observer*); the **reverse polygon**, if it exists, is the one directly behind it. (My usage roughly corresponds to numismatics, wherein *obverse* signifies a coin’s *heads* side and *reverse* signifies *tails*.)
     - A line *must* have an obverse polygon, because negative space *physically does not exist* in portal engines like Aleph One; indeed, attempting to render from outside the bounds of a polygon simply crashes the game. This is why Aleph One does not (and probably will never have) a noclip cheat. (To my knowledge, *Marathon*’s source does not actually use the term *portal* anywhere, but in Aleph One, a portal is functionally equivalent to a polygon in most contexts.)
@@ -133,7 +140,7 @@ This remains a work in progress, hence its beta status. Below are:
 - As far as I’m aware, in most other cases (outside the exceptions listed above), sides should only display primary and transparent textures, though the game can sometimes get confused into displaying the secondary texture, or not displaying any texture, if polygon heights have changed since the last time the side was textured. In such cases, sampling the texture on any surface of the wall should generally fix the issue.
 - Polygons’ **floors** and **ceilings** behave similarly to side surfaces, except their definition is much more straightforward, since each polygon always has exactly one floor and exactly one ceiling.
 
-**Ambient delta:**
+#### Ambient delta:
 - A value added to or subtracted from the light value of a side, where a value of 1 corresponds to a 100% increase in light value.
 - Ambient delta applies to the entire side - thus, its primary, secondary, and transparent textures are all affected by it. It cannot be applied to polygon floors or ceilings.
 - Negative ambient delta values can override the game’s miner’s light (i.e., the effect that lights surfaces close to the player more brightly).
@@ -235,21 +242,21 @@ To use Vasara with additional or moved collections (or to limit M2 to the 3 work
 ----------------------------------------------------------------
 ### CHANGELOG:
 
-**v1.0.3:**
+#### v1.0.3:
 * Improved compatibility with Marathon 2
 
-**v1.0.2:**
+#### v1.0.2:
 * Fix problem where "Revert Changes" did nothing
 * Fix problem where control panel settings were reverted
 * Fix problem where chip insertion slots were marked as destroyable
 * Require Aleph One 1.2, which fixes a bug involving Lua and wires
 * Ships as one plugin instead of two
 
-**v1.0.1:**
+#### v1.0.1:
 * Fix crash when frames are missing for wall texture bitmaps
 * Fix crash when a level has no platforms
 
-**v1.0:**
+#### v1.0:
 * First release
 
 ----------------------------------------------------------------
