@@ -153,10 +153,25 @@ end
 
 -- PREFERENCES
 
+-- what shapes file collections contain "wall" textures
+-- (which can also be used as floors or ceilings, but never mind that)
+-- defaults: 
+--     M1: { 2, 8, 17, 18, 19, 24 }
+--     M2: { 17, 18, 19, 21 }
+--     MI: { 17, 18, 19, 20, 21 }
 WALLS = { 17, 18, 19, 20, 21 }
+
+-- what shapes file collections contain "landscape" textures
+-- ("walls" can also be used in landscape mode, but again, never mind that)
+-- defaults: 
+--     M1: {}
+--     M2/MI: { 27, 28, 29, 30 }
 LANDSCAPES = { 27, 28, 29, 30 }
 
+-- set to false for items to appear within Vasara
 SUPPRESS_ITEMS = true
+
+-- set to false for monsters to appear within Vasara
 SUPPRESS_MONSTERS = true
 
 MAX_TAGS = 90    -- max: 90
@@ -165,7 +180,7 @@ MAX_SCRIPTS = 90 -- max: 90
 -- set to false to hide the Visual Mode header on startup
 SHOW_VISUAL_MODE_HEADER = true
 
--- highlight selected destination in Teleport mode
+-- whether to highlight destination polygon in Teleport mode (this still has some bugs)
 SHOW_TELEPORT_DESTINATION = true
 
 -- cursor speed settings: larger numbers mean a slower mouse
@@ -190,21 +205,24 @@ FFW_TELEPORT_SCRUB_SPEED = 1
 -- how many ticks to highlight a latched keypress in HUD
 KEY_HIGHLIGHT_DELAY = 4
 
+-- set to true to preserve "must be explored" polygons at the cost of exploration missions becoming incompletable within Vasara
+-- (kind of a hack, but probably preferable to having to reset "must be explored" polygons after texturing)
+RESTORE_EXPLORATION = true
+
 -- which menu items should be in what state when Vasara starts up
-APPLY_TEXTURES = true
-APPLY_LIGHTS = false
-ALIGN_ADJACENT = true
-REALIGN_WHEN_RETEXTURING = false
-EDIT_PANELS = true
-APPLY_TRANSPARENT = false
-APPLY_TRANSFER = true
-QUANTIZE_MODE = 0 -- 0 = absolute, 1 = negative (northwest), 2 = center, 3 = positive (southeast)
-QUANTIZE_X = true
-QUANTIZE_Y = true -- set both to false to disable grid snap
-DEFAULT_QUANTIZE = 10 -- see snap_denominators below for possible options here: first menu option is 1, second is 2, third is 3, etc
-AUTOMATIC_LANDSCAPE = true -- whether textures in landscape collections should automatically have "landscape" transfer mode set. (while overriding this could conceivably be useful occasionally, false seems like an undesirable default, but i've included it for completeness)
-OVERRIDE_TERMINAL_COUNT = true -- whether to use the terminal count in merged maps (this will tell you that you're using a merged map, but it's annoying)
-DECOUPLE_TRANSPARENT = false -- if true, Vasara edits transparent sides on both sides of a line (its traditional behaviour); set to false to disable this
+APPLY_TEXTURES = true -- default: true
+APPLY_LIGHTS = false -- Vasara AF default: false; Vasara 1.0.x default: true
+ALIGN_ADJACENT = true -- default: true
+REALIGN_WHEN_RETEXTURING = false -- Vasara AF default: false. Vasara 1.0.x automatically did this, and it was impossible to disable
+EDIT_PANELS = true -- default: true
+APPLY_TRANSPARENT = false -- default: false
+APPLY_TRANSFER = true -- default: true
+QUANTIZE_MODE = 0 -- 0 = absolute, 1 = negative (northwest), 2 = center, 3 = positive (southeast). default: 0
+QUANTIZE_X = true -- Vasara AF default: true
+QUANTIZE_Y = true -- Vasara AF default: true. set both to false to disable grid snap
+DEFAULT_QUANTIZE = 10 -- see snap_denominators below for possible options here: first menu option is 1, second is 2, third is 3, etc. default: 10 (1/16 WU)
+OVERRIDE_TERMINAL_COUNT = true -- whether to use the terminal count in merged maps (this tells you you're using a merged map, but it's annoying)
+DECOUPLE_TRANSPARENT = false -- default: false. if false, Vasara edits transparent sides on both sides of a line (its traditional behaviour); set to true to edit only one side
 
 -- END PREFERENCES -- no user serviceable parts below ;)
 
@@ -239,6 +257,14 @@ for _, collection in danger_pairs(LANDSCAPES) do
 	table.insert(CollectionsUsed, collection)
 end
 
+local function restore_exploration()
+	for i = 1, #Level._explore do
+		if Level._explore[i].type == "normal" then
+			Level._explore[i].type = "must be explored"
+		end
+	end
+end
+
 Triggers = {}
 function init()
 	VML.init()
@@ -257,6 +283,15 @@ function init()
 				slot.collection = colldef
 				slot.texture_index = 0
 				slot.type = typedef
+			end
+		end
+	end
+
+	if RESTORE_EXPLORATION then
+		Level._explore = {}
+		for p in Polygons() do
+			if p.type == "must be explored" then
+				table.insert(Level._explore, p)
 			end
 		end
 	end
@@ -312,6 +347,8 @@ function Triggers.idle()
 		print(Level.stash["ERROR"])
 		Level.stash["ERROR"] = nil
 	end
+
+	if RESTORE_EXPLORATION then restore_exploration() end
 end
 
 function Triggers.postidle()
@@ -319,6 +356,7 @@ function Triggers.postidle()
 	for p in Players() do
 		p.life = 409 -- signal to HUD that Vasara is active
 	end
+	if RESTORE_EXPLORATION then restore_exploration() end
 end
 
 function Triggers.terminal_enter(terminal, player)
@@ -342,6 +380,7 @@ function Triggers.cleanup()
 			uTeleport.remove_highlight(p)
 		end
 	end
+	if RESTORE_EXPLORATION then restore_exploration() end
 end
 
 function PIN(v, min, max)
@@ -371,7 +410,6 @@ SMode = {
 			p._cursor_x = 320
 			p._cursor_y = 240
 			p._advanced_mode = not SHOW_VISUAL_MODE_HEADER
-			p._override_landscape = not AUTOMATIC_LANDSCAPE
 
 			SMode.default_attribute(p)
 
@@ -1077,10 +1115,8 @@ SMode = {
 				p._apply.transfer = not p._apply.transfer
 			elseif name == "apply_realign" then
 				p._apply.realign = not p._apply.realign
-			elseif name == "override_landscape" then
-				p._override_landscape = not p._override_landscape
 			elseif name == "decouple_xparent" then
-				p._apply.decouple_transparent = not p._apply.decouple_transparent
+				p._apply. = not p._apply.
 			elseif name == "xgrid" then
 				p._quantize_x = not p._quantize_x
 			elseif name == "ygrid" then
@@ -1843,7 +1879,7 @@ SStatus = {
 				-- i dunno why but i have to do this here
 				if p._quantize_x then status = status + 64 end
 				if p._quantize_y then status = status + 128 end
-				if p._apply.decouple_transparent then Level.stash["decouple"] = "TRUE" else Level.stash["decouple"] = "false" end
+				if p._apply. then Level.stash["decouple"] = "TRUE" else Level.stash["decouple"] = "false" end
 				p.texture_palette.slots[46].texture_index = status
 
 				p.texture_palette.slots[47].texture_index = p._menu_item
