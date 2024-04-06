@@ -1116,7 +1116,7 @@ SMode = {
 			elseif name == "apply_realign" then
 				p._apply.realign = not p._apply.realign
 			elseif name == "decouple_xparent" then
-				p._apply. = not p._apply.
+				p._apply.decouple_transparent = not p._apply.decouple_transparent
 			elseif name == "xgrid" then
 				p._quantize_x = not p._quantize_x
 			elseif name == "ygrid" then
@@ -1879,7 +1879,7 @@ SStatus = {
 				-- i dunno why but i have to do this here
 				if p._quantize_x then status = status + 64 end
 				if p._quantize_y then status = status + 128 end
-				if p._apply. then Level.stash["decouple"] = "TRUE" else Level.stash["decouple"] = "false" end
+				if p._apply.decouple_transparent then Level.stash["decouple"] = "TRUE" else Level.stash["decouple"] = "false" end
 				p.texture_palette.slots[46].texture_index = status
 
 				p.texture_palette.slots[47].texture_index = p._menu_item
