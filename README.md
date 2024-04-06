@@ -1,23 +1,23 @@
-# Vasara
+# Vasara AF
 ## a texturing utility for Marathon Aleph One
 
 credits in chronological order:
 - **[Visual Mode.lua](https://github.com/treellama/visualmode)** by **[@jonirons](https://github.com/jonirons)** and **[@treellama](https://github.com/treellama)**
 - **[Vasara 1.0.3](https://simplici7y.com/items/vasara/)** by **[@Hopper262](https://github.com/Hopper262)** and **Ares Ex Machina**
-- **Vasara 2.0b** by **[@aaronfreed](https://github.com/aaronfreed)**, **[@murbruksprodukt](https://github.com/murbruksprodukt)**, and **[@SolraBizna](https://github.com/SolraBizna)**
+- **Vasara AF 1.0b** by **[@aaronfreed](https://github.com/aaronfreed)**, **[@murbruksprodukt](https://github.com/murbruksprodukt)**, and **[@SolraBizna](https://github.com/SolraBizna)**
 
 Hopper also has a **[GitHub repository for Vasara 1.0.2](https://github.com/Hopper262/Vasara)**, but it’s one version behind the Simplici7y release.
 
 ----------------------------------------------------------------
 ## WIP notes by Aaron (see below for original readme):
-**Vasara** is a texturing utility for **[Marathon Aleph One](https://alephone.lhowon.org)** 1.7 or later, best used with **[Weland](https://github.com/treellama/weland/releases)** (see [my detailed setup guide](https://aaronfreed.github.io/mapmaking101.html#welandsetup) if Weland’s readme proves confusing). The original version hasn’t been updated in years, so I’ve taken it upon myself, with a little help from my friends, to update it for several reasons:
+**Vasara AF** is a texturing utility for **[Marathon Aleph One](https://alephone.lhowon.org)** 1.7 or later, best used with **[Weland](https://github.com/treellama/weland/releases)** (see [my detailed setup guide](https://aaronfreed.github.io/mapmaking101.html#welandsetup) if Weland’s readme proves confusing). The original version hasn’t been updated in years, so I’ve taken it upon myself, with a little help from my friends, to update it for several reasons:
 - to take advantage of new Aleph One features
 - to add features that it had been sorely lacking for years
 - to fix longstanding bugs.
 
 This remains a work in progress, hence its beta status. Below are:
 - [Brief installation instructions, including a link to my Weland setup guide](#getting-started)
-- [A more detailed overview of Vasara 2’s new features and settings](#new-features--planned-additions):
+- [A more detailed overview of Vasara AF’s new features and settings](#new-features--planned-additions):
   - [Advanced grid interface](#advanced-grid-interface)
   - [Apply texture mode](#apply-texture-mode)
   - [Advanced map overlays](#advanced-map-overlays)
@@ -53,7 +53,7 @@ This remains a work in progress, hence its beta status. Below are:
 4. *(Optional, but highly recommended.)* Set it up in Weland. There are brief instructions in Weland’s readme; should one of the steps prove challenging or frustrating, I’ve written detailed guides for doing this on Windows and MacOS. If the word “Forge” brings up a lot of *Marathon*-related memories for you, you’ll probably want [my advanced guide](https://aaronfreed.github.io/mapmaking.html#welandsetup); otherwise, you should probably consult my [beginners’ guide](https://aaronfreed.github.io/mapmaking101.html#welandsetup). (One of these days I’ll write a guide for Linux.)
     * Alternately, you can run it through Aleph One directly; as this will require you to swap the map back and forth between Aleph One and Weland, simplifying version control should in and of itself be sufficient reason to avoid this approach. However, should you be unable to get Weland to launch Vasara correctly, select it in your Aleph One install’s Preferences -> Plugins, ensure that no other plugins that use solo Lua are enabled, and ensure that “Solo Lua Script” is unchecked. You will then have to type `.save level` into the Lua console to save the level and – this step is important – *make sure to reload it in Weland **after** you save it.* Which in turn, on Windows, will require you to quit Aleph One (or take some other similarly tedious step); and once you relaunch Aleph One, you’ll have to make sure *it* loads the right version of the level – like I said, I strongly recommend against this approach.
   
-[Back to the top](#vasara)
+[Back to the top](#vasara-af)
 
 ----------------------------------------------------------------
 ### NEW FEATURES & PLANNED ADDITIONS:
@@ -71,14 +71,14 @@ I’m almost finished redoing the grid interface.
 - The preview should now display all grid settings correctly, though bear in mind that it does not yet display the 2x and 4x transfer modes correctly – those will have more snap positions than you’ll see in the preview.
 
 #### Apply texture mode
-Vasara 2.0b splits “Apply texture mode” and “apply texture” into two separate options.
+Vasara AF splits “Apply texture mode” and “apply texture” into two separate options.
 - If you have “apply texture mode” selected, but not “apply texture”, Vasara will apply different transfer modes to existing textures without adjusting their textures, and *vice versa*. (The Romans would’ve pronounced this something like ***wee**-keh **wer**-sah*. There, you can cross off an item on your bingo cards. You’re welcome.)
 - Landscapes are the wild card, as they usually override existing transfer modes. I have yet to work out all the strange behavior this causes.
   - If for some reason you wish to apply a texture from a landscape collection in a transfer mode other than “landscape”, you can apply it to your desired surface, deselect “apply texture”, and then apply a different transfer mode. (You may need to select a different texture before you can do the last of these.) However, bear in mind that textures from landscape collections may behave weirdly in transfer modes besides “landscape”.
 - All of this mostly shows up correctly in visual mode, though the preview currently behaves weirdly when “apply texture” is disabled. (The checkbox in visual mode is now at least checked when “apply transfer mode” is checked, but “apply texture” isn’t.)
 
 #### Advanced map overlays
-Vasara 2.0b lists what you’re looking at in the upper-left corner of visual mode, including one feature you’re probably not familiar with: ambient delta.
+Vasara AF lists what you’re looking at in the upper-left corner of visual mode, including one feature you’re probably not familiar with: ambient delta.
 - Floors, ceilings, and lines without associated sides (which occur when you haven’t paved a level before going into visual mode) are labeled as floors, ceilings, or lines. Sides are listed along the lines “1337 (∆0.0420)”, which indicates that you are looking at side 1337 and that it has an ambient delta value of 0.0420. Ambient delta is a rarely-used map element that affects the side’s light intensity; at present, Greg Kirkpatrick, Jason Jones, and I are the only people I’m aware of who have ever used it. [I explain ambient delta at length below](#ambient-delta).
 - If you see an additional side listed to the right of the one in the upper-left, it’s a transparent side. Unfortunately, Vasara currently displays the one furthest from you – I feel the closest one would make the most sense, but I’ve so far been unable to debug this.
 - I haven’t yet begun writing the UI to adjust ambient delta, so for now, to set the ambient delta of side `foo` to `bar`, you can use the following Lua code:
@@ -90,7 +90,7 @@ Vasara 2.0b lists what you’re looking at in the upper-left corner of visual mo
   - I’m not especially confident in my UI ideas (I’ve long held that UI is far too important to be left up to programmers that aren’t UI specialists, which I very decidedly am not). At the moment, I tentatively plan to add an “ambient delta modifier” hotkey that’ll be combined with other keys: one will select which digit to edit, another two will adjust it upwards or downwards, yet another will apply it, and yet another will sample it from another wall, but I haven’t gotten past the concept stage and probably won’t get around to writing it for weeks or even months. If you have any better ideas for a UI for this feature, please [contact me](#credits-and-contact-info).
 
 #### Aleph One 1.7’s new transfer modes
-Vasara 2.0b adds the reverse slide, 2x, and 4x transfer modes from Aleph One 1.7.
+Vasara AF adds the reverse slide, 2x, and 4x transfer modes from Aleph One 1.7.
 - This flat-out breaks if you aren’t using at least Aleph One 1.7, and I don’t care. Upgrade your Aleph One.
 - I don’t know what sort of preview to do for the 2x or 4x transfer modes. [Contact me](#credits-and-contact-info) if you have any ideas.
 
@@ -106,20 +106,21 @@ The new “Decouple transparent sides” option disables Vasara’s standard beh
 - Applying entirely different textures to each side – especially useful if one texture is a horizontal flip of the other
 - Applying a texture to only one side of a line
 
-[Back to the top](#vasara)
+[Back to the top](#vasara-af)
 
 ----------------------------------------------------------------
 ### BUG FIXES, CURRENT ISSUES, PLANNED FEATURES, AND CREDITS:
 #### Bug fixes:
-- I’ve fixed the Lua error spam for lights > 55, but haven’t figured out how to get them to preview correctly. You can currently select lights 0-97 in the main palette, and even if you have both “apply light” and “apply texture” selected with lights > 97, it won’t spam errors. I may figure out a way to reduce the size of each light if there are more than 98 so that more will fit in the selector (but really, what are you doing with that many lights? I’ve only ever made a map with that many lights to test Vasara).
+- I’ve fixed the Lua error spam for lights > 55, but haven’t figured out how to get them to preview correctly. You can currently select lights 0-97 in the main palette, and even if you have both “Apply Light” and “Apply Texture” selected with lights > 97, it won’t spam errors. I may figure out a way to reduce the size of each light if there are more than 98 so that more will fit in the selector (but really, what are you doing with that many lights? I’ve only ever made a map with that many lights to test Vasara).
 - Platform and light switches now display a lot more options, which should reduce the amount people need to rely on tags. Side note: [tags are terrible](https://aaronfreed.github.io/mapmaking.html#tagsareterrible). :-)
 - ~~The border for the selected texture on the texture palette broke and I haven’t figured out why. This has been the most annoying thing to debug.~~ Fixed. Apparently I needed to throw in some `tonumber` statements that weren't previously necessary. ¯\\(°\_o)/¯
 - “Align adjacent” now works correctly with *most* sides Vasara has created since loading the map. Still not aligning correctly: certain transparent sides, explained below.
+- By default, Vasara AF now restores the state of “Must Be Explored” polygons after the player walks over them (or even looks at them if “Exploration (M1)” is set as the mission type) – previously, they’d be set to “Normal”. This is kind of a hack, and it makes Exploration missions incompletable while Vasara AF is running, but Vasara AF is primarily meant as a texturing utility, and I suspect that most people used to Forge found those polygons being set to “Normal” to be both annoying and unexpected. If you need to preview how a level works in gameplay without monsters, either use [Nature’s Peace](https://simplici7y.com/items/nature-s-peace/) or set `RESTORE_EXPLORATION` in Vasara_Script.lua to `false`.
+  - Note that if, for some reason, you try to set a “Must Be Explored” polygon to “Normal” with Lua while Vasara AF is running, Vasara AF will automatically restore it to “Must Be Explored” – the engine doesn’t provide Lua any way to know why a polygon was changed from “Must Be Explored” to “Normal”.
 
 #### Current issues:
 - Transparent sides don’t align at all when the reverse polygon’s ceiling is higher than or has the same height as the obverse polygon’s, and the reverse polygon’s floor is lower than or has the same height as the obverse polygon’s.
 - I think I understand the math needed to fix alignment of transparent textures on the reverse side; I just haven’t figured out how to get Vasara to know which transparent sides should be aligned to which others. (In fact, I’m not fully sure I know this myself.) Because of this, I’ve introduced the “decouple transparent textures” mode, though for the above reason, you’ll frequently have to align transparent textures on one side of a line manually (this should at least help for the other side, though).
-- Walking over “must be explored” polygons (or, if the mission type is set to “Exploration (M1)”, even seeing them somewhere within your field of view) changes them to “normal”. This may require some engine-side changes to fix; in fact, some previous engine-side changes were meant to have provided a fix, but I’m not certain if it’s working as intended. I’ll have to investigate further.
 - Exiting a level with a polygon highlighted in teleport mode will cause the floor to get set to “static” mode and the polygon to get set to “major ouch”, regardless of what was there before (**warning: if you were looking at a platform, this _will_ overwrite all its data**). I had a fix for this that involved not highlighting the polygons, but I wound up disliking that a lot more, so I restored the previous behaviour. Fixing it more properly may likewise require some engine-side changes.
 - Switching from map view to visual mode while teleporting causes Vasara to get confused and swap the teleport controls to the visual mode screen.
 - Freezing with enough momentum will result in continued camera bob. When you come out of the freeze state, your momentum will be reduced (or cut to zero).
@@ -130,20 +131,21 @@ The new “Decouple transparent sides” option disables Vasara’s standard beh
   - Forge’s “adjust height” mode _always_ adjusted heights by 51 IU (≈.04980 WU). This meant that adjusting the height by five clicks would have moved it by 255 IU (≈.24902 WU), which caused egregious _mis_-alignments when mappers were too lazy to clean up their heights. (Bungie could’ve easily fixed this by simply adding or subtracting 1 IU \[≈.00098 WU\] with each five adjustments.) For those of us on the obsessive-compulsive spectrum, I believe this qualifies as a war crime. Any implementation of this feature that does _not_ align to a grid is to be nuked from orbit – it’s the only way to be sure.
 - Vasara’s code is very, very dense and very, very sparsely documented, so this has been a slow project and will probably continue to be slow, but I hope to get it finished soon™.
 
-#### Credits and contact info:
+#### Credits, acknowledgements, and contact info:
 - Most of the updates are mine; a few are **[@murbruksprodukt](https://github.com/murbruksprodukt)** (notably the platform switch fix and the initial work at expanding the grid selections) or **[@SolraBizna](https://github.com/SolraBizna)**’s (e.g., the extended stack traces) work.
-- Vasara 2.0b is, of course, based on **[Vasara 1.0.3](https://simplici7y.com/items/vasara)** by **[@Hopper262](https://github.com/Hopper262)** (Jeremiah Morris, who did most of the programming) and **Ares Ex Machina** (who did most of the UI design).
+- Vasara AF is, of course, based on **[Vasara 1.0.3](https://simplici7y.com/items/vasara)** by **[@Hopper262](https://github.com/Hopper262)** (Jeremiah Morris, who did most of the programming) and **Ares Ex Machina** (who did most of the UI design).
 - Vasara 1.0.3 is in turn based on **[Visual Mode.lua](https://simplici7y.com/items/visual-mode-lua)** by **[@treellama](https://github.com/treellama)** and **[@jonirons](https://github.com/jonirons)**.
 - If you need to contact me, email is probably the worst possible way to do so. Your best bet is to open an issue or create a discussion here, or contact me on Discord (**@Aaron#6608** or **@aaron6608**). You’ll need a server in common with me to do the latter; if you’ve read this far and aren’t already a member of the [*Marathon* Discord](https://discord.gg/c7rEVgY), you’ll want to fix that as soon as possible.
+- Acknowledgements to **Solra** for a ton of coding help, **treellama** for the name “Vasara AF”, all the **Aleph One** developers for keeping this thing going, and **Bungie** for creating the games that ruined our lives to begin with.
 
 #### Further resources:
-- [Weland](https://github.com/treellama/weland/releases), just in case you somehow don’t have it yet. If you need help setting it up, see the relevant section of my beginners’ guide immediately below.
-- My mapmaking guide is currently available in two distinct flavours:
-  - [A guide for beginners](https://aaronfreed.github.io/mapmaking101.html), which is relatively brief by my standards
-  - [A much longer advanced guide](https://aaronfreed.github.io/mapmaking.html), which I’m planning to split up eventually (the beginners’ guide is step one of this process)
+- **[Weland](https://github.com/treellama/weland/releases)**, just in case you somehow don’t have it yet. If you need help setting it up, see the relevant section of my beginners’ guide immediately below.
+- My **mapmaking guide** is now split up into several segments, the most important being:
+  - **[A beginners’ guide](https://aaronfreed.github.io/mapmaking101.html)**, which is relatively brief by my standards
+  - **[An advanced guide](https://aaronfreed.github.io/mapmaking.html)** that I’m in the process of splitting up further; it in turn links to several appendices with additional info that you may find helpful
 - [The Aleph One GitHub wiki](https://github.com/Aleph-One-Marathon/alephone/wiki) is an invaluable resource
 
-[Back to the top](#vasara)
+[Back to the top](#vasara-af)
 
 ----------------------------------------------------------------
 ### NOTES ON TERMINOLOGY:
@@ -186,9 +188,9 @@ The new “Decouple transparent sides” option disables Vasara’s standard beh
   - If a side’s ambient delta value is -1, a texture on the side given a 100% intensity light is rendered as if it had been given a light with 0% intensity. A texture lit at 0% intensity is rendered as completely black.
   - If a side’s ambient delta value is -2, it always renders as completely black.
 
---**Aaron**, 2023-12-12 (last edited 2024-03-18)
+--**Aaron**, 2023-12-12 (last edited 2024-04-05)
 
-[Back to the top](#vasara)
+[Back to the top](#vasara-af)
 
 ----------------------------------------------------------------
 ## Vasara 1.0.3
@@ -309,4 +311,4 @@ To use Vasara with additional or moved collections (or to limit M2 to the 3 work
 If you have any questions, comments, or bugs to report, you can email Hopper:
 - hopper@whpress.com
 
-[Back to the top](#vasara)
+[Back to the top](#vasara-af)
