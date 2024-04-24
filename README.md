@@ -187,7 +187,7 @@ The new “Decouple transparent sides” option disables Vasara’s standard beh
   - A side with an ambient delta value of 1 always renders at 100% light intensity, even if one or more of its surfaces is textured with a 0% intensity light.
   - If a side’s ambient delta value is -1, a texture on the side given a 100% intensity light is rendered as if it had been given a light with 0% intensity. A texture lit at 0% intensity is rendered as completely black.
   - If a side’s ambient delta value is -2, it always renders as completely black, barring occurrences such as muzzle flashes.
---**Aaron**, 2023-12-12 (last edited 2024-04-05)
+--**Aaron**, 2023-12-12 (last edited 2024-04-23)
 
 [Back to the top](#vasara-af)
 
