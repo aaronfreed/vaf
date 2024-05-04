@@ -153,25 +153,10 @@ end
 
 -- PREFERENCES
 
--- what shapes file collections contain "wall" textures
--- (which can also be used as floors or ceilings, but never mind that)
--- defaults: 
---     M1: { 2, 8, 17, 18, 19, 24 }
---     M2: { 17, 18, 19, 21 }
---     MI: { 17, 18, 19, 20, 21 }
 WALLS = { 17, 18, 19, 20, 21 }
-
--- what shapes file collections contain "landscape" textures
--- ("walls" can also be used in landscape mode, but again, never mind that)
--- defaults: 
---     M1: {}
---     M2/MI: { 27, 28, 29, 30 }
 LANDSCAPES = { 27, 28, 29, 30 }
 
--- set to false for items to appear within Vasara
 SUPPRESS_ITEMS = true
-
--- set to false for monsters to appear within Vasara
 SUPPRESS_MONSTERS = true
 
 MAX_TAGS = 90    -- max: 90
@@ -180,7 +165,7 @@ MAX_SCRIPTS = 90 -- max: 90
 -- set to false to hide the Visual Mode header on startup
 SHOW_VISUAL_MODE_HEADER = true
 
--- whether to highlight destination polygon in Teleport mode (this still has some bugs)
+-- highlight selected destination in Teleport mode
 SHOW_TELEPORT_DESTINATION = true
 
 -- cursor speed settings: larger numbers mean a slower mouse
@@ -205,29 +190,39 @@ FFW_TELEPORT_SCRUB_SPEED = 1
 -- how many ticks to highlight a latched keypress in HUD
 KEY_HIGHLIGHT_DELAY = 4
 
--- set to true to preserve "must be explored" polygons at the cost of exploration missions becoming incompletable within Vasara
--- (kind of a hack, but probably preferable to having to reset "must be explored" polygons after texturing)
-RESTORE_EXPLORATION = true
-
 -- which menu items should be in what state when Vasara starts up
-APPLY_TEXTURES = true -- default: true
-APPLY_LIGHTS = false -- Vasara AF default: false; Vasara 1.0.x default: true
-ALIGN_ADJACENT = true -- default: true
-REALIGN_WHEN_RETEXTURING = false -- Vasara AF default: false. Vasara 1.0.x automatically did this, and it was impossible to disable
-EDIT_PANELS = true -- default: true
-APPLY_TRANSPARENT = false -- default: false
-APPLY_TRANSFER = true -- default: true
-QUANTIZE_MODE = 0 -- 0 = absolute, 1 = negative (northwest), 2 = center, 3 = positive (southeast). default: 0
-QUANTIZE_X = true -- Vasara AF default: true
-QUANTIZE_Y = true -- Vasara AF default: true. set both to false to disable grid snap
-DEFAULT_QUANTIZE = 10 -- see snap_denominators below for possible options here: first menu option is 1, second is 2, third is 3, etc. default: 10 (1/16 WU)
-OVERRIDE_TERMINAL_COUNT = true -- whether to use the terminal count in merged maps (this tells you you're using a merged map, but it's annoying)
-DECOUPLE_TRANSPARENT = false -- default: false. if false, Vasara edits transparent sides on both sides of a line (its traditional behaviour); set to true to edit only one side
+APPLY_TEXTURES = true
+APPLY_LIGHTS = false
+ALIGN_ADJACENT = true
+REALIGN_WHEN_RETEXTURING = false
+EDIT_PANELS = true
+APPLY_TRANSPARENT = false
+APPLY_TRANSFER = true
+QUANTIZE_MODE = 0 -- 0 = absolute, 1 = negative (northwest), 2 = center, 3 = positive (southeast)
+QUANTIZE_X = true
+QUANTIZE_Y = true -- set both to false to disable grid snap
+DEFAULT_QUANTIZE = 10 -- see snap_denominators below for possible options here: first menu option is 1, second is 2, third is 3, etc
+AUTOMATIC_LANDSCAPE = true -- whether textures in landscape collections should automatically have "landscape" transfer mode set. (while overriding this could conceivably be useful occasionally, false seems like an undesirable default, but i've included it for completeness)
+OVERRIDE_TERMINAL_COUNT = true -- whether to use the terminal count in merged maps (this will tell you that you're using a merged map, but it's annoying)
+DECOUPLE_TRANSPARENT = false -- if true, Vasara edits transparent sides on both sides of a line (its traditional behaviour); set to false to disable this
 
 -- END PREFERENCES -- no user serviceable parts below ;)
 
 
 MAX_LIGHTS = 98 -- maximum number of lights we can accommodate
+
+Vasara = {
+	stash_value = function(key, value)
+		Level.stash[key] = value
+	end,
+	stash_bool = function(key, value)
+		if value == true then
+			Level.stash[key] = "TRUE"
+		else
+			Level.stash[key] = "false"
+		end
+	end,
+}
 
 Game.monsters_replenish = not SUPPRESS_MONSTERS
 snap_denominators = { 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 18, 20, 24, 30, 32, 36, 40, 48, 60, 64, 128 }
@@ -258,6 +253,7 @@ for _, collection in danger_pairs(LANDSCAPES) do
 end
 
 local function restore_exploration()
+	local i
 	for i = 1, #Level._explore do
 		if Level._explore[i].type == "normal" then
 			Level._explore[i].type = "must be explored"
@@ -287,12 +283,10 @@ function init()
 		end
 	end
 
-	if RESTORE_EXPLORATION then
-		Level._explore = {}
-		for p in Polygons() do
-			if p.type == "must be explored" then
-				table.insert(Level._explore, p)
-			end
+	Level._explore = {}
+	for p in Polygons() do
+		if p.type == "must be explored" then
+			table.insert(Level._explore, p)
 		end
 	end
 
@@ -318,8 +312,8 @@ function init()
 end
 
 function Triggers.idle()
-	if not Sides.new then
-		Players.print("Vasara requires a newer version of Aleph One")
+	if not Sides.new or Game.version < "20231125" then
+		Players.print("Vasara AF requires Aleph One 1.7 or later")
 		kill_script()
 		return
 	end
@@ -340,6 +334,9 @@ function Triggers.idle()
 	for p in Players() do
 		p.life = 450
 		p.oxygen = 10800
+		if p._mode == SMode.teleport then
+			UTeleport.idle(p)
+		end
 		VML.find_target(p, false, false)
 	end
 
@@ -348,15 +345,18 @@ function Triggers.idle()
 		Level.stash["ERROR"] = nil
 	end
 
-	if RESTORE_EXPLORATION then restore_exploration() end
+	restore_exploration()
 end
 
 function Triggers.postidle()
 	SFreeze.postidle()
 	for p in Players() do
+		if p._mode == SMode.teleport then
+			UTeleport.postidle(p)
+		end
 		p.life = 409 -- signal to HUD that Vasara is active
 	end
-	if RESTORE_EXPLORATION then restore_exploration() end
+	restore_exploration()
 end
 
 function Triggers.terminal_enter(terminal, player)
@@ -380,7 +380,7 @@ function Triggers.cleanup()
 			uTeleport.remove_highlight(p)
 		end
 	end
-	if RESTORE_EXPLORATION then restore_exploration() end
+	restore_exploration()
 end
 
 function PIN(v, min, max)
@@ -410,6 +410,7 @@ SMode = {
 			p._cursor_x = 320
 			p._cursor_y = 240
 			p._advanced_mode = not SHOW_VISUAL_MODE_HEADER
+			p._override_landscape = not AUTOMATIC_LANDSCAPE
 
 			SMode.default_attribute(p)
 
@@ -1115,6 +1116,8 @@ SMode = {
 				p._apply.transfer = not p._apply.transfer
 			elseif name == "apply_realign" then
 				p._apply.realign = not p._apply.realign
+			elseif name == "override_landscape" then
+				p._override_landscape = not p._override_landscape
 			elseif name == "decouple_xparent" then
 				p._apply.decouple_transparent = not p._apply.decouple_transparent
 			elseif name == "xgrid" then
@@ -1875,12 +1878,14 @@ SStatus = {
 				if p._apply.align then status = status + 4 end
 				if p._apply.transparent then status = status + 8 end
 				if p._apply.edit_panels then status = status + 16 end
-				if p._apply.realign then status = status + 32 end
 				-- i dunno why but i have to do this here
-				if p._quantize_x then status = status + 64 end
-				if p._quantize_y then status = status + 128 end
 				if p._apply.decouple_transparent then Level.stash["decouple"] = "TRUE" else Level.stash["decouple"] = "false" end
 				p.texture_palette.slots[46].texture_index = status
+
+				Vasara.stash_bool("decouple", p._apply.decouple_transparent)
+				Vasara.stash_bool("realign", p._apply.realign)
+				Vasara.stash_bool("snap_x", p._quantize_x)
+				Vasara.stash_bool("snap_y", p._quantize_y)
 
 				p.texture_palette.slots[47].texture_index = p._menu_item
 
@@ -2607,6 +2612,22 @@ UTeleport = {
 			p._teleport.last_target_type = poly.type
 			poly.floor.transfer_mode = "static"
 			poly.type = PolygonTypes["major ouch"]
+		end
+	end,
+
+	idle = function(p)
+		if SHOW_TELEPORT_DESTINATION and p._teleport and p._teleport.last_target then
+			p._teleport.last_target.floor.transfer_mode = p._teleport.last_target_mode
+			p._teleport.last_target.type = p._teleport.last_target_type
+		end
+	end,
+
+	postidle = function(p)
+		if SHOW_TELEPORT_DESTINATION and p._teleport and p._teleport.last_target then
+			p._teleport.last_target_mode = p._teleport.last_target.floor.transfer_mode
+			p._teleport.last_target_type = p._teleport.last_target.type
+			p._teleport.last_target.floor.transfer_mode = "static"
+			p._teleport.last_target.type = PolygonTypes["major ouch"]
 		end
 	end,
 
