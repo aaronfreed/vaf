@@ -1,4 +1,4 @@
--- Vasara 1.0.4 (HUD script)
+-- Vasara AF 1.0b (HUD script)
 -- by Hopper, Ares Ex Machina, Aaron Freed, CryoS, and Solra Bizna
 
 -- see line 109 for preferences (the code below needs to execute *first*)
@@ -54,7 +54,7 @@ setmetatable(shadow_triggers, {
 					end
 					if not success then
 						-- There was a message. Print the error message.
-						HGlobals.fontn:draw_text("Error in Triggers."..key..":\n"..result, 0, 0, {1, 1, 1, 1})
+						debug_print("Error in Triggers."..key..":\n"..result, true)
 						print("Error in Triggers."..key..":\n"..result)
 					elseif result == false then
 						-- If the subtrigger explicitly returned false, don't call
@@ -201,6 +201,7 @@ menu_prefs = {
 	},
 }
 
+DEBUG_MODE = false -- set to true to tell me when a nil value is getting sent to hasbit
 
 -- END PREFERENCES -- no user serviceable parts below ;)
 
@@ -215,6 +216,37 @@ snap_denominators = { 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 18, 20, 24, 30, 32, 36, 4
 snap_modes = { 1 }
 for _,d in ipairs(snap_denominators) do
 	if d ~= 1 then table.insert(snap_modes, "1/" .. d) end
+end
+
+function debug_print(str, is_error)
+	if DEBUG_MODE or is_error then
+		local keep_printing = true -- whether we need to keep printing
+		local start_of_line = 1 -- place to start searching
+		local line_count = 0 -- line to start printing on
+		if DEBUG_MODE and is_error then line_count = 1 end
+		local length = string.len(str)
+		repeat
+			local end_of_line = math.min(string.find(str, "\n", start_of_line + 1) or length,
+			                             string.find(str, "\f", start_of_line + 1) or length,
+			                             string.find(str, "\r", start_of_line + 1) or length,
+			                             start_of_line + 160,
+			                             length)
+			HGlobals.fontn:draw_text(string.sub(str,
+			                                    start_of_line,
+			                                    end_of_line
+			                                   ),
+			                         Screen.world_rect.x + 10,
+			                         Screen.world_rect.y + ((line_count + 1) * 20),
+			                         {1, 1, 1, 1}
+			                        )
+			if end_of_line ~= length then
+				line_count = line_count + 1
+				start_of_line = end_of_line
+			else
+				keep_printing = false
+			end
+		until not keep_printing
+	end
 end
 
 function Triggers.draw()
@@ -562,9 +594,10 @@ function layout()
 	                  imgs["cursor_menu"].height/2 }
 end
 
-function hasbit(field, which)
+function hasbit(yourmom, which)
+	-- if not yourmom then return true end -- i dunno why but this is necessary
 	local test = 2 ^ (which - 1)
-	return field % (test + test) >= test
+	return (yourmom % (test + test) >= test)
 end
 
 function PIN(v, min, max)
@@ -592,10 +625,16 @@ HKeys = {
 	end,
 
 	down = function(k)
+		if HKeys.bitfield == nil then
+			debug_print(string.format("HKeys.bitfield in HKeys.down for %u", k), false)
+		end
 		return hasbit(HKeys.bitfield, k)
 	end,
 
 	dummy = function(k)
+		if HKeys.bitfield == nil then
+			debug_print(string.format("HKeys.dummyfield in HKeys.dummy for %u", k), false)
+		end
 		return hasbit(HKeys.dummyfield, k)
 	end,
 
@@ -648,7 +687,6 @@ HApply = {
 	align = 3,
 	transparent = 4,
 	edit_panels = 5,
-	realign = 6,
 	current_light = 0,
 	current_transfer = 0,
 	transfer_modes = {
@@ -664,8 +702,12 @@ HApply = {
 		HApply.use_transfer = Player.texture_palette.slots[44].type
 		HApply.current_snap = Player.texture_palette.slots[45].texture_index
 		HApply.current_snap_mode = Player.texture_palette.slots[45].type
-		HApply.snap_x = hasbit(Player.texture_palette.slots[46].texture_index, 7)
-		HApply.snap_y = hasbit(Player.texture_palette.slots[46].texture_index, 8)
+		if Player.texture_palette.slots[46].texture_index == nil then
+			debug_print("Player.texture_palette.slots[46].texture_index in HApply.update")
+		end
+		HApply.realign = (Level.stash["realign"] == "TRUE")
+		HApply.snap_x = (Level.stash["snap_x"] == "TRUE")
+		HApply.snap_y = (Level.stash["snap_y"] == "TRUE")
 
 		local lbls = HMenu.menus["key_" .. HMode.apply]
 		local lbls2 = HMenu.menus["key_" .. HMode.attribute]
@@ -686,6 +728,9 @@ HApply = {
 	end,
 
 	down = function(k)
+		if HKeys.bitfield == nil then
+			debug_print(string.format("HApply.bitfield in HApply.down for %u", k), false)
+		end
 		return hasbit(HApply.bitfield, k)
 	end,
 }
@@ -743,6 +788,9 @@ HStatus = {
 	end,
 
 	down = function(k)
+		if HKeys.bitfield == nil then
+			debug_print(string.format("HStatus.bitfield in HStatus.down for %u", k), false)
+		end
 		return hasbit(HStatus.bitfield, k)
 	end,
 }
@@ -1414,7 +1462,7 @@ HMenu = {
 		elseif name == "apply_edit" then
 			if HApply.down(HApply.edit_panels) then state = "active" end
 		elseif name == "apply_realign" then
-			if HApply.down(HApply.realign) then state = "active" end
+			if HApply.realign then state = "active" end
 		elseif name == "advanced" then
 			if not HStatus.down(HStatus.advanced_active) then state = "active" end
 		elseif name == "xgrid" then
@@ -2107,10 +2155,16 @@ HPanel = {
 	end,
 
 	valid_class = function(k)
+		if HPanel.bitfield_class == nil then
+			debug_print(string.format("HPanel.bitfield_class in HPanel.valid_class for %u", k), false)
+		end
 		return hasbit(HPanel.bitfield_class, k)
 	end,
 
 	option_set = function(k)
+		if HPanel.bitfield_option == nil then
+			debug_print(string.format("HPanel.bitfield_option in HPanel.option_set for %u", k), false)
+		end
 		return hasbit(HPanel.bitfield_option, k)
 	end,
 
