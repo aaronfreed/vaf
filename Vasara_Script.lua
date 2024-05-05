@@ -153,20 +153,29 @@ end
 
 -- PREFERENCES
 
+-- what shapes file collections contain "wall" textures
+-- (which can also be used as floors or ceilings, but never mind that)
+-- defaults: 
+--     M1: { 2, 8, 17, 18, 19, 24 }
+--     M2: { 17, 18, 19, 21 }
+--     MI: { 17, 18, 19, 20, 21 }
 WALLS = { 17, 18, 19, 20, 21 }
+
+-- what shapes file collections contain "landscape" textures
+-- ("walls" can also be used in landscape mode, but again, never mind that)
+-- defaults: 
+--     M1: {}
+--     M2/MI: { 27, 28, 29, 30 }
 LANDSCAPES = { 27, 28, 29, 30 }
 
-SUPPRESS_ITEMS = true
-SUPPRESS_MONSTERS = true
+SUPPRESS_ITEMS = true -- default: true; set to false for items to appear within Vasara
+SUPPRESS_MONSTERS = true -- default: true; set to false for monsters to appear within Vasara
 
 MAX_TAGS = 90    -- max: 90
 MAX_SCRIPTS = 90 -- max: 90
 
--- set to false to hide the Visual Mode header on startup
-SHOW_VISUAL_MODE_HEADER = true
-
--- highlight selected destination in Teleport mode
-SHOW_TELEPORT_DESTINATION = true
+SHOW_VISUAL_MODE_HEADER = true -- default: true; set to false to hide the Visual Mode header on startup
+SHOW_TELEPORT_DESTINATION = true -- default: true; whether to highlight destination polygon in Teleport mode (this still has some bugs)
 
 -- cursor speed settings: larger numbers mean a slower mouse
 MENU_VERTICAL_RANGE = 30    -- default: 30
@@ -190,21 +199,24 @@ FFW_TELEPORT_SCRUB_SPEED = 1
 -- how many ticks to highlight a latched keypress in HUD
 KEY_HIGHLIGHT_DELAY = 4
 
+-- set to true to preserve "must be explored" polygons at the cost of exploration missions becoming incompletable within Vasara
+-- (kind of a hack, but probably preferable to having to reset "must be explored" polygons after texturing)
+RESTORE_EXPLORATION = true
+
 -- which menu items should be in what state when Vasara starts up
-APPLY_TEXTURES = true
-APPLY_LIGHTS = false
-ALIGN_ADJACENT = true
-REALIGN_WHEN_RETEXTURING = false
-EDIT_PANELS = true
-APPLY_TRANSPARENT = false
-APPLY_TRANSFER = true
-QUANTIZE_MODE = 0 -- 0 = absolute, 1 = negative (northwest), 2 = center, 3 = positive (southeast)
-QUANTIZE_X = true
-QUANTIZE_Y = true -- set both to false to disable grid snap
-DEFAULT_QUANTIZE = 10 -- see snap_denominators below for possible options here: first menu option is 1, second is 2, third is 3, etc
-AUTOMATIC_LANDSCAPE = true -- whether textures in landscape collections should automatically have "landscape" transfer mode set. (while overriding this could conceivably be useful occasionally, false seems like an undesirable default, but i've included it for completeness)
-OVERRIDE_TERMINAL_COUNT = true -- whether to use the terminal count in merged maps (this will tell you that you're using a merged map, but it's annoying)
-DECOUPLE_TRANSPARENT = false -- if true, Vasara edits transparent sides on both sides of a line (its traditional behaviour); set to false to disable this
+APPLY_TEXTURES = true -- default: true
+APPLY_LIGHTS = false -- Vasara AF default: false; Vasara 1.0.x default: true
+ALIGN_ADJACENT = true -- default: true
+REALIGN_WHEN_RETEXTURING = false -- Vasara AF default: false. Vasara 1.0.x automatically did this, and it was impossible to disable
+EDIT_PANELS = true -- default: true
+APPLY_TRANSPARENT = false -- default: false
+APPLY_TRANSFER = true -- default: true
+QUANTIZE_MODE = 0 -- 0 = absolute, 1 = negative (northwest), 2 = center, 3 = positive (southeast). default: 0
+QUANTIZE_X = true -- Vasara AF default: true
+QUANTIZE_Y = true -- Vasara AF default: true. set both to false to disable grid snap
+DEFAULT_QUANTIZE = 10 -- see snap_denominators below for possible options here: first menu option is 1, second is 2, third is 3, etc. default: 10 (1/16 WU)
+OVERRIDE_TERMINAL_COUNT = true -- whether to use the terminal count in merged maps (this tells you you're using a merged map, but it's annoying)
+DECOUPLE_TRANSPARENT = false -- default: false. if false, Vasara edits transparent sides on both sides of a line (its traditional behaviour); set to true to edit only one side
 
 -- END PREFERENCES -- no user serviceable parts below ;)
 
@@ -283,10 +295,12 @@ function init()
 		end
 	end
 
-	Level._explore = {}
-	for p in Polygons() do
-		if p.type == "must be explored" then
-			table.insert(Level._explore, p)
+	if RESTORE_EXPLORATION then
+		Level._explore = {}
+		for p in Polygons() do
+			if p.type == "must be explored" then
+				table.insert(Level._explore, p)
+			end
 		end
 	end
 
@@ -345,7 +359,7 @@ function Triggers.idle()
 		Level.stash["ERROR"] = nil
 	end
 
-	restore_exploration()
+	if RESTORE_EXPLORATION then restore_exploration() end
 end
 
 function Triggers.postidle()
@@ -356,7 +370,7 @@ function Triggers.postidle()
 		end
 		p.life = 409 -- signal to HUD that Vasara is active
 	end
-	restore_exploration()
+	if RESTORE_EXPLORATION then restore_exploration() end
 end
 
 function Triggers.terminal_enter(terminal, player)
@@ -380,7 +394,7 @@ function Triggers.cleanup()
 			uTeleport.remove_highlight(p)
 		end
 	end
-	restore_exploration()
+	if RESTORE_EXPLORATION then restore_exploration() end
 end
 
 function PIN(v, min, max)
