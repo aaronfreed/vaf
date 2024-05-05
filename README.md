@@ -117,6 +117,12 @@ The new “Decouple transparent sides” option disables Vasara’s standard beh
 - “Align adjacent” now works correctly with *most* sides Vasara has created since loading the map. Still not aligning correctly: certain transparent sides, explained below.
 - By default, Vasara AF now restores the state of “Must Be Explored” polygons after the player walks over them (or even looks at them if “Exploration (M1)” is set as the mission type) – previously, they’d be set to “Normal”. This is kind of a hack, and it makes Exploration missions incompletable while Vasara AF is running, but Vasara AF is primarily meant as a texturing utility, and I suspect that most people used to Forge found those polygons being set to “Normal” to be both annoying and unexpected. If you need to preview how a level works in gameplay without monsters, either use [Nature’s Peace](https://simplici7y.com/items/nature-s-peace/) or set `RESTORE_EXPLORATION` in Vasara_Script.lua to `false`.
   - Note that if, for some reason, you try to set a “Must Be Explored” polygon to “Normal” with Lua while Vasara AF is running, Vasara AF will automatically restore it to “Must Be Explored” – the engine doesn’t provide Lua any way to know why a polygon was changed from “Must Be Explored” to “Normal”.
+- I’ve fixed the Lua HUD error spam that was occurring when too many options were selected in visual mode.
+- Solra and I have also improved the handling of stack traces; if you get a message starting along the lines:
+
+      Error in Triggers.draw:
+      [string "HUD Lua"]:599: attempt to perform arithmetic on local 'yourmom' (a nil value)
+  ... then please screenshot it and [submit it in an issue describing what you were doing when you got the error](https://github.com/aaronfreed/vasara/issues) (assuming that no such issue has already been created).
 
 #### Current bugs/issues:
 - Transparent sides don’t align at all if there is no primary side defined for that surface. This occurs when a transparent texture is assigned to a side that has never been textured, whose reverse polygon’s ceiling is higher than or has the same height as its obverse polygon’s, and whose reverse polygon’s floor is lower than or has the same height as its obverse polygon’s.
@@ -125,7 +131,7 @@ The new “Decouple transparent sides” option disables Vasara’s standard beh
 - Exiting a level with a polygon highlighted in teleport mode will cause the floor to get set to “static” mode and the polygon to get set to “major ouch”, regardless of what was there before (**warning: if you were looking at a platform, this _will_ overwrite all its data**). I had a fix for this that involved not highlighting the polygons, but I wound up disliking that a lot more, so I restored the previous behaviour. Fixing it more properly may likewise require some engine-side changes.
 - Switching from map view to visual mode while teleporting causes Vasara to get confused and swap the teleport controls to the visual mode screen.
 - Freezing with enough momentum will result in continued camera bob. When you come out of the freeze state, your momentum will be reduced (or cut to zero).
-- See also [Vasara AF’s issues page](https://github.com/aaronfreed/vasara/issues).
+- See also [Vasara AF’s issues page](https://github.com/aaronfreed/vasara/issues). If you get an error message, please screenshot it and submit it in an issue describing what you were doing to that page (assuming that no such issue has already been created).
 
 #### Planned features:
 - As much as I hated Forge’s implementation of this feature, I’m tentatively planning to add an “adjust heights” mode that would adjust polygon heights, on the strict condition that it _always_ snap to the player’s selected grid setting.
@@ -188,7 +194,7 @@ The new “Decouple transparent sides” option disables Vasara’s standard beh
   - A side with an ambient delta value of 1 always renders at 100% light intensity, even if one or more of its surfaces is textured with a 0% intensity light.
   - If a side’s ambient delta value is -1, a texture on the side given a 100% intensity light is rendered as if it had been given a light with 0% intensity. A texture lit at 0% intensity is rendered as completely black.
   - If a side’s ambient delta value is -2, it always renders as completely black, barring occurrences such as muzzle flashes.
---**Aaron**, 2023-12-12 (last edited 2024-04-23)
+--**Aaron**, 2023-12-12 (last edited 2024-05-04)
 
 [Back to the top](#vasara-af)
 
