@@ -74,7 +74,7 @@ I’m almost finished redoing the grid interface.
 Vasara AF splits “Apply texture mode” and “apply texture” into two separate options.
 - If you have “apply texture mode” selected, but not “apply texture”, Vasara will apply different transfer modes to existing textures without adjusting their textures, and *vice versa*. (The Romans would’ve pronounced this something like ***wee**-keh **wer**-sah*. There, you can cross off an item on your bingo cards. You’re welcome.)
 - Landscapes are the wild card, as they usually override existing transfer modes. I have yet to work out all the strange behavior this causes.
-  - If for some reason you wish to apply a texture from a landscape collection in a transfer mode other than “landscape”, you can apply it to your desired surface, deselect “apply texture”, and then apply a different transfer mode. (You may need to select a different texture before you can do the last of these.) However, bear in mind that textures from landscape collections may behave weirdly in transfer modes besides “landscape”.
+  - If for some reason you wish to apply a texture from a landscape collection in a transfer mode other than “landscape”, you can apply it to your desired surface, deselect “apply texture”, and then apply a different transfer mode. (You may need to select a different texture before you can do the last of these.) However, textures from landscape collections may behave weirdly if their transfer mode isn’t set to “landscape”. In particular, in OpenGL mode, this causes texture smearing/hall of mirrors glitches for people that have Non-Power-of-Two textures disabled in their graphics settings (which is currently the engine default), so I recommend avoiding it entirely.
 - All of this mostly shows up correctly in visual mode, though the preview currently behaves weirdly when “apply texture” is disabled. (The checkbox in visual mode is now at least checked when “apply transfer mode” is checked, but “apply texture” isn’t.)
 
 #### Advanced map overlays
@@ -194,7 +194,7 @@ The new “Decouple transparent sides” option disables Vasara’s standard beh
   - A side with an ambient delta value of 1 always renders at 100% light intensity, even if one or more of its surfaces is textured with a 0% intensity light.
   - If a side’s ambient delta value is -1, a texture on the side given a 100% intensity light is rendered as if it had been given a light with 0% intensity. A texture lit at 0% intensity is rendered as completely black.
   - If a side’s ambient delta value is -2, it always renders as completely black, barring occurrences such as muzzle flashes.
---**Aaron**, 2023-12-12 (last edited 2024-05-04)
+--**Aaron**, 2023-12-12 (last edited 2024-05-09)
 
 [Back to the top](#vasara-af)
 
