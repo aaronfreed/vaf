@@ -26,10 +26,11 @@ This remains a work in progress, hence its beta status. Below are:
   - [Decouple transparent sides](#decouple-transparent-sides)
 - [**A somewhat less exhaustive overview of bug fixes, known issues, planned features, credits, and links to additional resources**](#bug-fixes-current-issues-planned-features-and-credits)
   - [Bug fixes](#bug-fixes)
-  - [Current issues](#current-issues)
+  - [Current bugs/issues](#current-bugsissues)
   - [Planned features](#planned-features)
-  - [Credits and contact info](#credits-and-contact-info)
+  - [Credits, acknowledgements, and contact info](#credits-acknowledgements-and-contact-info)
   - [Further resources](#further-resources)
+  - [What does “AF” stand for, anyway?](#what-does-af-stand-for-anyway)
 - [**Extremely obsessive notes on mapping terminology**](#notes-on-terminology) *(you do not need to memorize all of this before you begin texturing, but it may clarify some of the terminology I use in the above sections)*
   - [Lengths and heights](#lengths-and-heights)
   - [Lines, sides, and surfaces](#lines-sides-and-surfaces)
@@ -111,18 +112,21 @@ The new “Decouple transparent sides” option disables Vasara’s standard beh
 ----------------------------------------------------------------
 ### BUG FIXES, CURRENT ISSUES, PLANNED FEATURES, AND CREDITS:
 #### Bug fixes:
+**Fixed from the original:**
 - I’ve fixed the Lua error spam for lights > 55, but haven’t figured out how to get them to preview correctly. You can currently select lights 0-97 in the main palette, and even if you have both “Apply Light” and “Apply Texture” selected with lights > 97, it won’t spam errors. I may figure out a way to reduce the size of each light if there are more than 98 so that more will fit in the selector (but really, what are you doing with that many lights? I’ve only ever made a map with that many lights to test Vasara).
 - Platform and light switches now display a lot more options, which should reduce the amount people need to rely on tags. Side note: [tags are terrible](https://aaronfreed.github.io/mapmaking.html#tagsareterrible). :-)
-- ~~The border for the selected texture on the texture palette broke and I haven’t figured out why. This has been the most annoying thing to debug.~~ Fixed. Apparently I needed to throw in some `tonumber` statements that weren't previously necessary. ¯\\(°\_o)/¯
-- “Align adjacent” now works correctly with *most* sides Vasara has created since loading the map. Still not aligning correctly: certain transparent sides, explained below.
+- “Align adjacent” now works correctly with *most* sides Vasara has created since loading the map. Still not aligning correctly: certain transparent sides, explained under “Current bugs/issues”.
 - By default, Vasara AF now restores the state of “Must Be Explored” polygons after the player walks over them (or even looks at them if “Exploration (M1)” is set as the mission type) – previously, they’d be set to “Normal”. This is kind of a hack, and it makes Exploration missions incompletable while Vasara AF is running, but Vasara AF is primarily meant as a texturing utility, and I suspect that most people used to Forge found those polygons being set to “Normal” to be both annoying and unexpected. If you need to preview how a level works in gameplay without monsters, either use [Nature’s Peace](https://simplici7y.com/items/nature-s-peace/) or set `RESTORE_EXPLORATION` in Vasara_Script.lua to `false`.
   - Note that if, for some reason, you try to set a “Must Be Explored” polygon to “Normal” with Lua while Vasara AF is running, Vasara AF will automatically restore it to “Must Be Explored” – the engine doesn’t provide Lua any way to know why a polygon was changed from “Must Be Explored” to “Normal”.
-- I’ve fixed the Lua HUD error spam that was occurring when too many options were selected in visual mode.
 - Solra and I have also improved the handling of stack traces; if you get a message starting along the lines:
 
       Error in Triggers.draw:
       [string "HUD Lua"]:599: attempt to perform arithmetic on local 'yourmom' (a nil value)
-  ... then please screenshot it and [submit it in an issue describing what you were doing when you got the error](https://github.com/aaronfreed/vasara/issues) (assuming that no such issue has already been created).
+  …then please screenshot the **entire message** and [submit it in an issue describing what you were doing when you got the error](https://github.com/aaronfreed/vasara/issues) (assuming that no such issue has already been created).
+
+**Fixed from previous releases of Vasara AF:**
+- ~~The border for the selected texture on the texture palette broke and I haven’t figured out why. This has been the most annoying thing to debug.~~ Fixed. Apparently I needed to throw in some `tonumber` statements that weren't previously necessary. ¯\\(°\_o)/¯
+- I’ve fixed the Lua HUD error spam that was occurring when too many options were selected in visual mode.
 
 #### Current bugs/issues:
 - Transparent sides don’t align at all if there is no primary side defined for that surface. This occurs when a transparent texture is assigned to a side that has never been textured, whose reverse polygon’s ceiling is higher than or has the same height as its obverse polygon’s, and whose reverse polygon’s floor is lower than or has the same height as its obverse polygon’s.
@@ -131,26 +135,46 @@ The new “Decouple transparent sides” option disables Vasara’s standard beh
 - Exiting a level with a polygon highlighted in teleport mode will cause the floor to get set to “static” mode and the polygon to get set to “major ouch”, regardless of what was there before (**warning: if you were looking at a platform, this _will_ overwrite all its data**). I had a fix for this that involved not highlighting the polygons, but I wound up disliking that a lot more, so I restored the previous behaviour. Fixing it more properly may likewise require some engine-side changes.
 - Switching from map view to visual mode while teleporting causes Vasara to get confused and swap the teleport controls to the visual mode screen.
 - Freezing with enough momentum will result in continued camera bob. When you come out of the freeze state, your momentum will be reduced (or cut to zero).
-- See also [Vasara AF’s issues page](https://github.com/aaronfreed/vasara/issues). If you get an error message, please screenshot it and submit it in an issue describing what you were doing to that page (assuming that no such issue has already been created).
+- See also [Vasara AF’s issues page](https://github.com/aaronfreed/vasara/issues). If you get an error, **please screenshot the entire message** and submit it in an issue describing what you were doing (assuming that no such issue has already been created). Solra and I have implemented stack traces, so even if the error messages are incomprehensible word salad to you, they contain invaluable debugging information for us.
 
 #### Planned features:
-- As much as I hated Forge’s implementation of this feature, I’m tentatively planning to add an “adjust heights” mode that would adjust polygon heights, on the strict condition that it _always_ snap to the player’s selected grid setting.
-  - Forge’s “adjust height” mode _always_ adjusted heights by 51 IU (≈.04980 WU). This meant that adjusting the height by five clicks would have moved it by 255 IU (≈.24902 WU), which caused egregious _mis_-alignments when mappers were too lazy to clean up their heights. (Bungie could’ve easily fixed this by simply adding or subtracting 1 IU \[≈.00098 WU\] with each five adjustments.) For those of us on the obsessive-compulsive spectrum, I believe this qualifies as a war crime. Any implementation of this feature that does _not_ align to a grid is to be nuked from orbit – it’s the only way to be sure.
-- Vasara’s code is very, very dense and very, very sparsely documented, so this has been a slow project and will probably continue to be slow, but I hope to get it finished soon™.
+- A new interface layer for hotkeys. I’m currently writing this; it will in turn facilitate my planned implementations of the following features:
+  - Heights Mode. As much as I hated Forge’s implementation of this feature, I’m tentatively planning to add a mode to adjust the heights of polygon floors and ceilings, on the strict condition that they _always_ snap to the player’s selected grid setting.
+    - Forge’s Heights Mode _always_ adjusted heights by 51 IU (≈.04980 WU). This meant that adjusting the height by five clicks would move it by 255 IU (≈.24902 WU), which caused egregious _mis_-alignments when mappers were too lazy to clean up their heights. (Bungie could’ve easily fixed this by simply adding or subtracting 1 IU \[≈.00098 WU\] with each five adjustments, and/or simply snapping the height to a predefined grid.) For those of us on the obsessive-compulsive spectrum, I believe this qualifies as a war crime. Any implementation of this feature that does _not_ align to a grid is to be nuked from orbit – it’s the only way to be sure.
+  - New toggle shortcuts for “align adjacent” (which Forge toggled with “control”), “apply transparent” (which Forge toggled with “shift”), “apply texture”, and “apply light” (both of which Forge toggled with “command”).
+- I plan to change “freeze player” into “freeze momentum”, so that players can move in midair as though they were on the ground instead of having to deal with intertial velocity as they currently do when unfrozen. This may be extremely complicated to implement, as it may require rewriting significant chunks of Vasara’s texturing interface; if I’m unable to get it working, I’ll instead add additional hotkeys to move players in midair (most likely 4, 5, 6, and 10, since they default to 4, 5, 6, and T, which vertically invert the shape of the standard WASD setup in a QWERTY layout).
+- Vasara’s code is very, very dense and very, very sparsely documented, so this has been a slow project and may continue to be slow, but I plan to continue working on it for as long as is necessary. Stack traces have at least made debugging vastly less tedious, which has improved both my enthusiasm for working on this project and my ability to solve problems as they come up.
 
 #### Credits, acknowledgements, and contact info:
-- Most of the updates are mine; a few are **[@murbruksprodukt](https://github.com/murbruksprodukt)** (notably the platform switch fix and the initial work at expanding the grid selections) or **[@SolraBizna](https://github.com/SolraBizna)**’s (e.g., the extended stack traces) work.
+- Most of the updates are mine; a few are **[@murbruksprodukt](https://github.com/murbruksprodukt)** (notably the platform switch fix and the initial work at expanding the grid selections) or **[@SolraBizna](https://github.com/SolraBizna)**’s (e.g., most aspects of the extended stack traces; I corrected the HUD’s handling of line wrapping myself) work.
 - Vasara AF is, of course, based on **[Vasara 1.0.3](https://simplici7y.com/items/vasara)** by **[@Hopper262](https://github.com/Hopper262)** (Jeremiah Morris, who did most of the programming) and **Ares Ex Machina** (who did most of the UI design).
 - Vasara 1.0.3 is in turn based on **[Visual Mode.lua](https://simplici7y.com/items/visual-mode-lua)** by **[@treellama](https://github.com/treellama)** and **[@jonirons](https://github.com/jonirons)**.
 - If you need to contact me, email is probably the worst possible way to do so. Your best bet is to open an issue or create a discussion here, or contact me on Discord (**@Aaron#6608** or **@aaron6608**). You’ll need a server in common with me to do the latter; if you’ve read this far and aren’t already a member of the [*Marathon* Discord](https://discord.gg/c7rEVgY), you’ll want to fix that as soon as possible.
-- Acknowledgements to **Solra** for a ton of coding help, **treellama** for the name “Vasara AF”, all the **Aleph One** developers for keeping this thing going, and **Bungie** for creating the games that ruined our lives to begin with.
+- Acknowledgements to **Solra Bizna** for a ton of coding help, **treellama** for the name “Vasara AF”, all the **Aleph One** developers for keeping this thing going, and **Bungie** for creating the games that ruined our lives to begin with.
 
 #### Further resources:
-- **[Weland](https://github.com/treellama/weland/releases)**, just in case you somehow don’t have it yet. If you need help setting it up, see the relevant section of my beginners’ guide immediately below.
-- My **mapmaking guide** is now split up into several segments, the most important being:
-  - **[A beginners’ guide](https://aaronfreed.github.io/mapmaking101.html)**, which is relatively brief by my standards
-  - **[An advanced guide](https://aaronfreed.github.io/mapmaking.html)** that I’m in the process of splitting up further; it in turn links to several appendices with additional info that you may find helpful
-- [The Aleph One GitHub wiki](https://github.com/Aleph-One-Marathon/alephone/wiki) is an invaluable resource
+- **[Weland](https://github.com/treellama/weland/releases)**, just in case you somehow don’t have it yet; if you need help setting it up, see the relevant section of my beginners’ guide a few lines below
+- **[The Aleph One GitHub wiki](https://github.com/Aleph-One-Marathon/alephone/wiki)** is an invaluable resource and almost certainly the most reliable source of information about this game
+- My **mapmaking guide** is now split up into several segments; the following are probably the most important:
+  - **[My beginners’ guide](https://aaronfreed.github.io/mapmaking101.html)**, which is relatively brief by my standards
+  - **[My advanced guide](https://aaronfreed.github.io/mapmaking.html)**, which in turn links to several appendices with additional info that you may find helpful
+  - **[My annotated Forge manual](https://aaronfreed.github.io/forgemanual.html)**, which is a work in progress (only about 25% finished as of 2024-05-12)
+
+#### What does “AF” stand for, anyway?
+I take a “[Death of the Author](https://en.wikipedia.org/wiki/Death_of_the_Author)” approach to this initialism. Possibilities include:
+- Aaron Freed
+- Aaron’s Fork
+- à la Freed
+- Advanced Features
+- Additional Functionality
+- Also Featuring
+- *Ad factōrēs*¹
+- As [Fork](https://www.google.com/search?q=the+good+place)²
+
+These are just examples; it could also be something much better. In short, “AF” is the new “MIDA”… well, at least it’s not the old “MIDA”.
+
+¹Latin meaning, in this context, roughly *for creators*. In case one Latin acronym isn’t enough for you, other possibilities include *ad factūram* (*for creation*), *ad faciēns* (*for creating*), *ad faciendum* (*for that which is to be created*)…
+²**Warning:** Please beware spoilers. *The Good Place* is one show you *absolutely do not want spoiled,* even if you normally don’t care about spoilers. I’d recommend not even reading the Wikipedia page until you’ve finished the show. See also the *Battlestar Galactica* variant “As Frak”, the *Farscape* variant “As Frell”, and of course [the more vulgar variant](https://en.wiktionary.org/wiki/AF#Adverb) that you probably already thought of.
 
 [Back to the top](#vasara-af)
 
@@ -194,7 +218,7 @@ The new “Decouple transparent sides” option disables Vasara’s standard beh
   - A side with an ambient delta value of 1 always renders at 100% light intensity, even if one or more of its surfaces is textured with a 0% intensity light.
   - If a side’s ambient delta value is -1, a texture on the side given a 100% intensity light is rendered as if it had been given a light with 0% intensity. A texture lit at 0% intensity is rendered as completely black.
   - If a side’s ambient delta value is -2, it always renders as completely black, barring occurrences such as muzzle flashes.
---**Aaron**, 2023-12-12 (last edited 2024-05-09)
+--**Aaron**, 2023-12-12 (last edited 2024-05-12)
 
 [Back to the top](#vasara-af)
 
