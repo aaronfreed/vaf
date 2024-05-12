@@ -174,6 +174,7 @@ I take a “[Death of the Author](https://en.wikipedia.org/wiki/Death_of_the_Aut
 These are just examples; it could also be something much better. In short, “AF” is the new “MIDA”… well, at least it’s not the old “MIDA”.
 
 ¹Latin meaning, in this context, roughly *for creators*. In case one Latin acronym isn’t enough for you, other possibilities include *ad factūram* (*for creation*), *ad faciēns* (*for creating*), *ad faciendum* (*for that which is to be created*)…
+
 ²**Warning:** Please beware spoilers. *The Good Place* is one show you *absolutely do not want spoiled,* even if you normally don’t care about spoilers. I’d recommend not even reading the Wikipedia page until you’ve finished the show. See also the *Battlestar Galactica* variant “As Frak”, the *Farscape* variant “As Frell”, and of course [the more vulgar variant](https://en.wiktionary.org/wiki/AF#Adverb) that you probably already thought of.
 
 [Back to the top](#vasara-af)
