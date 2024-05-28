@@ -10,7 +10,7 @@ Hopper also has a **[GitHub repository for Vasara 1.0.2](https://github.com/Hopp
 
 ----------------------------------------------------------------
 ## WIP notes by Aaron (see below for original readme):
-**VAF** is a texturing utility for **[Marathon Aleph One](https://alephone.lhowon.org)** 1.7 or later, best used with **[Weland](https://github.com/treellama/weland/releases)** (see [my detailed setup guide](https://aaronfreed.github.io/mapmaking101.html#welandsetup) if Weland’s readme proves confusing). The original version hasn’t been updated in years, so I’ve taken it upon myself, with a little help from my friends, to update it for several reasons:
+**VAF** is a texturing utility for **[Marathon Aleph One](https://alephone.lhowon.org)** 1.7 or later, best used with **[Weland](https://github.com/treellama/weland/releases)** (see [my detailed setup guide](https://aaronfreed.github.io/mapmaking101.html#welandsetup) if Weland’s readme proves confusing). Vasara hasn’t been updated in years, so I’ve taken it upon myself, with a little help from my friends, to fork it for several reasons:
 - to take advantage of new Aleph One features
 - to add features that it had been sorely lacking for years
 - to fix longstanding bugs.
