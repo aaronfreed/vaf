@@ -3,17 +3,17 @@
 
 credits in chronological order:
 - **[Visual Mode.lua](https://github.com/treellama/visualmode)** by **[@jonirons](https://github.com/jonirons)** and **[@treellama](https://github.com/treellama)**
-- **[Vasara 1.0.3](https://simplici7y.com/items/vasara/)** by **[@Hopper262](https://github.com/Hopper262)** and **Ares Ex Machina**
+- **[Vasara 1.0.3](https://github.com/Hopper262/Vasara)** by **[@Hopper262](https://github.com/Hopper262)** and **Ares Ex Machina**
 - **VAF 1.0b** by **[@aaronfreed](https://github.com/aaronfreed)**, **[@murbruksprodukt](https://github.com/murbruksprodukt)**, and **[@SolraBizna](https://github.com/SolraBizna)**
 
-Hopper also has a **[GitHub repository for Vasara 1.0.2](https://github.com/Hopper262/Vasara)**, but it’s one version behind the Simplici7y release.
+**NOTE:** Vasara 1.1 was released on 2024-10-19; I plan to merge in its improvements and new features as time permits, but as I have several other active projects, I can’t promise this will be prompt.
 
 ----------------------------------------------------------------
 ## WIP notes by Aaron (see below for original readme):
-**VAF** is a texturing utility for **[Marathon Aleph One](https://alephone.lhowon.org)** 1.7 or later, best used with **[Weland](https://github.com/treellama/weland/releases)** (see [my detailed setup guide](https://aaronfreed.github.io/mapmaking101.html#welandsetup) if Weland’s readme proves confusing). Vasara hasn’t been updated in years, so I’ve taken it upon myself, with a little help from my friends, to fork it for several reasons:
+**VAF** is a texturing utility for **[Marathon Aleph One](https://alephone.lhowon.org)** 1.7 or later, best used with **[Weland](https://github.com/treellama/weland/releases)** (see [my detailed setup guide](https://aaronfreed.github.io/mapmaking101.html#welandsetup) if Weland’s readme proves confusing). At the time I began this project, Vasara hadn’t been updated since 2016 (and it wasn’t updated again until 2024-10-19), so I took it upon myself, with a little help from my friends, to fork it for several reasons:
 - to take advantage of new Aleph One features
 - to add features that it had been sorely lacking for years
-- to fix longstanding bugs.
+- to fix longstanding bugs
 
 This remains a work in progress, hence its beta status. Below are:
 - [**Brief installation instructions, including a link to my Weland setup guide**](#getting-started)
