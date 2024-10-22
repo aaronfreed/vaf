@@ -105,7 +105,7 @@ The new “Decouple transparent sides” option disables Vasara and Visual Mode.
   - Alignment that got screwed up on only one side (“align adjacent” has never aligned both sides correctly)
 - Applying different lights to each side – perhaps there’s a light on one side of the texture
 - Applying entirely different textures to each side – especially useful if one texture is a horizontal flip of the other
-- Applying a texture to only one side of a line
+- Applying a texture to only one side of a line – if you’re prone to running out of [map indices](https://aaronfreed.github.io/mapcomplexity.html), this can conserve them in cases where only one side will ever be visible to players
 
 [Back to the top](#vaf)
 
@@ -187,7 +187,7 @@ These are just examples; it could also be something much better. In short, “VA
 - For reference, in vanilla game physics, the player is 819 IU (≈0.7998 WU) tall and has a radius of 256 IU (0.25 WU). There is contradictory information about how this corresponds to real-world measurements; the indispensable [Marathon’s Story page](https://marathon.bungie.org/story/) has an [entire section on this](https://marathon.bungie.org/story/ourheight.html), and the definitive answer is “¯\\(°_o)/¯”.
 - Forge and Weland use both WU and IU in different contexts; for instance, when you single-click a point in either, the status bar in the lower left shows its location in WU; when you double-click it, the dialog box that comes up lists its location in IU. Most values are rounded to the thousandths place (which means that, e.g., 64 IU and 65 IU both display as 0.063 WU, although Weland treats these as functionally different heights in some circumstances).
 - Anvil and ShapeFusion list values for physics models in IU. The scale factor in a shapes file also corresponds to IU – each pixel of a shape with a scale factor of 1 will occupy 1 IU in the game world.
-- I present both WU and IU throughout the this document. This version of Vasara also displays both where space permits.
+- I present both WU and IU throughout the this document. VAF also displays both where space permits.
 
 #### Lines, sides, and surfaces:
 - A **line** is what you’d draw in Forge or Weland, and what they display in top-down view.
@@ -200,12 +200,12 @@ These are just examples; it could also be something much better. In short, “VA
 - I’m currently aware of at least four cases in which “surface” and “texture” may not correspond how you’d expect:
   1. After the side was textured, one or more of the polygons on either side had its height changed in a way that added or deleted a surface. **Tip:** Using the “select texture” key on such a side will correct this, though you will probably need to retexture the side or realign its textures after you do so.
   2. A transparent and primary texture can both be applied to the same surface of a line that that does not border another polygon, e.g., the [dual texture trick](https://citadel.lhowon.org/litterbox/Forge/hastursworkshop/aesthetics3.html) from [Hastur’s Workshop](https://citadel.lhowon.org/litterbox/Forge/hastursworkshop/).
-  3. A transparent and primary texture can also be applied to the same surface of a line bordering two polygons in certain circumstances, described in this item’s sub-bullets. In these cases, the same side can be given both a primary and a transparent texture, which functionally behave as two transparent textures with the “transparent” texture rendered in front of the “primary” texture on both sides. As far as I’m aware, this currently must be done using Lua. I’m currently thinking about a UI to enable this in Vasara.
+  3. A transparent and primary texture can also be applied to the same surface of a line bordering two polygons in certain circumstances, described in this item’s sub-bullets. In these cases, the same side can be given both a primary and a transparent texture, which functionally behave as two transparent textures with the “transparent” texture rendered in front of the “primary” texture on both sides. As far as I’m aware, this currently must be done using Lua. I’m currently thinking about a UI to enable this in VAF.
       - This can work on *both* sides of the line *if and only if* the polygons on each side have the exact same floor and ceiling heights.
       - It can work on *one* side if the reverse polygon’s floor height is no lower than the obverse polygon’s, and the reverse polygon’s ceiling height is no higher than the obverse polygon’s. However, if either the floors or ceilings of the adjoining polygons have different heights, it *will not* work on both sides of the line.
       - If either the reverse polygon’s height is higher than the obverse polygon’s, or the reverse polygon’s ceiling is lower than the obverse polygon’s, this currently results in glitchy z-fighting.
       - Sampling textures from these sides currently removes the transparent side if you have “edit transparent sides” selected; fortunately, pressing “undo” restores it. “Fix this” is on my to-do list.
-  4. The conditions described in iii may also exist _without_ a transparent texture. This means that, confusingly, a side will have a texture that looks to all appearances to be a “transparent” texture, but will be defined as “primary” in the engine. This was fairly easy to do in Forge – one simply made a line non-transparent, textured its sides, and then made it transparent again. It is less easy to do with modern tools – in fact, these sides are currently invisible to Vasara (I plan to work on a fix for this as well). Several examples of this form of texturing occur in the *Tempus Irae* level “Towel Boy”. (I may have changed them to genuine “transparent” textures in *Tempus Irae Redux* to make my life easier – I can’t remember at the moment.)
+  4. The conditions described in iii may also exist _without_ a transparent texture. This means that, confusingly, a side will have a texture that looks to all appearances to be a “transparent” texture, but will be defined as “primary” in the engine. This was fairly easy to do in Forge – one simply made a line non-transparent, textured its sides, and then made it transparent again. It is less easy to do with modern tools – in fact, these sides are currently invisible to VAF (I plan to work on a fix for this as well). Several examples of this form of texturing occur in the *Tempus Irae* level “Towel Boy”. (I changed some of them to genuine “transparent” textures in *Tempus Irae Redux* to make my life easier.)
 - If the polygon on the reverse side has a lower ceiling and higher floor than the one on the obverse side, the primary texture is applied to the part of the side above the reverse polygon’s ceiling, the transparent texture (if it exists) is applied to the part between the reverse polygon’s floor and its ceiling, and the secondary texture is applied to the part below its floor.
 - As far as I’m aware, in most other cases (outside the exceptions listed above), sides should only display primary and transparent textures, though the game can sometimes get confused into displaying the secondary texture, or not displaying any texture, if polygon heights have changed since the last time the side was textured. In such cases, sampling the texture on any surface of the wall should generally fix the issue.
 - Polygons’ **floors** and **ceilings** behave similarly to side surfaces, except their definition is much more straightforward, since each polygon always has exactly one floor and exactly one ceiling.
@@ -220,7 +220,7 @@ These are just examples; it could also be something much better. In short, “VA
   - If a side’s ambient delta value is -1, a texture on the side given a 100% intensity light is rendered as if it had been given a light with 0% intensity. A texture lit at 0% intensity is rendered as completely black.
   - If a side’s ambient delta value is -2, it always renders as completely black, barring occurrences such as muzzle flashes.
 
---**Aaron**, 2023-12-12 (last edited 2024-05-27)
+--**Aaron**, 2023-12-12 (last edited 2024-10-22)
 
 [Back to the top](#vaf)
 
